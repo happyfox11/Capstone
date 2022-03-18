@@ -1,8 +1,10 @@
-package com.android.aifoodapp;
+package com.android.aifoodapp.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.android.aifoodapp.R;
 
 public class MainActivity extends AppCompatActivity {
 
