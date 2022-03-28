@@ -31,7 +31,8 @@ android {
                 srcDirs =
                         [
                                 'src\\main\\res\\common',
-                                'src\\main\\res\\main'
+                                'src\\main\\res\\main',
+                                'src\\main\\res\\login'
                         ]
             }
         }
