@@ -32,6 +32,38 @@ public class LoginActivity extends AppCompatActivity {
         initialize();
         addListener();
 
+        Function2<OAuthToken, Throwable, Unit> callback = new Function2<OAuthToken, Throwable, Unit>() {
+            @Override
+            public Unit invoke(OAuthToken oAuthToken, Throwable throwable) {
+                if(oAuthToken != null) {
+                    //로그인이 성공 (토큰 전달 완료)
+                }
+                if( throwable != null) {
+                    //로그인 실패
+                }
+                updateKakaoLoginUi();
+                return null;
+            }
+        };
+
+        //1. 카카오 로그인 리스너 등록
+        btn_kakao.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+            /*Intent intent = new Intent(activity, MainActivity.class);
+            startActivity(intent);*/
+                if(UserApiClient.getInstance().isKakaoTalkLoginAvailable(LoginActivity.this)) {
+                    //카카오톡 존재시
+                    UserApiClient.getInstance().loginWithKakaoTalk(LoginActivity.this, callback);
+                }
+                else {
+                    UserApiClient.getInstance().loginWithKakaoAccount(LoginActivity.this, callback);
+                }
+            }
+        });
+        updateKakaoLoginUi();
+        finish();
+
     }
 
     //변수 초기화
@@ -42,42 +74,12 @@ public class LoginActivity extends AppCompatActivity {
         btn_email = findViewById(R.id.btn_email);
     }
 
-    Function2<OAuthToken, Throwable, Unit> callback = new Function2<OAuthToken, Throwable, Unit>() {
-        @Override
-        public Unit invoke(OAuthToken oAuthToken, Throwable throwable) {
-            if(oAuthToken != null) {
-                //로그인이 성공 (토큰 전달 완료)
-            }
-            if( throwable != null) {
-                //로그인 실패
-            }
-            updateKakaoLoginUi();
-            return null;
-        }
-    };
-
     //리스너 생성
     private void addListener(){
-        btn_kakao.setOnClickListener(listener_kakao_sign);
+        //btn_kakao.setOnClickListener(listener_kakao_sign);
         btn_google.setOnClickListener(listener_google_sign);
         btn_email.setOnClickListener(listener_email_sign);
     }
-
-    //1. 카카오 로그인 리스너 등록
-    private final View.OnClickListener listener_kakao_sign = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            /*Intent intent = new Intent(activity, MainActivity.class);
-            startActivity(intent);*/
-            if(UserApiClient.getInstance().isKakaoTalkLoginAvailable(LoginActivity.this)) {
-                //카카오톡 존재시
-                UserApiClient.getInstance().loginWithKakaoTalk(LoginActivity.this, callback);
-            }
-            else {
-                UserApiClient.getInstance().loginWithKakaoAccount(LoginActivity.this, callback);
-            }
-        }
-    };
 
     //2. 구글 로그인 리스너 등록
     private final View.OnClickListener listener_google_sign = new View.OnClickListener() {
