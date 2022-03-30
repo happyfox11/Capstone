@@ -2,26 +2,36 @@ package com.android.aifoodapp.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.android.aifoodapp.R;
+import com.kakao.sdk.auth.model.OAuthToken;
+import com.kakao.sdk.user.UserApiClient;
+import com.kakao.sdk.user.model.User;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function2;
 
 public class LoginActivity extends AppCompatActivity {
 
     Activity activity;
     LinearLayout  btn_google, btn_email;
     ImageView btn_kakao;
+    static Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mContext = this;
         setContentView(R.layout.activity_login);
         initialize();
         addListener();
+
     }
 
     //변수 초기화
@@ -31,6 +41,20 @@ public class LoginActivity extends AppCompatActivity {
         btn_google = findViewById(R.id.btn_google);
         btn_email = findViewById(R.id.btn_email);
     }
+
+    Function2<OAuthToken, Throwable, Unit> callback = new Function2<OAuthToken, Throwable, Unit>() {
+        @Override
+        public Unit invoke(OAuthToken oAuthToken, Throwable throwable) {
+            if(oAuthToken != null) {
+                //로그인이 성공 (토큰 전달 완료)
+            }
+            if( throwable != null) {
+                //로그인 실패
+            }
+            updateKakaoLoginUi();
+            return null;
+        }
+    };
 
     //리스너 생성
     private void addListener(){
@@ -43,8 +67,15 @@ public class LoginActivity extends AppCompatActivity {
     private final View.OnClickListener listener_kakao_sign = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(activity, MainActivity.class);
-            startActivity(intent);
+            /*Intent intent = new Intent(activity, MainActivity.class);
+            startActivity(intent);*/
+            if(UserApiClient.getInstance().isKakaoTalkLoginAvailable(LoginActivity.this)) {
+                //카카오톡 존재시
+                UserApiClient.getInstance().loginWithKakaoTalk(LoginActivity.this, callback);
+            }
+            else {
+                UserApiClient.getInstance().loginWithKakaoAccount(LoginActivity.this, callback);
+            }
         }
     };
 
@@ -65,4 +96,31 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
         }
     };
+
+    //카카오
+    public void updateKakaoLoginUi() {
+        UserApiClient.getInstance().me(new Function2<User, Throwable, Unit>() {
+            @Override
+            public Unit invoke(User user, Throwable throwable) {
+                if ( user != null) { //정상 로그인 & 이미 로그인 되어있을 때
+
+                    String userId = Long.toString(user.getId());
+                    String userNickName = user.getKakaoAccount().getProfile().getNickname();
+                    //Log.i(TAG, "id " + user.getId());
+                    //Log.i(TAG, "invoke: nickname=" + user.getKakaoAccount().getProfile().getNickname());
+
+                    Intent intent = new Intent(activity, MainActivity.class);
+
+                    //intent로 userId값 전달
+                    intent.putExtra("kakao_userId", userId);
+                    intent.putExtra("kakao_userNickName", userNickName);
+                    startActivity(intent);
+
+                } else {
+                    //mobileTextView.setText("로그인 해주세요");
+                }
+                return  null;
+            }
+        });
+    }
 }
