@@ -31,7 +31,8 @@
             android:layout_gravity="center"
             app:srcCompat="@drawable/character" />
 
-        <LinearLayout
+
+        <!--<LinearLayout
             android:id="@+id/btn_kakao"
             android:layout_width="300dp"
             android:layout_height="50dp"
@@ -59,7 +60,15 @@
                 android:text="카카오로 쉬운 시작"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
-        </LinearLayout>
+        </LinearLayout>-->
+
+        <ImageView
+            android:id="@+id/btn_kakao"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/kakao_login_medium_wide" />
+
 
         <LinearLayout
             android:id="@+id/btn_google"
