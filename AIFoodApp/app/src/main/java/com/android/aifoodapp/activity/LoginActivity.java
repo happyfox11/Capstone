@@ -62,7 +62,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         updateKakaoLoginUi();
-        finish();
 
     }
 
@@ -117,6 +116,9 @@ public class LoginActivity extends AppCompatActivity {
                     intent.putExtra("kakao_userId", userId);
                     intent.putExtra("kakao_userNickName", userNickName);
                     startActivity(intent);
+
+                    //finish 해도 정상 작동되는지 확인 필요!
+                    finish();
 
                 } else {
                     //mobileTextView.setText("로그인 해주세요");
