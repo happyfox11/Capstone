@@ -5,13 +5,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.android.aifoodapp.R;
 
 public class LoginActivity extends AppCompatActivity {
 
     Activity activity;
-    LinearLayout btn_kakao, btn_google, btn_email;
+    LinearLayout  btn_google, btn_email;
+    ImageView btn_kakao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     //변수 초기화
     private void initialize(){
         activity = this;
-        btn_kakao = findViewById(R.id.btn_kakao);
+        btn_kakao = (ImageView) findViewById(R.id.btn_kakao);
         btn_google = findViewById(R.id.btn_google);
         btn_email = findViewById(R.id.btn_email);
     }
