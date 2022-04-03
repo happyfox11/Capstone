@@ -12,9 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="AI Food App Name"
+        android:text="Plan Meal"
         android:textColor="#000000"
-        android:textSize="30sp"
+        android:textSize="40sp"
         tools:layout_marginBottom="30dp"
         tools:layout_marginTop="30dp" />
 

@@ -1,0 +1,10 @@
+<!-- Background circle for the magnitude value -->
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <solid android:color="#EF6D6D" />
+    <size android:width="36dp" android:height="36dp" />
+    <corners android:radius="18dp" />
+
+</shape>

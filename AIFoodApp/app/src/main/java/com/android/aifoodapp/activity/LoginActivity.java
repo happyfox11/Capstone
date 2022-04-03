@@ -166,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
     private final View.OnClickListener listener_email_sign = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(activity, MainActivity.class);
+            Intent intent = new Intent(activity, InitialSurveyActivity.class);
             startActivity(intent);
         }
     };
@@ -191,7 +191,11 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
 
                     //finish 해도 정상 작동되는지 확인 필요!
-                    finish();
+                    /*  hanbyul comment:
+                        MainActivity에서 로그아웃 버튼을 누르고 다시 앱에 들어가는 경우, 로그아웃 처리가 되지 않는 문제가 발생합니다.
+                        아래 finish()를 주석처리하면 문제가 발생하지 않는 것 같아서 일단 주석처리 해두었습니다.
+                    */
+                    //finish();
 
                 } else {
                     //mobileTextView.setText("로그인 해주세요");
