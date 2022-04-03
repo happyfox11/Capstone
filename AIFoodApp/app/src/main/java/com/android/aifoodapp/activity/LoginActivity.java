@@ -14,6 +14,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.android.aifoodapp.R;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.kakao.sdk.auth.model.OAuthToken;
 import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.user.model.User;
@@ -29,6 +35,8 @@ public class LoginActivity extends AppCompatActivity {
     LinearLayout  btn_google, btn_email;
     ImageView btn_kakao;
     static Context mContext;
+    GoogleSignInClient mGoogleSignInClient;
+    int RC_SIGN_IN = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +78,61 @@ public class LoginActivity extends AppCompatActivity {
         });
         updateKakaoLoginUi();
 
+
+        /*주희 수정부분 구글 로그인*/
+        btn_google.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.btn_google:
+                        signIn();
+                        break;
+                }
+            }
+        });
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        // Build a GoogleSignInClient with the options specified by gso.
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+
+
     }
+    private void signIn() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
+    }
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            // Signed in successfully, show authenticated UI.
+            Intent intent = new Intent(activity, MainActivity.class);
+            startActivity(intent);
+
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            Log.w("Error", "signInResult:failed code=" + e.getStatusCode());
+        }
+    }
+    /*주희 수정부분 구글 로그인 끝*/
+
 
     //변수 초기화
     private void initialize(){
@@ -83,11 +145,13 @@ public class LoginActivity extends AppCompatActivity {
     //리스너 생성
     private void addListener(){
         //btn_kakao.setOnClickListener(listener_kakao_sign);
-        btn_google.setOnClickListener(listener_google_sign);
+        //btn_google.setOnClickListener(listener_google_sign);
         btn_email.setOnClickListener(listener_email_sign);
     }
 
+
     //2. 구글 로그인 리스너 등록
+    /*
     private final View.OnClickListener listener_google_sign = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -95,6 +159,8 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
         }
     };
+
+    */
 
     //3. 이메일 로그인 리스너 등록
     private final View.OnClickListener listener_email_sign = new View.OnClickListener() {
