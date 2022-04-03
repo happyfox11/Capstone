@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.aifoodapp">
-
-    <!-- 인터넷 사용 권한 설정 (카카오 서버와 통신하기 위하여)-->
+    <!-- 인터넷 사용 권한 설정 (카카오 서버와 통신하기 위하여) -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".KakaoApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AIFoodApp"
-        android:name=".KakaoApplication">
+        android:theme="@style/Theme.AIFoodApp">
+        <activity
+            android:name=".activity.InitialSurveyActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.MainActivity"
             android:exported="false" />
@@ -24,21 +26,26 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <!--Redirect URI 설정(인가코드를 받아오기 위해) -->
+        </activity> <!-- Redirect URI 설정(인가코드를 받아오기 위해) -->
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <!-- Redirect URI: "kakao{NATIVE_APP_KEY}://oauth" -->
-                <data android:host="oauth"
+                <data
+                    android:host="oauth"
                     android:scheme="kakaoee925720d00642f3e5c08066b8883de5" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.UserSettingActivity"
+            android:exported="false"/>
+        <activity android:name=".activity.FoodAnalysisActivity"
+            android:exported="false"/>
     </application>
 
 </manifest>
