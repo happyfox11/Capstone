@@ -1,7 +1,9 @@
 package com.android.aifoodapp.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,21 +17,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class FoodAnalysisActivity extends AppCompatActivity {
 
     Activity activity;
-    ImageView iv_foodAnalysis;
-    TextView tv_foodName;
+    ImageView iv_foodAnalysis,iv_minusBtn,iv_plusBtn,cl_foodInfo,
+            iv_scrollUpBtn,iv_scrollDownBtn,iv_arrowBtn,iv_infoBtn;
+    TextView tv_foodName,fl_foodName,tv_calories,cl_foodName,cl_caloriesInfo,cl_intake;
     CircleImageView fl_foodInfo;
-    ImageView iv_minusBtn;
-    TextView fl_foodName;
-    ImageView iv_plusBtn;
-    TextView tv_calories;
-    ImageView cl_foodInfo;
-    TextView cl_foodName;
-    TextView cl_caloriesInfo;
-    TextView cl_intake;
-    ImageView iv_scrollUpBtn;
-    ImageView iv_scrollDownBtn;
-    ImageView iv_arrowBtn;
-    ImageView iv_infoBtn;
+
     Button  modifyBtn;
 
     @Override
@@ -38,6 +30,14 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         setContentView(R.layout.activity_food_analysis);
         initialize();
 
+
+        iv_arrowBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),FoodDetailInfoActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 

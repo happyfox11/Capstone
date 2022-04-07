@@ -46,6 +46,8 @@
             android:exported="false"/>
         <activity android:name=".activity.FoodAnalysisActivity"
             android:exported="false"/>
+        <activity android:name=".activity.FoodDetailInfoActivity"
+            android:exported="false"/>
     </application>
 
 </manifest>

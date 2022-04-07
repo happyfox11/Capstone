@@ -102,95 +102,111 @@
                 android:text="칼로리 표시" />
 
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="20dp"
+            android:background="#C1BDBD" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/cl_foodInfo"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginLeft="15dp"
-                android:src="@drawable/profile"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/cl_foodName"
-                android:layout_width="89dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="20dp"
-                android:text="음식 이름 표시"
-                app:layout_constraintStart_toEndOf="@+id/cl_foodInfo"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/cl_caloriesInfo"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="29dp"
-                android:text="칼로리 표시"
-                app:layout_constraintStart_toEndOf="@+id/cl_foodInfo"
-                app:layout_constraintTop_toBottomOf="@+id/cl_foodName" />
+                android:layout_marginTop="20dp">
 
-            <TextView
-                android:id="@+id/cl_intake"
+                <ImageView
+                    android:id="@+id/cl_foodInfo"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="15dp"
+                    android:src="@drawable/profile"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/cl_foodName"
+                    android:layout_width="89dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
+                    android:text="음식 이름 표시"
+                    app:layout_constraintStart_toEndOf="@+id/cl_foodInfo"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/cl_caloriesInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="29dp"
+                    android:text="칼로리 표시"
+                    app:layout_constraintStart_toEndOf="@+id/cl_foodInfo"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_foodName" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="136dp"
-                android:layout_marginTop="48dp"
-                android:text="섭취량"
-                app:layout_constraintStart_toEndOf="@+id/cl_foodInfo"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/TextView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="48dp"
-                android:text="인분"
-                app:layout_constraintStart_toEndOf="@+id/cl_intake"
-                app:layout_constraintTop_toTopOf="parent" />
+                <ImageView
+                    android:id="@+id/iv_scorllUpBtn"
+                    android:layout_width="15dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="35dp"
+                    android:layout_marginTop="30dp"
+                    app:srcCompat="@drawable/scrollup" />
 
-            <ImageView
-                android:id="@+id/iv_scorllDownBtn"
-                android:layout_width="15dp"
-                android:layout_height="25dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="135dp"
-                android:layout_marginBottom="10dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cl_intake"
-                app:layout_constraintVertical_bias="1.0"
-                app:srcCompat="@drawable/scrolldown" />
+                <TextView
+                    android:id="@+id/cl_intake"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="섭취량"
+                    app:layout_constraintStart_toEndOf="@+id/imageView"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/iv_scorllUpBtn"
-                android:layout_width="15dp"
-                android:layout_height="25dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="135dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/scrollup" />
+                <ImageView
+                    android:id="@+id/iv_scorllDownBtn"
+                    android:layout_width="15dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="35dp"
+                    app:srcCompat="@drawable/scrolldown" />
 
-            <ImageView
-                android:id="@+id/iv_arrowBtn"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="36dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/TextView1"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/arrowbtn" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="55dp"
+                    android:text="인분" />
+
+                <ImageView
+                    android:id="@+id/iv_arrowBtn"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="55dp"
+                    android:layout_marginRight="20dp"
+                    android:gravity="center_horizontal"
+                    app:srcCompat="@drawable/arrowbtn" />
+            </LinearLayout>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -207,6 +223,7 @@
                 android:src="@drawable/noticeicon" />
 
             <TextView
+                android:id="@+id/textView28"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
