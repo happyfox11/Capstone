@@ -55,6 +55,7 @@ tools:context=".activity.MainActivity">
                 android:layout_marginRight="10dp"
                 android:background="@drawable/round_rect_button"
                 android:backgroundTint="#3A531C"
+                android:padding="5dp"
                 android:text="Logout"
                 android:textColor="#FFFFFF" />
 
@@ -95,7 +96,8 @@ tools:context=".activity.MainActivity">
             android:gravity="center"
             android:orientation="vertical"
             android:paddingLeft="2dp"
-            android:paddingTop="5dp">
+            android:paddingTop="5dp"
+            android:paddingBottom="10dp">
 
             <ImageView
                 android:id="@+id/imageView7"
@@ -119,8 +121,10 @@ tools:context=".activity.MainActivity">
             android:id="@+id/layout_day_of_week"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal"
-            android:padding="4dp">
+            android:padding="4dp"
+            android:paddingBottom="10dp">
 
             <TextView
                 android:id="@+id/textView4"
@@ -277,7 +281,7 @@ tools:context=".activity.MainActivity">
                     android:layout_marginBottom="10dp"
                     android:layout_weight="1"
                     android:text="1000 / 2000 kcal"
-                    android:textSize="11sp" />
+                    android:textSize="9sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -357,7 +361,7 @@ tools:context=".activity.MainActivity">
                         android:layout_weight="1"
                         android:gravity="right"
                         android:text="11 /22 g"
-                        android:textSize="11sp" />
+                        android:textSize="9sp" />
 
                     <TextView
                         android:id="@+id/tv_gram_of_protein"
@@ -368,7 +372,7 @@ tools:context=".activity.MainActivity">
                         android:layout_weight="1"
                         android:gravity="right"
                         android:text="11 /22 g"
-                        android:textSize="11sp" />
+                        android:textSize="9sp" />
 
                     <TextView
                         android:id="@+id/tv_gram_of_fat"
@@ -377,7 +381,7 @@ tools:context=".activity.MainActivity">
                         android:layout_weight="1"
                         android:gravity="right"
                         android:text="11 /22 g"
-                        android:textSize="11sp" />
+                        android:textSize="9sp" />
                 </LinearLayout>
             </LinearLayout>
 
