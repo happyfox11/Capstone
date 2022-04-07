@@ -368,14 +368,14 @@ public class MainActivity<Unit> extends AppCompatActivity {
             회원가입 후, 초기 개인정보 화면에서 넘어온 경우, 값을 바로 받아서 적용한다.(InitialSurveyActivity에서 DB에 저장되어야 함)
             DB 생성 후 이하 getIntent()에서 받아오는 HashMap은 사용하지 않아도 됨
          */
-        int recommended_calories, gram_of_carbohydrate, gram_of_protein, gram_of_fat;
+        int target_calory, gram_of_carbohydrate, gram_of_protein, gram_of_fat;
 
         Intent intent = getIntent();
         if(intent.getSerializableExtra("survey_result") != null){
             HashMap<String, Integer> survey_result = (HashMap<String, Integer>)intent.getSerializableExtra("survey_result");
             Log.i("HashMapTest", String.valueOf(survey_result));
 
-            recommended_calories = survey_result.get("recommended_calories");
+            target_calory = survey_result.get("target_calory");
             gram_of_carbohydrate = survey_result.get("gram_of_carbohydrate");
             gram_of_protein = survey_result.get("gram_of_protein");
             gram_of_fat = survey_result.get("gram_of_fat");
@@ -383,7 +383,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
         }else{
             //이미 회원인 상황에서 로그인을 한 경우에, DB에서 받아와야하는 값
-            recommended_calories = 2000;
+            target_calory = 2000;
             gram_of_carbohydrate = 100;
             gram_of_protein = 100;
             gram_of_fat = 100;
@@ -394,12 +394,12 @@ public class MainActivity<Unit> extends AppCompatActivity {
         int current_protein = 30;
         int current_fat = 20;
 
-        tv_total_calories.setText(current_calories + " / " + recommended_calories + "kcal");
+        tv_total_calories.setText(current_calories + " / " + target_calory + "kcal");
         tv_gram_of_carbohydrate.setText(current_carbohydrate + " / " + gram_of_carbohydrate + "g");
         tv_gram_of_protein.setText(current_protein + " / " + gram_of_protein + "g");
         tv_gram_of_fat.setText(current_fat + " / " + gram_of_fat + "g");
 
-        pb_total_calories.setProgress((int) ((current_calories*100.0)/recommended_calories));
+        pb_total_calories.setProgress((int) ((current_calories*100.0)/target_calory));
         pb_carbohydrate.setProgress((int) ((current_carbohydrate*100.0)/gram_of_carbohydrate));
         pb_protein.setProgress((int) ((current_protein*100.0)/gram_of_protein));
         pb_fat.setProgress((int) ((current_fat*100.0)/gram_of_fat));

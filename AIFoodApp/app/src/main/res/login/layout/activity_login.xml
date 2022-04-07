@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Plan Meal"
+        android:text="플랜밀"
         android:textColor="#000000"
         android:textSize="40sp"
         tools:layout_marginBottom="30dp"
@@ -132,7 +132,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center|fill_vertical"
-                android:text="이메일로 로그인 / 회원가입"
+                android:text="이메일로 시작"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>

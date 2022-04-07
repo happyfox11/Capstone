@@ -142,6 +142,8 @@ public class InitialSurveyActivity extends AppCompatActivity {
 
                 if(et_target_calory.getText().toString().equals("0"))
                     survey_result.put("target_calory", survey_result.get("recommended_calories"));
+                else
+                    survey_result.put("target_calory", Integer.valueOf(et_target_calory.getText().toString()));
 
                 Intent intent = new Intent(activity, MainActivity.class);
                 intent.putExtra("survey_result", (Serializable) survey_result);
@@ -180,7 +182,8 @@ public class InitialSurveyActivity extends AppCompatActivity {
                 layout_input_target_calory.setVisibility(View.VISIBLE);
             }else{
                 layout_input_target_calory.setVisibility(View.GONE);
-                survey_result.put("target_calories", 0);//권장칼로리를 기본으로 설정함
+                et_target_calory.setText("0");
+                survey_result.put("target_calory", 0);//권장칼로리를 기본으로 설정함
             }
         }
     };
