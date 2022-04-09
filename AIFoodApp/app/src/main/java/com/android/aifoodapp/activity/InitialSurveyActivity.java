@@ -25,8 +25,8 @@ public class InitialSurveyActivity extends AppCompatActivity {
     Activity activity;
     Button btn_survey_yes, btn_survey_no;
     CheckBox cb_target_exist;
-    LinearLayout layout_input_target_calory;
-    EditText et_age, et_height, et_weight, et_target_calory;
+    LinearLayout layout_input_target_calorie;
+    EditText et_age, et_height, et_weight, et_target_calorie;
     RadioGroup rg_activity_rate;
     RadioButton rb_lv1, rb_lv2, rb_lv3, rb_lv4;
     RadioGroup rg_gender;
@@ -51,11 +51,11 @@ public class InitialSurveyActivity extends AppCompatActivity {
         btn_survey_yes = findViewById(R.id.btn_survey_yes);
         btn_survey_no = findViewById(R.id.btn_survey_no);
         cb_target_exist= (CheckBox) findViewById(R.id.cb_target_exist);
-        layout_input_target_calory = findViewById(R.id.layout_input_target_calory);
+        layout_input_target_calorie = findViewById(R.id.layout_input_target_calorie);
         et_age = findViewById(R.id.et_age);
         et_height = findViewById(R.id.et_height);
         et_weight = findViewById(R.id.et_weight);
-        et_target_calory = findViewById(R.id.et_target_calory);
+        et_target_calorie = findViewById(R.id.et_target_calorie);
         rg_activity_rate = findViewById(R.id.rg_activity_rate);
         rb_lv1 = findViewById(R.id.rb_lv1);
         rb_lv2 = findViewById(R.id.rb_lv2);
@@ -67,7 +67,7 @@ public class InitialSurveyActivity extends AppCompatActivity {
     }
 
     private void setting(){
-        et_target_calory.setText("0");
+        et_target_calorie.setText("0");
     }
 
     private void addListener(){
@@ -134,16 +134,16 @@ public class InitialSurveyActivity extends AppCompatActivity {
                 survey_result.put("height", Integer.valueOf(et_height.getText().toString()));
             if(! et_weight.getText().toString().equals(""))
                 survey_result.put("weight", Integer.valueOf(et_weight.getText().toString()));
-            if(! et_target_calory.getText().toString().equals(""))
-                survey_result.put("target_calory", Integer.valueOf(et_target_calory.getText().toString()));
+            if(! et_target_calorie.getText().toString().equals(""))
+                survey_result.put("target_calorie", Integer.valueOf(et_target_calorie.getText().toString()));
 
             if(survey_result.size() == 6){
                 calc_recommended_calories();
 
-                if(et_target_calory.getText().toString().equals("0"))
-                    survey_result.put("target_calory", survey_result.get("recommended_calories"));
+                if(et_target_calorie.getText().toString().equals("0"))
+                    survey_result.put("target_calorie", survey_result.get("recommended_calories"));
                 else
-                    survey_result.put("target_calory", Integer.valueOf(et_target_calory.getText().toString()));
+                    survey_result.put("target_calorie", Integer.valueOf(et_target_calorie.getText().toString()));
 
                 Intent intent = new Intent(activity, MainActivity.class);
                 intent.putExtra("survey_result", (Serializable) survey_result);
@@ -179,11 +179,11 @@ public class InitialSurveyActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             if(cb_target_exist.isChecked()){
-                layout_input_target_calory.setVisibility(View.VISIBLE);
+                layout_input_target_calorie.setVisibility(View.VISIBLE);
             }else{
-                layout_input_target_calory.setVisibility(View.GONE);
-                et_target_calory.setText("0");
-                survey_result.put("target_calory", 0);//권장칼로리를 기본으로 설정함
+                layout_input_target_calorie.setVisibility(View.GONE);
+                et_target_calorie.setText("0");
+                survey_result.put("target_calorie", 0);//권장칼로리를 기본으로 설정함
             }
         }
     };

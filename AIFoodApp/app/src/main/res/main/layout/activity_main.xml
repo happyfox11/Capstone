@@ -82,6 +82,7 @@ tools:context=".activity.MainActivity">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
         android:background="@drawable/round_rect"
         android:backgroundTint="#5D8A29"
         android:orientation="vertical">
@@ -606,17 +607,24 @@ tools:context=".activity.MainActivity">
                 android:orientation="horizontal">
 
                 <LinearLayout
+                    android:id="@+id/ayout_pie_graph"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="7"
-                    android:background="#BAB9B9"
+                    android:background="@drawable/round_rect"
+                    android:backgroundTint="#DEEDCC"
                     android:orientation="horizontal">
 
-                    <TextView
+                    <!--<TextView
                         android:id="@+id/textView21"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="(임시)그래프 공간입니다." />
+                        android:text="(임시)그래프 공간입니다." />-->
+
+                    <com.github.mikephil.charting.charts.RadarChart
+                        android:id="@+id/radarchart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
                 </LinearLayout>
 
                 <ImageView

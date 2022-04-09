@@ -60,4 +60,7 @@ dependencies {
 
     //google login
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
+
+    //MPAndroidChart_ About radarchart's radar map
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }
