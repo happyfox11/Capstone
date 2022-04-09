@@ -59,9 +59,11 @@ public class LoginActivity extends AppCompatActivity {
         // URL 설정. 나중에 서버가면 수정 필요
         //String url = "http://       .cafe24.com/LoadPat        ";
         //String url = "https://naver.com";
-        //String url = "http://localhost:8080";
-        //String url = "http://localhost";
-        String url = "http://10.0.2.2:8080/json.do";
+
+        //핸드폰이용하는 경우 -- https://rateye.tistory.com/1082?category=1026651
+        String url = "http://192.168.219.102:8080/json.do"; //juhee
+        //avd를 이용하는 경우
+        //String url = "http://10.0.2.2:8080/json.do";
         
         
         // AsyncTask를 통해 HttpURLConnection 수행.
