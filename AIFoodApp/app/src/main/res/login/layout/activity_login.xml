@@ -137,6 +137,33 @@
                 android:textSize="16sp" />
         </LinearLayout>
 
+        <!-- test-->
+        <LinearLayout
+            android:id="@+id/btn_email22"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/round_rect_button"
+            android:backgroundTint="#9C27B0"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_login_with">
+
+            <TextView
+                android:id="@+id/textView19"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center|fill_vertical"
+                android:text="테스트"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+        <!-- test fin -->
+
     </LinearLayout>
+
 
 </LinearLayout>
