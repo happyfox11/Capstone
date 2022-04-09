@@ -1,19 +1,17 @@
 package com.android.aifoodapp.activity;
 
+import static android.graphics.Color.*;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -26,6 +24,16 @@ import android.widget.Toast;
 
 import com.android.aifoodapp.R;
 import com.bumptech.glide.Glide;
+
+import com.github.mikephil.charting.charts.RadarChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.RadarData;
+import com.github.mikephil.charting.data.RadarDataSet;
+import com.github.mikephil.charting.data.RadarEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -34,15 +42,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.kakao.sdk.user.UserApiClient;
 
-import java.security.MessageDigest;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
-import kotlin.jvm.functions.Function2;
 
 public class MainActivity<Unit> extends AppCompatActivity {
 
@@ -61,6 +67,12 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
     ImageView iv_user_setting_update;
     Button btn_meal1_detail;
+
+    RadarChart radarChart;
+
+    int percent_of_carbohydrate;
+    int percent_of_protein;
+    int percent_of_fat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,12 +183,15 @@ public class MainActivity<Unit> extends AppCompatActivity {
         tv_gram_of_fat = findViewById(R.id.tv_gram_of_fat);
         iv_user_setting_update = findViewById(R.id.iv_user_setting_update);
         btn_meal1_detail = findViewById(R.id.btn_meal1_detail);
+
+        radarChart = (RadarChart) findViewById(R.id.radarchart);
     }
 
     //설정
     private void setting(){
         setting_weekly_calendar();
         setting_nutri_progress();
+        setting_balance_graph();
     }
 
     //리스너 추가
@@ -309,7 +324,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
                 textView.setBackground(getDrawable(R.drawable.roundtv));
             }
             if(day_of_this_week.compareTo(Calendar.getInstance()) != 1)
-                textView.setTextColor(Color.WHITE);
+                textView.setTextColor(WHITE);
 
             col.addView(textView);
 
@@ -330,7 +345,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
         //DB에서 하루 총 섭취칼로리 받아오기
         int[] calories = new int[]{2100, 3800, 1200, 2200, 1000, 0, 0};
-        int target_calory = 2150;
+        int target_calorie = 2150;
 
         LinearLayout row_calories = new LinearLayout(activity);
         row_calories.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -349,12 +364,12 @@ public class MainActivity<Unit> extends AppCompatActivity {
             textView.setTypeface(null, Typeface.BOLD);
             textView.setTextSize(10);
 
-            if(target_calory - 50 <= calories[i] && calories[i] <= target_calory + 50)
-                textView.setTextColor(Color.parseColor("#7CFC00"));
-            else if(target_calory - 50 > calories[i])
-                textView.setTextColor(Color.parseColor("#FFFF00"));
+            if(target_calorie - 50 <= calories[i] && calories[i] <= target_calorie + 50)
+                textView.setTextColor(parseColor("#7CFC00"));
+            else if(target_calorie - 50 > calories[i])
+                textView.setTextColor(parseColor("#FFFF00"));
             else
-                textView.setTextColor(Color.parseColor("#FF4500"));
+                textView.setTextColor(parseColor("#FF4500"));
 
             col.addView(textView);
 
@@ -368,14 +383,14 @@ public class MainActivity<Unit> extends AppCompatActivity {
             회원가입 후, 초기 개인정보 화면에서 넘어온 경우, 값을 바로 받아서 적용한다.(InitialSurveyActivity에서 DB에 저장되어야 함)
             DB 생성 후 이하 getIntent()에서 받아오는 HashMap은 사용하지 않아도 됨
          */
-        int target_calory, gram_of_carbohydrate, gram_of_protein, gram_of_fat;
+        int target_calorie, gram_of_carbohydrate, gram_of_protein, gram_of_fat;
 
         Intent intent = getIntent();
         if(intent.getSerializableExtra("survey_result") != null){
             HashMap<String, Integer> survey_result = (HashMap<String, Integer>)intent.getSerializableExtra("survey_result");
             Log.i("HashMapTest", String.valueOf(survey_result));
 
-            target_calory = survey_result.get("target_calory");
+            target_calorie = survey_result.get("target_calorie");
             gram_of_carbohydrate = survey_result.get("gram_of_carbohydrate");
             gram_of_protein = survey_result.get("gram_of_protein");
             gram_of_fat = survey_result.get("gram_of_fat");
@@ -383,7 +398,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
         }else{
             //이미 회원인 상황에서 로그인을 한 경우에, DB에서 받아와야하는 값
-            target_calory = 2000;
+            target_calorie = 2000;
             gram_of_carbohydrate = 100;
             gram_of_protein = 100;
             gram_of_fat = 100;
@@ -394,14 +409,114 @@ public class MainActivity<Unit> extends AppCompatActivity {
         int current_protein = 30;
         int current_fat = 20;
 
-        tv_total_calories.setText(current_calories + " / " + target_calory + "kcal");
+        tv_total_calories.setText(current_calories + " / " + target_calorie + "kcal");
         tv_gram_of_carbohydrate.setText(current_carbohydrate + " / " + gram_of_carbohydrate + "g");
         tv_gram_of_protein.setText(current_protein + " / " + gram_of_protein + "g");
         tv_gram_of_fat.setText(current_fat + " / " + gram_of_fat + "g");
 
-        pb_total_calories.setProgress((int) ((current_calories*100.0)/target_calory));
-        pb_carbohydrate.setProgress((int) ((current_carbohydrate*100.0)/gram_of_carbohydrate));
-        pb_protein.setProgress((int) ((current_protein*100.0)/gram_of_protein));
-        pb_fat.setProgress((int) ((current_fat*100.0)/gram_of_fat));
+        int percent_of_total_calories = (int) ((current_calories*100.0)/target_calorie);
+        pb_total_calories.setProgress(percent_of_total_calories);
+
+        if(percent_of_total_calories > 100)
+            pb_total_calories.setProgressTintList(ColorStateList.valueOf(Color.RED));
+
+        percent_of_carbohydrate = (int) ((current_carbohydrate*100.0)/gram_of_carbohydrate);
+        percent_of_protein = (int) ((current_protein*100.0)/gram_of_protein);
+        percent_of_fat = (int) ((current_fat*100.0)/gram_of_fat);
+
+/*        //Test Data
+        percent_of_carbohydrate = 150;
+        percent_of_protein = 80;
+        percent_of_fat = 101;*/
+
+        pb_carbohydrate.setProgress(percent_of_carbohydrate);
+        pb_protein.setProgress(percent_of_protein);
+        pb_fat.setProgress(percent_of_fat);
+
+        if(percent_of_carbohydrate > 100)
+            pb_carbohydrate.setProgressTintList(ColorStateList.valueOf(Color.RED));
+        if(percent_of_protein > 100)
+            pb_protein.setProgressTintList(ColorStateList.valueOf(Color.RED));
+        if(percent_of_fat > 100)
+            pb_fat.setProgressTintList(ColorStateList.valueOf(Color.RED));
+
+    }
+
+    private void setting_balance_graph(){
+
+        /*밸런스 그래프 출력*/
+        ArrayList<RadarEntry> visitors = new ArrayList<>();
+
+        visitors.add(new RadarEntry(percent_of_carbohydrate));
+        visitors.add(new RadarEntry(percent_of_fat));
+        visitors.add(new RadarEntry(percent_of_protein));
+
+/*      // yAxis 최댓값을 100으로 지정한 경우, 영양소 섭취 퍼센트가 100% 초과 시 100이 되도록 지정
+        visitors.add(new RadarEntry((percent_of_carbohydrate > 100)? 100 : percent_of_carbohydrate));
+        visitors.add(new RadarEntry((percent_of_fat > 100)? 100 : percent_of_fat));
+        visitors.add(new RadarEntry((percent_of_protein > 100)? 100 : percent_of_protein));
+*/
+
+        // 영양소 섭취량이 권장량을 초과하는 경우, Red Color로 변경 (일반 BLUE)
+        int color_of_carbonhydrate = (percent_of_carbohydrate > 100)? RED : BLUE;
+        int color_of_fat = (percent_of_fat > 100)? RED : BLUE;
+        int color_of_protein = (percent_of_protein > 100)? RED : BLUE;
+
+        RadarDataSet radarDataSet = new RadarDataSet(visitors, "visitors");
+        radarDataSet.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return super.getFormattedValue((int)value);
+            }
+        });
+
+        radarDataSet.setHighlightLineWidth(2f);
+        radarDataSet.setColor(parseColor("#3A531C"));
+        radarDataSet.setLineWidth(2f);
+        radarDataSet.setValueTextSize(16f);
+        radarDataSet.setDrawFilled(true);
+        //radarDataSet.setFillColor(parseColor("#3A531C"));
+
+        //Log.i("check", percent_of_carbohydrate+","+percent_of_fat+","+percent_of_protein);
+        // 모든 영양소 섭취량이 권장량을 초과하는 경우, Red Color로 변경 (일반 Dark Green)
+        if(percent_of_carbohydrate>100 && percent_of_fat>100 && percent_of_protein > 100){
+            radarDataSet.setFillColor(RED);
+        }else{
+            radarDataSet.setFillColor(parseColor("#3A531C"));
+        }
+
+        RadarData radarData = new RadarData();
+        radarData.addDataSet(radarDataSet);
+        radarData.setValueTextColors(Arrays.asList(new Integer[]{color_of_carbonhydrate, color_of_fat, color_of_protein}));
+        //radarData.setValueTextSize(10f);
+
+        String[] labels = {"탄수화물","지방","단백질"};
+
+        XAxis xAxis = radarChart.getXAxis();
+        xAxis.setTextSize(13f);
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
+        xAxis.setTypeface(Typeface.createFromAsset(getAssets(), "cafe24ssurroundair.ttf"));
+        YAxis yAxis = radarChart.getYAxis();
+
+        yAxis.setAxisMinimum(0f);
+        //yAxis.setAxisMaximum(100f); // yAxis 최대값 지정 (100 초과 시, chart 영역 벗어남)
+        //yAxis.setLabelCount(5, true); // web 개수 강제 지정
+        yAxis.setDrawLabels(false); //yAxis 기준 값 표시
+
+        radarChart.setTouchEnabled(false);
+        // chart 영역 위치 조정
+        radarChart.setScaleX(1.4f);
+        radarChart.setScaleY(1.4f);
+        radarChart.setY(80f);
+
+        radarChart.getDescription().setEnabled(false);
+        radarChart.getLegend().setEnabled(false);
+
+        radarChart.setWebColorInner(parseColor("#3A531C"));
+        radarChart.setWebLineWidthInner(1f);
+        radarChart.setWebColor(parseColor("#3A531C"));
+
+        radarChart.setData(radarData);
+
     }
 }
