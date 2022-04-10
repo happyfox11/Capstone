@@ -6,7 +6,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -14,11 +16,28 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.aifoodapp.R;
+import com.android.aifoodapp.domain.user;
+import com.android.aifoodapp.interfaceh.RetrofitAPI;
+import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+
+import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class InitialSurveyActivity extends AppCompatActivity {
 
@@ -33,10 +52,44 @@ public class InitialSurveyActivity extends AppCompatActivity {
     RadioButton rb_man, rb_woman;
 
     HashMap<String, Integer> survey_result = new HashMap<>();
+    HashMap<String, Object> accounts = new HashMap<>();
+
+    //account 정보
+    String personName, personGivenName,personEmail,personId ;
+    Uri personPhoto ;
+
+    //test
+    TextView test;
+
+    GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*juhee modify*/
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        // Build a GoogleSignInClient with the options specified by gso.
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+        if (acct != null) {
+            personName = acct.getDisplayName();
+            personGivenName = acct.getGivenName();
+            personEmail = acct.getEmail();
+            personId = acct.getId();
+            personPhoto = acct.getPhotoUrl();
+
+            //user account = new user();
+            //user(String id, String nickname, char sex, int age, int height, int weight, int activity_index, int target_calories)
+        }
+
+
+        /*juhee modify--fin*/
+
 
         setContentView(R.layout.activity_initial_survey);
         initialize();
@@ -64,6 +117,9 @@ public class InitialSurveyActivity extends AppCompatActivity {
         rg_gender = findViewById(R.id.rg_gender);
         rb_man = findViewById(R.id.rb_man);
         rb_woman = findViewById(R.id.rb_woman);
+
+        //test
+        test = findViewById(R.id.testview2);
     }
 
     private void setting(){
@@ -145,10 +201,53 @@ public class InitialSurveyActivity extends AppCompatActivity {
                 else
                     survey_result.put("target_calorie", Integer.valueOf(et_target_calorie.getText().toString()));
 
+                char sex = (survey_result.get("gender")==1)?'M':'F';
+                user account = new user(personId,personName,sex,survey_result.get("age"),
+                        survey_result.get("height"),survey_result.get("weight"),survey_result.get("activity_rate"),survey_result.get("target_calorie"));
+                test.setText(personId);
+
+                accounts.put("id",account.getId());
+                accounts.put("nickname",account.getNickname());
+                accounts.put("sex",account.getSex());
+                accounts.put("age",account.getAge());
+                accounts.put("height",account.getHeight());
+                accounts.put("activity_index",account.getActivity_index());
+                accounts.put("target_calories",account.getTarget_calories());
+
+                Toast.makeText(activity, account.pringStirng(), Toast.LENGTH_LONG).show();
+
+                //핸드폰이용하는 경우 -- https://rateye.tistory.com/1082?category=1026651
+                String url = "http://192.168.219.102:8080/userSave.do/"; //juhee
+                //avd를 이용하는 경우
+                //String url = "http://10.0.2.2:8080/json.do";
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
+
+                RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+                retrofitAPI.postData(accounts).enqueue(new Callback<user>() {
+                    @Override
+                    public void onResponse(Call<user> call, Response<user> response) {
+                        if(response.isSuccessful()){
+                            user data = response.body();
+                            Log.d("TestTest","Post 성공");
+                            Log.d("TestTest",data.getNickname());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<user> call, Throwable t) {
+                        Log.d("TestError!!!!","Post 성공");
+                    }
+                });
+
+
                 Intent intent = new Intent(activity, MainActivity.class);
                 intent.putExtra("survey_result", (Serializable) survey_result);
                 startActivity(intent);
                 finish();
+
+
             }else{
                 //Toast.makeText(activity, "작성되지 않은 항목이 존재합니다!", Toast.LENGTH_SHORT).show();
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);

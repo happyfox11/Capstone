@@ -48,6 +48,7 @@
                 android:layout_weight="1"
                 android:background="#26264d" />
 
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -93,6 +94,36 @@
 
 
                 </LinearLayout>
+
+                <!-- TEst-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:gravity="center_vertical"
+                        android:text="■ Test(email)"
+                        android:textColor="#1E1E1E" />
+
+
+                    <TextView
+                        android:id="@+id/testview2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:ems="10"
+                        android:gravity="center"
+                        android:text = "Test"
+                        android:inputType="number" />
+
+
+                </LinearLayout>
+
+                <!--test Fin-->
 
                 <LinearLayout
                     android:layout_width="match_parent"
