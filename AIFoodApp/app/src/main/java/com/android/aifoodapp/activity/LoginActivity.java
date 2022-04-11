@@ -29,12 +29,19 @@ import java.security.MessageDigest;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function2;
 
+import android.content.ContentValues;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.widget.TextView;
+
 public class LoginActivity extends AppCompatActivity {
 
     Activity activity;
     LinearLayout  btn_google, btn_email;
     ImageView btn_kakao;
     static Context mContext;
+
+
     GoogleSignInClient mGoogleSignInClient;
     int RC_SIGN_IN = 0;
 
@@ -46,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         initialize();
         addListener();
         getKeyHash();
+
 
         Function2<OAuthToken, Throwable, Unit> callback = new Function2<OAuthToken, Throwable, Unit>() {
             @Override
@@ -80,6 +88,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
         /*주희 수정부분 구글 로그인*/
+        //TODO 회원 정보가 있으면 -> 메인으로 넘어가고 없으면 intent page로 넘어가서 정보를 입력 받아야 함
+        //안드로이드라 처음에 로그인 하고 그냥 안해도 되려나..
         btn_google.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,8 +132,12 @@ public class LoginActivity extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             // Signed in successfully, show authenticated UI.
-            Intent intent = new Intent(activity, MainActivity.class);
+            //servey 화면으로 넘어가는것
+            Intent intent = new Intent(activity, InitialSurveyActivity.class);
             startActivity(intent);
+            //main으로 넘어가는것
+            //Intent intent = new Intent(activity, MainActivity.class);
+            //startActivity(intent);
 
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
@@ -140,6 +154,8 @@ public class LoginActivity extends AppCompatActivity {
         btn_kakao = (ImageView) findViewById(R.id.btn_kakao);
         btn_google = findViewById(R.id.btn_google);
         btn_email = findViewById(R.id.btn_email);
+
+        //test = findViewById(R.id.textView19);
     }
 
     //리스너 생성
@@ -204,7 +220,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void getKeyHash() {
         try {
