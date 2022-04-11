@@ -16,9 +16,16 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.android.aifoodapp.R;
+import com.android.aifoodapp.item.MemberInfoItem;
+import com.android.aifoodapp.remote.RemoteService;
+import com.android.aifoodapp.remote.ServiceGenerator;
 
 import java.io.Serializable;
 import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class InitialSurveyActivity extends AppCompatActivity {
 
@@ -32,16 +39,19 @@ public class InitialSurveyActivity extends AppCompatActivity {
     RadioGroup rg_gender;
     RadioButton rb_man, rb_woman;
 
+    MemberInfoItem currentItem;
+
     HashMap<String, Integer> survey_result = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_initial_survey);
         initialize();
         setting();
         addListener();
+
+        currentItem=((MMyApp) getApplication()).getMemberItem();
 
     }
 
@@ -140,6 +150,7 @@ public class InitialSurveyActivity extends AppCompatActivity {
             if(survey_result.size() == 6){
                 calc_recommended_calories();
 
+
                 if(et_target_calorie.getText().toString().equals("0"))
                     survey_result.put("target_calorie", survey_result.get("recommended_calories"));
                 else
@@ -226,6 +237,46 @@ public class InitialSurveyActivity extends AppCompatActivity {
         }
     };
 
+    /* 사용자가 입력한 정보를 MemberInfoItem 객체에 저장해서 반환 */
+    private MemberInfoItem getMemberInfoItem(){
+        MemberInfoItem item=new MemberInfoItem();
+        char sex=(survey_result.get("gender")==1)?'M':'F';
 
+        item.sex=sex;
+        item.age=survey_result.get("age");
+        item.weight=survey_result.get("weight");
+        item.height=survey_result.get("height");
+        item.activity_index=survey_result.get("activity_rate");
+        item.target_calories=survey_result.get("target_calorie");
+
+        return item;
+    }
+
+    /* 입력 정보 저장 */
+    private void save(){
+        final MemberInfoItem newItem = getMemberInfoItem();
+
+        RemoteService remoteService= ServiceGenerator.createService(RemoteService.class);
+
+        Call<String> call=remoteService.insertMemberInfo(newItem);
+        call.enqueue(new Callback<String>(){
+            @Override
+            public void onResponse(Call<String> call, Response<String> response){
+                if(response.isSuccessful()){
+                    String seq=response.body();
+                    try{
+                        currentItem.seq=Integer.parseInt(seq);
+                        if(currentItem.seq=0){
+                            MyToast.s(context,R.string.member_insert_fail_message);
+                            return;
+                        }
+                    } catch(Exception e){
+                        MyToast.s(context,R.string.member_inster_fail_message);
+                        return;
+                    }
+                }
+            }
+        })
+    }
 
 }
