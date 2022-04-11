@@ -17,7 +17,7 @@ public interface RetrofitAPI {
     Call<List<user>> getData(@Query("userID")String id);
 
     @FormUrlEncoded
-    @POST("/posts")
+    @POST("/userSave.do")
     Call<user> postData(@FieldMap HashMap<String, Object>param);
 
 }

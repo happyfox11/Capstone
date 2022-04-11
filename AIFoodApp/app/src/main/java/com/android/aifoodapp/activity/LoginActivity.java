@@ -40,7 +40,6 @@ public class LoginActivity extends AppCompatActivity {
     LinearLayout  btn_google, btn_email;
     ImageView btn_kakao;
     static Context mContext;
-    TextView test;
 
 
     GoogleSignInClient mGoogleSignInClient;
@@ -54,24 +53,6 @@ public class LoginActivity extends AppCompatActivity {
         initialize();
         addListener();
         getKeyHash();
-
-        //juhee
-        // URL 설정. 나중에 서버가면 수정 필요
-        //String url = "http://       .cafe24.com/LoadPat        ";
-        //String url = "https://naver.com";
-
-        //핸드폰이용하는 경우 -- https://rateye.tistory.com/1082?category=1026651
-        String url = "http://192.168.219.102:8080/userSave.do"; //juhee
-        //avd를 이용하는 경우
-        //String url = "http://10.0.2.2:8080/json.do";
-        
-        
-        // AsyncTask를 통해 HttpURLConnection 수행.
-        //LoginActivity.NetworkTask networkTask = new LoginActivity.NetworkTask(url, null);
-        LoginActivity.NetworkTask networkTask = new LoginActivity.NetworkTask(url, null);
-
-        networkTask.execute();
-
 
 
         Function2<OAuthToken, Throwable, Unit> callback = new Function2<OAuthToken, Throwable, Unit>() {
@@ -174,7 +155,7 @@ public class LoginActivity extends AppCompatActivity {
         btn_google = findViewById(R.id.btn_google);
         btn_email = findViewById(R.id.btn_email);
 
-        test = findViewById(R.id.textView19);
+        //test = findViewById(R.id.textView19);
     }
 
     //리스너 생성
@@ -239,42 +220,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
-    /*juhee*/
-    public class NetworkTask extends AsyncTask<Void, Void, String> {
-
-        private String url;
-        private ContentValues values;
-
-        public NetworkTask(String url, ContentValues values) {
-
-            this.url = url;
-            this.values = values;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-
-            String result; // 요청 결과를 저장할 변수.
-            RequestHttpURLConnection requestHttpURLConnection = new RequestHttpURLConnection();
-            result = requestHttpURLConnection.request(url, values); // 해당 URL로 부터 결과물을 얻어온다.
-
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-
-            //doInBackground()로 부터 리턴된 값이 onPostExecute()의 매개변수로 넘어오므로 s를 출력한다.
-            test.setText(s);
-        }
-    }
-
-    /*juhee -- fin*/
-
-
-
 
     private void getKeyHash() {
         try {

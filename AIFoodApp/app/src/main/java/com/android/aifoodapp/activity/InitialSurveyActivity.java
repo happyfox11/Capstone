@@ -32,6 +32,7 @@ import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -211,20 +212,38 @@ public class InitialSurveyActivity extends AppCompatActivity {
                 accounts.put("sex",account.getSex());
                 accounts.put("age",account.getAge());
                 accounts.put("height",account.getHeight());
+                accounts.put("weight",account.getWeight());
                 accounts.put("activity_index",account.getActivity_index());
                 accounts.put("target_calories",account.getTarget_calories());
 
                 Toast.makeText(activity, account.pringStirng(), Toast.LENGTH_LONG).show();
 
                 //핸드폰이용하는 경우 -- https://rateye.tistory.com/1082?category=1026651
-                String url = "http://192.168.219.102:8080/userSave.do/"; //juhee
+                //String url = "http://192.168.219.102:8080/userSave.do/"; //juhee
                 //avd를 이용하는 경우
-                //String url = "http://10.0.2.2:8080/json.do";
+                String url = "http://10.0.2.2:8080";
 
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
 
                 RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+/*
+                retrofitAPI.getData(accounts).enqueue(new Callback<user>() {
+                    @Override
+                    public void onResponse(Call<user> call, Response<user> response) {
+                        if(response.isSuccessful()){
+                            Log.d("TestTest","Post 성공");
+                            //Log.d("TestTest",data.getNickname());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<user> call, Throwable t) {
+                        Log.d("TestError!!!!","Post 성공");
+                    }
+                });
+*/
+
                 retrofitAPI.postData(accounts).enqueue(new Callback<user>() {
                     @Override
                     public void onResponse(Call<user> call, Response<user> response) {
