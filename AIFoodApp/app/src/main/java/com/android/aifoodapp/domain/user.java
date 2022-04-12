@@ -1,8 +1,11 @@
 package com.android.aifoodapp.domain;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class user {
+public class user implements Parcelable {
     @SerializedName("id")
     private String id;
     @SerializedName("nickname")
@@ -37,6 +40,18 @@ public class user {
 
     }
 
+
+    public static final Creator<user> CREATOR = new Creator<user>() {
+        @Override
+        public user createFromParcel(Parcel in) {
+            return new user(in);
+        }
+
+        @Override
+        public user[] newArray(int size) {
+            return new user[size];
+        }
+    };
 
     public String getId(){
         return id;
@@ -110,7 +125,46 @@ public class user {
         return  "user"+id+"  "+nickname+"   "+sex + "   " + getActivity_index();
     }
 
+    //TODO 해당부분에서 자잘한 에러 나는듯 확인 필요
+    protected user(Parcel in){
+        id=in.readString();
+        nickname=in.readString();
+        sex = (in.readString()!=null)?in.readString().charAt(0):'N';
+        age=in.readInt();
+        height= in.readInt();
+        weight=in.readInt();
+        activity_index= in.readInt();
+        target_calories=in.readInt();
+        //profile
+    }
 
+    public static final Creator<user> USER_CREATOR = new Creator<user>() {
+        @Override
+        public user createFromParcel(Parcel parcel) {
+            return new user(parcel);
+        }
 
+        @Override
+        public user[] newArray(int size) {
+            return new user[size];
+        }
+    };
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(nickname);
+        parcel.writeInt((int) sex);
+        parcel.writeInt(age);
+        parcel.writeInt(height);
+        parcel.writeInt(weight);
+        parcel.writeInt(activity_index);
+        parcel.writeInt(target_calories);
+        //profile
+    }
 }

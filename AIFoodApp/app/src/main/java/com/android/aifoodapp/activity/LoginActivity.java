@@ -1,5 +1,7 @@
 package com.android.aifoodapp.activity;
 
+import static com.android.aifoodapp.interfaceh.baseURL.url;
+
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Context;
@@ -14,6 +16,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.android.aifoodapp.R;
+import com.android.aifoodapp.domain.user;
+import com.android.aifoodapp.interfaceh.NullOnEmptyConverterFactory;
+import com.android.aifoodapp.interfaceh.RetrofitAPI;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -25,14 +30,21 @@ import com.kakao.sdk.user.UserApiClient;
 import com.kakao.sdk.user.model.User;
 
 import java.security.MessageDigest;
+import java.util.List;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function2;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import android.content.ContentValues;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.TextView;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -40,7 +52,6 @@ public class LoginActivity extends AppCompatActivity {
     LinearLayout  btn_google, btn_email;
     ImageView btn_kakao;
     static Context mContext;
-
 
     GoogleSignInClient mGoogleSignInClient;
     int RC_SIGN_IN = 0;
@@ -132,12 +143,42 @@ public class LoginActivity extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             // Signed in successfully, show authenticated UI.
-            //servey 화면으로 넘어가는것
-            Intent intent = new Intent(activity, InitialSurveyActivity.class);
-            startActivity(intent);
-            //main으로 넘어가는것
-            //Intent intent = new Intent(activity, MainActivity.class);
-            //startActivity(intent);
+
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(url).addConverterFactory(new NullOnEmptyConverterFactory())
+                    .addConverterFactory(GsonConverterFactory.create()).build();
+
+            RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+            retrofitAPI.getUser(account.getId()).enqueue(new Callback<user>() {
+                @Override
+                public void onResponse(Call<user> call, Response<user> response) {
+                    user user = response.body();
+                    if(user != null){ // 토큰잉 db에 있는 경우
+                        //구글 로그인 연동 종료
+
+                        //main으로 넘어가는경우
+                        Intent intent = new Intent(activity, MainActivity.class);
+                        intent.putExtra("user",user);
+                        startActivity(intent);
+                    }
+                    else{ // 회원가입
+                        //servey 화면으로 넘어가는것 --> intent.putExtra로 구글 정보를 넘길지 아니면 현재 로그인 정보를 확인할지 선택
+                        Intent intent = new Intent(activity, InitialSurveyActivity.class);
+                        startActivity(intent);
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<user> call, Throwable t) {
+                    Log.d("dj",call.toString());
+                    Log.d("t",t.getMessage());
+                    Log.d("TestError!!!!","로그인 실패");
+                }
+            });
+
 
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
@@ -232,8 +273,8 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("Hash key", key);
             }
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             Log.e("name not found", e.toString());
         }
     }
+
 }

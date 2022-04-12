@@ -1,6 +1,7 @@
 package com.android.aifoodapp.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.aifoodapp.R;
+import com.android.aifoodapp.domain.user;
 
 public class UserSettingActivity extends AppCompatActivity {
 
@@ -22,15 +24,31 @@ public class UserSettingActivity extends AppCompatActivity {
     TextView tv_kg;
     TextView tv_bmi;
 
+    com.android.aifoodapp.domain.user user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usersetting);
         initialize();
 
-
+        Intent intent = getIntent();
+        user = intent.getParcelableExtra("user");
+        settingText();
     }
 
+    private void settingText(){
+        //iv_profile
+        tv_userName.setText(user.getNickname());
+        tv_userIdInfo.setText(user.getId());
+        //tv_modifyInfo
+        //tv_modifyPwd
+       // tv_age.setText(user.getAge());
+        //tv_height.setText(user.getHeight());
+        //tv_kg.setText(user.getWeight());
+        //tv_bmi
+
+    }
 
     //변수 초기화
     private void initialize(){
