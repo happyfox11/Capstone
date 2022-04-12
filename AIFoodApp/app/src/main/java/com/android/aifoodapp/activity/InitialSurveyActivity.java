@@ -1,5 +1,7 @@
 package com.android.aifoodapp.activity;
 
+import static com.android.aifoodapp.interfaceh.baseURL.url;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -59,8 +61,6 @@ public class InitialSurveyActivity extends AppCompatActivity {
     String personName, personGivenName,personEmail,personId ;
     Uri personPhoto ;
 
-    //test
-    TextView test;
 
     GoogleSignInClient mGoogleSignInClient;
 
@@ -119,8 +119,6 @@ public class InitialSurveyActivity extends AppCompatActivity {
         rb_man = findViewById(R.id.rb_man);
         rb_woman = findViewById(R.id.rb_woman);
 
-        //test
-        test = findViewById(R.id.testview2);
     }
 
     private void setting(){
@@ -205,7 +203,6 @@ public class InitialSurveyActivity extends AppCompatActivity {
                 char sex = (survey_result.get("gender")==1)?'M':'F';
                 user account = new user(personId,personName,sex,survey_result.get("age"),
                         survey_result.get("height"),survey_result.get("weight"),survey_result.get("activity_rate"),survey_result.get("target_calorie"));
-                test.setText(personId);
 
                 accounts.put("id",account.getId());
                 accounts.put("nickname",account.getNickname());
@@ -216,12 +213,12 @@ public class InitialSurveyActivity extends AppCompatActivity {
                 accounts.put("activity_index",account.getActivity_index());
                 accounts.put("target_calories",account.getTarget_calories());
 
-                Toast.makeText(activity, account.pringStirng(), Toast.LENGTH_LONG).show();
+                ///Toast.makeText(activity, account.pringStirng(), Toast.LENGTH_LONG).show();
 
                 //핸드폰이용하는 경우 -- https://rateye.tistory.com/1082?category=1026651
-                //String url = "http://192.168.219.102:8080/userSave.do/"; //juhee
+                //String url = "http://192.168.219.103:8080"; //juhee
                 //avd를 이용하는 경우
-                String url = "http://10.0.2.2:8080";
+                //String url = "http://10.0.2.2:8080";
 
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
@@ -244,19 +241,18 @@ public class InitialSurveyActivity extends AppCompatActivity {
                 });
 */
 
-                retrofitAPI.postData(accounts).enqueue(new Callback<user>() {
+                retrofitAPI.postSaveUser(accounts).enqueue(new Callback<user>() {
                     @Override
                     public void onResponse(Call<user> call, Response<user> response) {
                         if(response.isSuccessful()){
                             user data = response.body();
                             Log.d("TestTest","Post 성공");
-                            Log.d("TestTest",data.getNickname());
                         }
                     }
 
                     @Override
                     public void onFailure(Call<user> call, Throwable t) {
-                        Log.d("TestError!!!!","Post 성공");
+                        Log.d("TestError!!!!","Post 실패 ");
                     }
                 });
 

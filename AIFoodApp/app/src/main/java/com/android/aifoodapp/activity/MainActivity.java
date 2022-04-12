@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.aifoodapp.R;
+import com.android.aifoodapp.domain.user;
 import com.bumptech.glide.Glide;
 
 import com.github.mikephil.charting.charts.RadarChart;
@@ -54,8 +55,8 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
     Activity activity;
     Button btn_logout;
-    TextView tv_userId,tv_userName,tv_userEmail;
-    ImageView tv_userPhoto;
+    TextView tv_userId;
+    //ImageView tv_userPhoto;
 
     GoogleSignInClient mGoogleSignInClient;
 
@@ -74,6 +75,8 @@ public class MainActivity<Unit> extends AppCompatActivity {
     int percent_of_protein;
     int percent_of_fat;
 
+    user user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +87,8 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
         Intent intent = getIntent();
         String userId=intent.getStringExtra("kakao_userNickName");
+        //아래 user 넘겨 받는 코드
+        user = intent.getParcelableExtra("user");
 
         tv_userId.setText(userId);
         btn_logout.setOnClickListener(new View.OnClickListener() {
@@ -114,6 +119,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
+        //로그아웃 코드
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,8 +132,10 @@ public class MainActivity<Unit> extends AppCompatActivity {
         });
 
 
-        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+        /*사진 이메일등 구글 정보 가져오는*/
+        /*GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
         if (acct != null) {
+
             String personName = acct.getDisplayName();
             String personGivenName = acct.getGivenName();
             String personEmail = acct.getEmail();
@@ -136,20 +144,23 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
             tv_userId.setText(personId);
             tv_userName.setText(personName);
-            tv_userEmail.setText(personEmail);
+            //tv_userEmail.setText(personEmail);
             //Glide 사용 가능
             //https://bumptech.github.io/glide/
-            Glide.with(this).load(String.valueOf(personPhoto)).into(tv_userPhoto);
+            //Glide.with(this).load(String.valueOf(personPhoto)).into(tv_userPhoto);
             //tv_userPhoto.setImageIcon(Icon.createWithContentUri(personPhoto));
 
-        }
+        }*/
         /*juhee modify--fin*/
 
+        //구글 로그인 닉네임
+        tv_userId.setText(user.getNickname());
 
     }
+
+    //Todo 구글 로그인을 계속 연동해서 사용할지 아니면 토큰만 써서 할지 결정
     private void signOut() {
-        mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+        mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Toast.makeText(MainActivity.this,"Signed Out ok ",Toast.LENGTH_LONG).show();
@@ -163,10 +174,6 @@ public class MainActivity<Unit> extends AppCompatActivity {
         activity = this;
         btn_logout = findViewById(R.id.btn_logout);
         tv_userId=findViewById(R.id.tv_userId);
-
-        tv_userPhoto=findViewById(R.id.tv_userPhoto);
-        tv_userEmail=findViewById(R.id.tv_userEmail);
-        tv_userName=findViewById(R.id.tv_userName);
 
         layout_date = findViewById(R.id.layout_date);
         tv_month = findViewById(R.id.tv_month);
@@ -205,6 +212,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(activity, UserSettingActivity.class);
+            intent.putExtra("user",user);
             startActivity(intent);
         }
     };

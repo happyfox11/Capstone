@@ -13,11 +13,11 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface RetrofitAPI {
-    @GET("/posts")
-    Call<List<user>> getData(@Query("userID")String id);
+    @GET("/checkUserId.do")
+    Call<user> getUser(@Query("id") String id);
 
     @FormUrlEncoded
     @POST("/userSave.do")
-    Call<user> postData(@FieldMap HashMap<String, Object>param);
+    Call<user> postSaveUser(@FieldMap HashMap<String, Object>param);
 
 }
