@@ -9,20 +9,29 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.aifoodapp.R;
+import com.android.aifoodapp.RecyclerView.FoodInfo;
+import com.android.aifoodapp.RecyclerView.FoodItem;
+import com.android.aifoodapp.RecyclerView.myRecyclerViewAdapter;
+import com.android.aifoodapp.RecyclerView.myRecyclerViewAdapter2;
+
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FoodAnalysisActivity extends AppCompatActivity {
 
     Activity activity;
-    ImageView iv_foodAnalysis,iv_minusBtn,iv_plusBtn,cl_foodInfo,
-            iv_scrollUpBtn,iv_scrollDownBtn,iv_arrowBtn,iv_infoBtn;
-    TextView tv_foodName,fl_foodName,tv_calories,cl_foodName,cl_caloriesInfo,cl_intake;
-    CircleImageView fl_foodInfo;
 
-    Button  modifyBtn;
+    ArrayList<FoodItem> arrayFoodList;
+    LinearLayoutManager linearLayoutManager, linearLayoutManager2;
+    com.android.aifoodapp.RecyclerView.myRecyclerViewAdapter myRecyclerViewAdapter;
+    myRecyclerViewAdapter2 myRecyclerViewAdapter2;
+    RecyclerView recyclerView ,recyclerView2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,35 +40,52 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         initialize();
 
 
-        iv_arrowBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),FoodDetailInfoActivity.class);
-                startActivity(intent);
-            }
-        });
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        linearLayoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false); //가로 방향으로 저장
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        arrayFoodList = new ArrayList<>();
+
+        /*for( int i= 1; i<=4;i++){
+            arrayList.add(new FoodLIst(R.drawable.ic_launcher_background,R.drawable.minusbtn,"음식"+i));
+        }*/
+
+        //어댑터 연결
+        myRecyclerViewAdapter = new myRecyclerViewAdapter(arrayFoodList);
+        recyclerView.setAdapter(myRecyclerViewAdapter);
+
+        //테스트
+        for ( int i=1; i<=4;i++) {
+            myRecyclerViewAdapter.addItem(new FoodItem(R.drawable.ic_launcher_background, R.drawable.minusbtn, "음식" + i));
+
+        }
+
+
+        //2번째 어댑터
+        recyclerView2 = (RecyclerView) findViewById(R.id.recyclerView2);
+        linearLayoutManager2 = new LinearLayoutManager(this);
+        recyclerView2.setLayoutManager(linearLayoutManager2);
+        myRecyclerViewAdapter2 = new myRecyclerViewAdapter2();
+
+
+
+        //테스트
+        for( int i=1; i<=4; i++){
+            myRecyclerViewAdapter2.addItem(new FoodInfo(R.drawable.ic_launcher_background,"음식"+i,"칼로리","0.5","음식"+i));
+
+        }
+
+        recyclerView2.setAdapter(myRecyclerViewAdapter2);
+
+
+
 
     }
 
     //변수 초기화
     private void initialize(){
         activity = this;
-        iv_foodAnalysis = findViewById(R.id.iv_foodAnalysis);
-        tv_foodName = findViewById(R.id.tv_foodName);
-        fl_foodInfo = findViewById(R.id.fl_foodInfo);
-        iv_minusBtn = findViewById(R.id.iv_minusBtn);
-        fl_foodName = findViewById(R.id.fl_foodName);
-        iv_plusBtn = findViewById(R.id.iv_plusBtn);
-        tv_calories = findViewById(R.id.tv_calories);
-        cl_foodInfo = findViewById(R.id.cl_foodInfo);
-        cl_foodName = findViewById(R.id.cl_foodName);
-        cl_caloriesInfo = findViewById(R.id.cl_caloriesInfo);
-        cl_intake = findViewById(R.id.cl_intake);
-        iv_scrollUpBtn = findViewById(R.id.iv_scorllUpBtn);
-        iv_scrollDownBtn = findViewById(R.id.iv_scorllDownBtn);
-        iv_arrowBtn = findViewById(R.id.iv_arrowBtn);
-        iv_infoBtn = findViewById(R.id.iv_infoBtn);
-        modifyBtn = findViewById(R.id.modifyBtn);
+
 
     }
 }

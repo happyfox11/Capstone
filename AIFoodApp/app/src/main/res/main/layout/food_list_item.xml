@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:padding="20dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/fl_foodInfo"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_background"
+            app:civ_border_color="#fff"
+
+            app:civ_border_overlay="true"
+            app:civ_border_width="3dp" />
+
+        <ImageView
+            android:id="@+id/iv_minusBtn"
+            android:layout_width="21dp"
+            android:layout_height="29dp"
+            android:src="@drawable/minusbtn" />
+
+        <TextView
+            android:id="@+id/fl_foodName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:text="음식 이름 표시" />
+    </FrameLayout>
+
+
+</LinearLayout>

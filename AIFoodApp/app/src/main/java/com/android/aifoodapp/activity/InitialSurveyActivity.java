@@ -220,6 +220,7 @@ public class InitialSurveyActivity extends AppCompatActivity {
                 //avd를 이용하는 경우
                 //String url = "http://10.0.2.2:8080";
 
+
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
 
