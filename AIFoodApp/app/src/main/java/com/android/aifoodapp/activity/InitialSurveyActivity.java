@@ -87,10 +87,15 @@ public class InitialSurveyActivity extends AppCompatActivity {
             //user account = new user();
             //user(String id, String nickname, char sex, int age, int height, int weight, int activity_index, int target_calories)
         }
-
-
         /*juhee modify--fin*/
 
+        //카카오 로그인 성공 후, activity 변경하면서 같이 값을 받아 온다.
+        if(getIntent().getStringExtra("kakao_userId")!=null){
+            Intent intent = getIntent();
+            personId=intent.getStringExtra("kakao_userId");
+            personName=intent.getStringExtra("kakao_userNickName");
+            personPhoto=intent.getParcelableExtra("kakao_img");
+        }
 
         setContentView(R.layout.activity_initial_survey);
         initialize();
@@ -214,12 +219,6 @@ public class InitialSurveyActivity extends AppCompatActivity {
                 accounts.put("target_calories",account.getTarget_calories());
 
                 ///Toast.makeText(activity, account.pringStirng(), Toast.LENGTH_LONG).show();
-
-                //핸드폰이용하는 경우 -- https://rateye.tistory.com/1082?category=1026651
-                //String url = "http://192.168.219.103:8080"; //juhee
-                //avd를 이용하는 경우
-                //String url = "http://10.0.2.2:8080";
-
 
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
