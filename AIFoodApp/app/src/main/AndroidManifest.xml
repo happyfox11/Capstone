@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AIFoodApp"
         android:usesCleartextTraffic="true">
-    <!-- http 접근을 허용 -->
+        <!-- http 접근을 허용 -->
 
         <activity
             android:name=".activity.InitialSurveyActivity"
@@ -46,6 +46,9 @@
                     android:scheme="kakaoee925720d00642f3e5c08066b8883de5" />
             </intent-filter>
         </activity>
+        <!--        <meta-data-->
+        <!--            android:name="com.kakao.sdk.AppKey"-->
+        <!--            android:value="ee925720d00642f3e5c08066b8883de5" />-->
         <activity android:name=".activity.UserSettingActivity"
             android:exported="false"/>
         <activity android:name=".activity.FoodAnalysisActivity"

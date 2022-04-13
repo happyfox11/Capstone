@@ -125,11 +125,11 @@ public class user implements Parcelable {
         return  "user"+id+"  "+nickname+"   "+sex + "   " + getActivity_index();
     }
 
-    //TODO 해당부분에서 자잘한 에러 나는듯 확인 필요
     protected user(Parcel in){
         id=in.readString();
         nickname=in.readString();
-        sex = (in.readString()!=null)?in.readString().charAt(0):'N';
+        //sex = (in.readString()!=null)?in.readString().charAt(0):'N';
+        sex=(char)in.readInt();
         age=in.readInt();
         height= in.readInt();
         weight=in.readInt();

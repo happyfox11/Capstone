@@ -100,11 +100,29 @@
             android:text="내 신체 정보" />
 
         <TextView
-            android:id="@+id/textView10"
+            android:id="@+id/textView17"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border"
+            android:layout_weight="0.1"
+            android:text="성별" />
+
+        <TextView
+            android:id="@+id/tv_sex"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/border"
             android:layout_weight="1"
+            android:textAlignment="center"
+            android:textSize="17sp"
+            android:text="성별 표시" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="match_parent"
+            android:layout_height="15dp"
+            android:layout_weight="0.1"
+            android:background="@drawable/border"
             android:text="나이" />
 
         <TextView
@@ -113,6 +131,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/border"
             android:layout_weight="1"
+            android:textAlignment="center"
+            android:textSize="17sp"
             android:text="나이 표시" />
 
         <TextView
@@ -120,7 +140,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/border"
-            android:layout_weight="1"
+            android:layout_weight="0.1"
             android:text="키" />
 
         <TextView
@@ -129,6 +149,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/border"
             android:layout_weight="1"
+            android:textAlignment="center"
+            android:textSize="17sp"
             android:text="키표시" />
 
         <TextView
@@ -136,7 +158,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/border"
-            android:layout_weight="1"
+            android:layout_weight="0.1"
             android:text="몸무게" />
 
         <TextView
@@ -145,6 +167,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/border"
             android:layout_weight="1"
+            android:textAlignment="center"
+            android:textSize="17sp"
             android:text="몸무게 표시" />
 
         <TextView
@@ -152,7 +176,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/border"
-            android:layout_weight="1"
+            android:layout_weight="0.1"
             android:text="BMI" />
 
         <TextView
@@ -161,7 +185,28 @@
             android:layout_height="wrap_content"
             android:background="@drawable/border"
             android:layout_weight="1"
+            android:textAlignment="center"
+            android:textSize="17sp"
             android:text="BMI 표시" />
+        <!--        목표칼로기가 없다면, BMI값 계산해서 기입하게 된다-->
+
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border"
+            android:layout_weight="0.1"
+            android:text="활동량" />
+
+        <TextView
+            android:id="@+id/tv_activity_rate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textSize="17sp"
+            android:text="활동량 표시" />
 
     </LinearLayout>
 

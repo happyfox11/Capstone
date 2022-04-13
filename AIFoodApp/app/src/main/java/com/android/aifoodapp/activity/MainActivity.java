@@ -86,51 +86,55 @@ public class MainActivity<Unit> extends AppCompatActivity {
         addListener();
 
         Intent intent = getIntent();
-        String userId=intent.getStringExtra("kakao_userNickName");
-        //아래 user 넘겨 받는 코드
         user = intent.getParcelableExtra("user");
+        String flag=intent.getStringExtra("flag"); //현재 계정이 구글인지 카카오인지
 
-        tv_userId.setText(userId);
-        btn_logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                UserApiClient.getInstance().logout((throwable) -> {
-                    if (throwable != null) {
-                        Log.e("[카카오] 로그아웃", "실패", throwable);
-                    }
-                    else {
-                        Log.i("[카카오] 로그아웃", "성공");
-                        ((LoginActivity)LoginActivity.mContext).updateKakaoLoginUi();
-                    }
-                    return null;
-                });
+        if(flag.equals("kakao")){
+            btn_logout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UserApiClient.getInstance().logout((throwable) -> {
+                        if (throwable != null) {
+                            Toast.makeText(getApplicationContext(),"카카오 로그아웃 실패", Toast.LENGTH_SHORT);
+                            Log.e("[카카오] 로그아웃", "실패", throwable);
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(),"카카오 로그아웃", Toast.LENGTH_SHORT);
+                            Log.i("[카카오] 로그아웃", "성공");
+                            ((LoginActivity)LoginActivity.mContext).updateKakaoLoginUi();
+                        }
+                        return null;
+                    });
 
-                Intent backIntent = new Intent(getApplicationContext(), LoginActivity.class); // 로그인 화면으로 이동
-                startActivity(backIntent);
-                finish();
+                    //Intent backIntent = new Intent(getApplicationContext(), LoginActivity.class); // 로그인 화면으로 이동
+                    Intent backIntent = new Intent(activity, LoginActivity.class); // 로그인 화면으로 이동
+                    startActivity(backIntent);
+                    finish();
 
-            }
-        });
-        /*juhee modify*/
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        // Build a GoogleSignInClient with the options specified by gso.
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-
-        //로그아웃 코드
-        btn_logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.btn_logout:
-                        signOut();
-                        break;
                 }
-            }
-        });
+            });
+        }
+        else if(flag.equals("google")){
+            /*juhee modify*/
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .build();
+            // Build a GoogleSignInClient with the options specified by gso.
+            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
+
+            //로그아웃 코드
+            btn_logout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    switch (v.getId()) {
+                        case R.id.btn_logout:
+                            signOut();
+                            break;
+                    }
+                }
+            });
+        }
 
         /*사진 이메일등 구글 정보 가져오는*/
         /*GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
@@ -153,7 +157,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         }*/
         /*juhee modify--fin*/
 
-        //구글 로그인 닉네임
+        //로그인 닉네임
         tv_userId.setText(user.getNickname());
 
     }
@@ -161,12 +165,12 @@ public class MainActivity<Unit> extends AppCompatActivity {
     //Todo 구글 로그인을 계속 연동해서 사용할지 아니면 토큰만 써서 할지 결정
     private void signOut() {
         mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(MainActivity.this,"Signed Out ok ",Toast.LENGTH_LONG).show();
-                        finish();
-                    }
-                });
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(MainActivity.this,"Signed Out ok ",Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
     }
 
     //변수 초기화

@@ -23,6 +23,7 @@ public class UserSettingActivity extends AppCompatActivity {
     TextView tv_height;
     TextView tv_kg;
     TextView tv_bmi;
+    TextView tv_sex;
 
     com.android.aifoodapp.domain.user user;
 
@@ -41,12 +42,13 @@ public class UserSettingActivity extends AppCompatActivity {
         //iv_profile
         tv_userName.setText(user.getNickname());
         tv_userIdInfo.setText(user.getId());
+        tv_sex.setText(String.valueOf(user.getSex()));
         //tv_modifyInfo
         //tv_modifyPwd
-       // tv_age.setText(user.getAge());
-        //tv_height.setText(user.getHeight());
-        //tv_kg.setText(user.getWeight());
-        //tv_bmi
+        tv_age.setText(String.valueOf(user.getAge()));
+        tv_height.setText(String.valueOf(user.getHeight()));
+        tv_kg.setText(String.valueOf(user.getWeight()));
+        tv_bmi.setText(String.valueOf(user.getTarget_calories()));
 
     }
 
@@ -62,6 +64,7 @@ public class UserSettingActivity extends AppCompatActivity {
         tv_height = findViewById(R.id.tv_height);
         tv_kg = findViewById(R.id.tv_kg);
         tv_bmi = findViewById(R.id.tv_bmi);
+        tv_sex=findViewById(R.id.tv_sex);
 
 
     }

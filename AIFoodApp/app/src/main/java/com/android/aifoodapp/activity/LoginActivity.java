@@ -44,6 +44,7 @@ import android.content.ContentValues;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -63,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         initialize();
         addListener();
-        getKeyHash();
+        //getKeyHash();
 
 
         Function2<OAuthToken, Throwable, Unit> callback = new Function2<OAuthToken, Throwable, Unit>() {
@@ -71,11 +72,12 @@ public class LoginActivity extends AppCompatActivity {
             public Unit invoke(OAuthToken oAuthToken, Throwable throwable) {
                 if(oAuthToken != null) {
                     //로그인이 성공 (토큰 전달 완료)
+                    updateKakaoLoginUi();
                 }
                 if( throwable != null) {
                     //로그인 실패
                 }
-                updateKakaoLoginUi();
+                //updateKakaoLoginUi();
                 return null;
             }
         };
@@ -161,11 +163,13 @@ public class LoginActivity extends AppCompatActivity {
                         //main으로 넘어가는경우
                         Intent intent = new Intent(activity, MainActivity.class);
                         intent.putExtra("user",user);
+                        intent.putExtra("flag","google");
                         startActivity(intent);
                     }
                     else{ // 회원가입
                         //servey 화면으로 넘어가는것 --> intent.putExtra로 구글 정보를 넘길지 아니면 현재 로그인 정보를 확인할지 선택
                         Intent intent = new Intent(activity, InitialSurveyActivity.class);
+                        intent.putExtra("flag","google");
                         startActivity(intent);
                     }
 
@@ -206,19 +210,6 @@ public class LoginActivity extends AppCompatActivity {
         btn_email.setOnClickListener(listener_email_sign);
     }
 
-
-    //2. 구글 로그인 리스너 등록
-    /*
-    private final View.OnClickListener listener_google_sign = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Intent intent = new Intent(activity, MainActivity.class);
-            startActivity(intent);
-        }
-    };
-
-    */
-
     //3. 이메일 로그인 리스너 등록
     private final View.OnClickListener listener_email_sign = new View.OnClickListener() {
         @Override
@@ -237,22 +228,46 @@ public class LoginActivity extends AppCompatActivity {
 
                     String userId = Long.toString(user.getId());
                     String userNickName = user.getKakaoAccount().getProfile().getNickname();
+                    String img=user.getKakaoAccount().getProfile().getProfileImageUrl(); //프로필 사진 uri로 불러온다.
+
                     //Log.i(TAG, "id " + user.getId());
                     //Log.i(TAG, "invoke: nickname=" + user.getKakaoAccount().getProfile().getNickname());
+                    Toast.makeText(getApplicationContext(),"카카오 로그인 되었습니다.", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(activity, MainActivity.class);
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl(url).addConverterFactory(new NullOnEmptyConverterFactory())
+                            .addConverterFactory(GsonConverterFactory.create()).build();
 
-                    //intent로 userId값 전달
-                    intent.putExtra("kakao_userId", userId);
-                    intent.putExtra("kakao_userNickName", userNickName);
-                    startActivity(intent);
+                    RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
-                    //finish 해도 정상 작동되는지 확인 필요!
-                    /*  hanbyul comment:
-                        MainActivity에서 로그아웃 버튼을 누르고 다시 앱에 들어가는 경우, 로그아웃 처리가 되지 않는 문제가 발생합니다.
-                        아래 finish()를 주석처리하면 문제가 발생하지 않는 것 같아서 일단 주석처리 해두었습니다.
-                    */
-                    //finish();
+                    retrofitAPI.getUser(userId).enqueue(new Callback<user>() {
+                        @Override
+                        public void onResponse(Call<user> call, Response<user> response) {
+                            user user = response.body();
+                            if(user != null){  //이미 id 존재
+                                Intent intent = new Intent(activity, MainActivity.class);
+                                intent.putExtra("user",user);
+                                intent.putExtra("flag","kakao");
+                                startActivity(intent);
+                                finish();
+                            }
+                            else{
+                                Intent intent = new Intent(activity, InitialSurveyActivity.class);
+                                intent.putExtra("kakao_userId", userId);
+                                intent.putExtra("kakao_userNickName", userNickName);
+                                intent.putExtra("kakao_img",img);
+                                intent.putExtra("flag","kakao");
+                                startActivity(intent);
+                                finish();
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<user> call, Throwable t) {
+
+                        }
+                    });
 
                 } else {
                     //mobileTextView.setText("로그인 해주세요");
