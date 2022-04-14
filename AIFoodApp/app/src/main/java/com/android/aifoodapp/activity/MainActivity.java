@@ -2,6 +2,8 @@ package com.android.aifoodapp.activity;
 
 import static android.graphics.Color.*;
 
+import static com.android.aifoodapp.interfaceh.baseURL.url;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,6 +26,8 @@ import android.widget.Toast;
 
 import com.android.aifoodapp.R;
 import com.android.aifoodapp.domain.user;
+import com.android.aifoodapp.interfaceh.NullOnEmptyConverterFactory;
+import com.android.aifoodapp.interfaceh.RetrofitAPI;
 import com.bumptech.glide.Glide;
 
 import com.github.mikephil.charting.charts.RadarChart;
@@ -50,6 +54,12 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity<Unit> extends AppCompatActivity {
 
@@ -87,6 +97,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
         Intent intent = getIntent();
         user = intent.getParcelableExtra("user");
+
         String flag=intent.getStringExtra("flag"); //현재 계정이 구글인지 카카오인지
 
         if(flag.equals("kakao")){

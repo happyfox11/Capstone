@@ -163,6 +163,7 @@ public class LoginActivity extends AppCompatActivity {
                         //main으로 넘어가는경우
                         Intent intent = new Intent(activity, MainActivity.class);
                         intent.putExtra("user",user);
+                        //intent.putExtra("userId", account.getId());
                         intent.putExtra("flag","google");
                         startActivity(intent);
                     }
@@ -246,7 +247,9 @@ public class LoginActivity extends AppCompatActivity {
                             user user = response.body();
                             if(user != null){  //이미 id 존재
                                 Intent intent = new Intent(activity, MainActivity.class);
+                                //Intent intent = new Intent(activity, RequestUserInfo.class);
                                 intent.putExtra("user",user);
+                                //intent.putExtra("userId", userId);
                                 intent.putExtra("flag","kakao");
                                 startActivity(intent);
                                 finish();

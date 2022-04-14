@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.android.aifoodapp.R;
 import com.android.aifoodapp.domain.user;
+import com.android.aifoodapp.interfaceh.NullOnEmptyConverterFactory;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -53,14 +54,15 @@ public class InitialSurveyActivity extends AppCompatActivity {
     RadioButton rb_lv1, rb_lv2, rb_lv3, rb_lv4;
     RadioGroup rg_gender;
     RadioButton rb_man, rb_woman;
+    String flag="";
 
     HashMap<String, Integer> survey_result = new HashMap<>();
     HashMap<String, Object> accounts = new HashMap<>();
 
     //account 정보
     String personName, personGivenName,personEmail,personId ;
-    Uri personPhoto ;
-
+    //Uri personPhoto ;
+    String personPhoto=null;
 
     GoogleSignInClient mGoogleSignInClient;
 
@@ -78,11 +80,12 @@ public class InitialSurveyActivity extends AppCompatActivity {
 
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
         if (acct != null) {
+            flag="google";
             personName = acct.getDisplayName();
             personGivenName = acct.getGivenName();
             personEmail = acct.getEmail();
             personId = acct.getId();
-            personPhoto = acct.getPhotoUrl();
+            //personPhoto = acct.getPhotoUrl().toString();
 
             //user account = new user();
             //user(String id, String nickname, char sex, int age, int height, int weight, int activity_index, int target_calories)
@@ -91,10 +94,12 @@ public class InitialSurveyActivity extends AppCompatActivity {
 
         //카카오 로그인 성공 후, activity 변경하면서 같이 값을 받아 온다.
         if(getIntent().getStringExtra("kakao_userId")!=null){
+            flag="kakao";
             Intent intent = getIntent();
             personId=intent.getStringExtra("kakao_userId");
             personName=intent.getStringExtra("kakao_userNickName");
             personPhoto=intent.getParcelableExtra("kakao_img");
+
         }
 
         setContentView(R.layout.activity_initial_survey);
@@ -206,8 +211,10 @@ public class InitialSurveyActivity extends AppCompatActivity {
                     survey_result.put("target_calorie", Integer.valueOf(et_target_calorie.getText().toString()));
 
                 char sex = (survey_result.get("gender")==1)?'M':'F';
+
+                if(personPhoto==null) personPhoto="";
                 user account = new user(personId,personName,sex,survey_result.get("age"),
-                        survey_result.get("height"),survey_result.get("weight"),survey_result.get("activity_rate"),survey_result.get("target_calorie"));
+                        survey_result.get("height"),survey_result.get("weight"),survey_result.get("activity_rate"),survey_result.get("target_calorie"),personPhoto);
 
                 accounts.put("id",account.getId());
                 accounts.put("nickname",account.getNickname());
@@ -217,8 +224,9 @@ public class InitialSurveyActivity extends AppCompatActivity {
                 accounts.put("weight",account.getWeight());
                 accounts.put("activity_index",account.getActivity_index());
                 accounts.put("target_calories",account.getTarget_calories());
+                accounts.put("profile",account.getProfile());
 
-                ///Toast.makeText(activity, account.pringStirng(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(activity, account.pringStirng(), Toast.LENGTH_LONG).show();
 
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
@@ -241,24 +249,38 @@ public class InitialSurveyActivity extends AppCompatActivity {
                 });
 */
 
+                Intent intent = new Intent(activity, MainActivity.class);
+                //Intent intent = new Intent(activity, RequestUserInfo.class);
+
+                //DB에 값은 저장이 되는데, fail로 오류가 뜸
                 retrofitAPI.postSaveUser(accounts).enqueue(new Callback<user>() {
                     @Override
                     public void onResponse(Call<user> call, Response<user> response) {
                         if(response.isSuccessful()){
                             user data = response.body();
+                            intent.putExtra("user",data);
                             Log.d("TestTest","Post 성공");
                         }
+                        Log.d("???","%%%%%%%%%%%%%%%%%");
                     }
 
                     @Override
                     public void onFailure(Call<user> call, Throwable t) {
-                        Log.d("TestError!!!!","Post 실패 ");
+                        Log.d("Retrofit","Post 실패 ");
                     }
                 });
 
 
-                Intent intent = new Intent(activity, MainActivity.class);
+                //TODO survery_result를 넘기는게 아니라 Main에서 db로부터 바로 받는 방식으로 고쳐야 할듯
                 intent.putExtra("survey_result", (Serializable) survey_result);
+                intent.putExtra("userId",account.getId());
+
+                if (flag.equals("google")) {
+                    intent.putExtra("flag","google");
+                }
+                else{
+                    intent.putExtra("flag","kakao");
+                }
                 startActivity(intent);
                 finish();
 
