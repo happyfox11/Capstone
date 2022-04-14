@@ -17,17 +17,23 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.aifoodapp.R;
+import com.android.aifoodapp.adapter.MealAdapter;
 import com.android.aifoodapp.domain.user;
 import com.android.aifoodapp.interfaceh.NullOnEmptyConverterFactory;
+import com.android.aifoodapp.interfaceh.OnEditMealHeight;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
+import com.android.aifoodapp.vo.MealMemberVo;
 import com.bumptech.glide.Glide;
 
 import com.github.mikephil.charting.charts.RadarChart;
@@ -45,6 +51,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kakao.sdk.user.UserApiClient;
 
 
@@ -86,6 +93,11 @@ public class MainActivity<Unit> extends AppCompatActivity {
     int percent_of_fat;
 
     user user;
+
+    private ListView lv_meal_item;
+    private MealAdapter mealAdapter;
+    private ArrayList<MealMemberVo> memberList;
+    FloatingActionButton fab_add_meal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,6 +222,11 @@ public class MainActivity<Unit> extends AppCompatActivity {
         btn_meal1_detail = findViewById(R.id.btn_meal1_detail);
 
         radarChart = (RadarChart) findViewById(R.id.radarchart);
+
+        lv_meal_item = findViewById(R.id.lv_custom_item);
+        memberList = new ArrayList<>();
+        mealAdapter = new MealAdapter(activity, memberList);
+        fab_add_meal = findViewById(R.id.fab_add_meal);
     }
 
     //설정
@@ -217,6 +234,8 @@ public class MainActivity<Unit> extends AppCompatActivity {
         setting_weekly_calendar();
         setting_nutri_progress();
         setting_balance_graph();
+        setting_meal_adapter();
+        setting_initial_meal();
     }
 
     //리스너 추가
@@ -224,7 +243,16 @@ public class MainActivity<Unit> extends AppCompatActivity {
         btn_select_calendar.setOnClickListener(listener_select_calendar);
         iv_user_setting_update.setOnClickListener(listener_setting_update);
         btn_meal1_detail.setOnClickListener(listener_meal1_detail);
+        fab_add_meal.setOnClickListener(listener_add_meal);
     }
+
+    private final View.OnClickListener listener_add_meal = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            addMeal();
+            setListViewHeightBasedOnChildren(lv_meal_item);
+        }
+    };
 
     private final View.OnClickListener listener_setting_update = new View.OnClickListener() {
         @Override
@@ -544,5 +572,57 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
         radarChart.setData(radarData);
 
+    }
+
+    private void setting_meal_adapter(){
+
+        lv_meal_item.setAdapter(mealAdapter);
+
+        // adapter 콜백리스너 등록
+        if (mealAdapter != null) {
+            mealAdapter.setOnEditMealHeightListener(new OnEditMealHeight() {
+                @Override
+                public void onEditMealHeight() {
+                    //콜백 메소드로 전달받은 값을 프래그먼트 쪽 멤버 변수에 할당해준다.
+                    setListViewHeightBasedOnChildren(lv_meal_item);
+                }
+            });
+        }
+    }
+
+    private void setting_initial_meal(){
+        addMeal();
+        addMeal();
+    }
+
+    private void addMeal(){
+        mealAdapter.addItem(new MealMemberVo());
+        setListViewHeightBasedOnChildren(lv_meal_item);
+    }
+
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        int totalHeight = 0;
+
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            ////listItem.measure(0, 0);
+            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += listItem.getMeasuredHeight();
+
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+
+        params.height = totalHeight;
+        listView.setLayoutParams(params);
+
+        listView.requestLayout();
     }
 }

@@ -439,7 +439,7 @@ tools:context=".activity.MainActivity">
 
             </LinearLayout>
 
-            <LinearLayout
+<!--            <LinearLayout
                 android:id="@+id/layout_meal2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -560,7 +560,22 @@ tools:context=".activity.MainActivity">
                         android:textColor="#FFFFFF" />
                 </LinearLayout>
 
+            </LinearLayout>-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ListView
+                    android:id="@+id/lv_custom_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </ListView>
             </LinearLayout>
+
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_add_meal"
