@@ -1,9 +1,11 @@
 package com.android.aifoodapp.domain;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+
 
 public class user implements Parcelable {
     @SerializedName("id")
@@ -22,10 +24,10 @@ public class user implements Parcelable {
     private int activity_index;
     @SerializedName("target_calories")
     private int target_calories;
-    //@SerializedName("profile")
-    //private
+    @SerializedName("profile")
+    private String profile;
 
-    public user(String id, String nickname, char sex, int age, int height, int weight, int activity_index, int target_calories) {
+    public user(String id, String nickname, char sex, int age, int height, int weight, int activity_index, int target_calories, String profile) {
         this.id = id;
         this.nickname = nickname;
         this.sex = sex;
@@ -34,6 +36,7 @@ public class user implements Parcelable {
         this.weight = weight;
         this.activity_index = activity_index;
         this.target_calories = target_calories;
+        this.profile=profile;
     }
 
     public user() {
@@ -120,9 +123,11 @@ public class user implements Parcelable {
         this.target_calories =target_calories;
     }
 
+    public void setProfile(String profile){this.profile = profile;}
+    public String getProfile(){return profile;}
 
     public String pringStirng(){
-        return  "user"+id+"  "+nickname+"   "+sex + "   " + getActivity_index();
+        return  "user"+id+"  "+nickname+"   "+sex + "   " + getActivity_index()+profile;
     }
 
     protected user(Parcel in){

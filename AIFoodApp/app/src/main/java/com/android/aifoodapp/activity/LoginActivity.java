@@ -118,8 +118,14 @@ public class LoginActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
         // Build a GoogleSignInClient with the options specified by gso.
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
+        //자동 로그인
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        GoogleSignInAccount gsa = GoogleSignIn.getLastSignedInAccount(LoginActivity.this);
+
+        if (gsa != null) {
+            signIn();
+        }
 
 
     }
@@ -163,14 +169,17 @@ public class LoginActivity extends AppCompatActivity {
                         //main으로 넘어가는경우
                         Intent intent = new Intent(activity, MainActivity.class);
                         intent.putExtra("user",user);
+                        //intent.putExtra("userId", account.getId());
                         intent.putExtra("flag","google");
                         startActivity(intent);
+                        finish();
                     }
                     else{ // 회원가입
                         //servey 화면으로 넘어가는것 --> intent.putExtra로 구글 정보를 넘길지 아니면 현재 로그인 정보를 확인할지 선택
                         Intent intent = new Intent(activity, InitialSurveyActivity.class);
                         intent.putExtra("flag","google");
                         startActivity(intent);
+                        finish();
                     }
 
                 }
@@ -246,7 +255,9 @@ public class LoginActivity extends AppCompatActivity {
                             user user = response.body();
                             if(user != null){  //이미 id 존재
                                 Intent intent = new Intent(activity, MainActivity.class);
+                                //Intent intent = new Intent(activity, RequestUserInfo.class);
                                 intent.putExtra("user",user);
+                                //intent.putExtra("userId", userId);
                                 intent.putExtra("flag","kakao");
                                 startActivity(intent);
                                 finish();
