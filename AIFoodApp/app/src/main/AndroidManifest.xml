@@ -15,9 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AIFoodApp"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".activity.RequestUserInfo"
-            android:exported="true" />
         <!-- http 접근을 허용 -->
         <activity
             android:name=".activity.InitialSurveyActivity"

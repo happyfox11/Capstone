@@ -249,19 +249,18 @@ public class InitialSurveyActivity extends AppCompatActivity {
                 });
 */
 
-                Intent intent = new Intent(activity, MainActivity.class);
-                //Intent intent = new Intent(activity, RequestUserInfo.class);
-
-                //DB에 값은 저장이 되는데, fail로 오류가 뜸
+                //DB에 값은 저장이 되는데, Post 실패로 오류가 뜸 ->callback 함수라서..?????
                 retrofitAPI.postSaveUser(accounts).enqueue(new Callback<user>() {
                     @Override
                     public void onResponse(Call<user> call, Response<user> response) {
                         if(response.isSuccessful()){
-                            user data = response.body();
-                            intent.putExtra("user",data);
                             Log.d("TestTest","Post 성공");
                         }
-                        Log.d("???","%%%%%%%%%%%%%%%%%");
+                        else{
+                            String body = response.errorBody().toString();
+                            Log.d("TestTest", "error - body : " + body);
+                        }
+
                     }
 
                     @Override
@@ -270,18 +269,21 @@ public class InitialSurveyActivity extends AppCompatActivity {
                     }
                 });
 
-
+                Intent intent2 = new Intent(activity, LoginActivity.class);
+                //Intent intent = new Intent(activity, RequestUserInfo.class);
+/*
                 //TODO survery_result를 넘기는게 아니라 Main에서 db로부터 바로 받는 방식으로 고쳐야 할듯
-                intent.putExtra("survey_result", (Serializable) survey_result);
-                intent.putExtra("userId",account.getId());
+                intent2.putExtra("survey_result", (Serializable) survey_result);
+                intent2.putExtra("userId",account.getId());
+
 
                 if (flag.equals("google")) {
-                    intent.putExtra("flag","google");
+                    intent2.putExtra("flag","google");
                 }
-                else{
-                    intent.putExtra("flag","kakao");
-                }
-                startActivity(intent);
+                else {
+                    intent2.putExtra("flag", "kakao");
+                }*/
+                startActivity(intent2);
                 finish();
 
 

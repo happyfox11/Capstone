@@ -141,6 +141,9 @@ public class MainActivity<Unit> extends AppCompatActivity {
                     switch (v.getId()) {
                         case R.id.btn_logout:
                             signOut();
+                            Intent backIntent = new Intent(activity, LoginActivity.class); // 로그인 화면으로 이동
+                            startActivity(backIntent);
+                            finish();
                             break;
                     }
                 }
