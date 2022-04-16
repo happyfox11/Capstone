@@ -126,6 +126,7 @@ public class user implements Parcelable {
     public void setProfile(String profile){this.profile = profile;}
     public String getProfile(){return profile;}
 
+    //테스트용
     public String pringStirng(){
         return  "user"+id+"  "+nickname+"   "+sex + "   " + getActivity_index()+profile;
     }
@@ -140,7 +141,8 @@ public class user implements Parcelable {
         weight=in.readInt();
         activity_index= in.readInt();
         target_calories=in.readInt();
-        //profile
+        //이미지 저장부분 일단 살려둠..
+        profile=in.readString();
     }
 
     public static final Creator<user> USER_CREATOR = new Creator<user>() {
@@ -170,6 +172,6 @@ public class user implements Parcelable {
         parcel.writeInt(weight);
         parcel.writeInt(activity_index);
         parcel.writeInt(target_calories);
-        //profile
+        parcel.writeString(profile);
     }
 }
