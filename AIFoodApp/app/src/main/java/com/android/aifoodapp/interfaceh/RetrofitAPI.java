@@ -18,8 +18,20 @@ import retrofit2.http.QueryMap;
 import retrofit2.http.QueryName;
 
 public interface RetrofitAPI {
+    /* user */
     @GET("/checkUserId.do")
     Call<user> getUser(@Query("id") String id);
+
+    @FormUrlEncoded
+    @POST("/userSave.do")
+    Call<user> postSaveUser(@FieldMap HashMap<String, Object>param);
+
+    @FormUrlEncoded
+    @POST("/updatePost.do")
+    Call<user> postUpdateUser(@FieldMap HashMap<String, Object>param);
+
+    @GET("/deleteUser.do")
+    Call<user> getDeleteUser(@Query("id") String id);
 
     @GET("/checkDailyMeal.do")
     Call<dailymeal> getDailyMeal(
@@ -30,15 +42,6 @@ public interface RetrofitAPI {
     //하루 조회용
     // https://jaejong.tistory.com/38
     //주간 조회용..
-
-
-    @FormUrlEncoded
-    @POST("/userSave.do")
-    Call<user> postSaveUser(@FieldMap HashMap<String, Object>param);
-
-    @FormUrlEncoded
-    @POST("/updatePost.do")
-    Call<user> postUpdateUser(@FieldMap HashMap<String, Object>param);
 
     @FormUrlEncoded
     @POST("/dailymealSave.do")

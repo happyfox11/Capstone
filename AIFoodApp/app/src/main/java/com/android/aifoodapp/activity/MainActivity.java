@@ -106,6 +106,8 @@ public class MainActivity<Unit> extends AppCompatActivity {
     private ArrayList<MealMemberVo> memberList;
     FloatingActionButton fab_add_meal;
 
+    private String flag;
+
     public static Activity _MainActivity;
 
     @Override
@@ -127,7 +129,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         /*Log.e("userERRRRRRRR",user.pringStirng());*/
 
 
-        String flag=intent.getStringExtra("flag"); //현재 계정이 구글인지 카카오인지
+        flag=intent.getStringExtra("flag"); //현재 계정이 구글인지 카카오인지
 
         if(flag.equals("kakao")){
             btn_logout.setOnClickListener(new View.OnClickListener() {
@@ -256,6 +258,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         public void onClick(View view) {
             Intent intent = new Intent(activity, UserSettingActivity.class);
             intent.putExtra("user",user);
+            intent.putExtra("flag",flag);
             startActivity(intent);
         }
     };

@@ -33,6 +33,8 @@ import com.kakao.sdk.user.UserApiClient;
 import java.io.IOException;
 import java.util.HashMap;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -54,7 +56,8 @@ public class UserSettingActivity extends AppCompatActivity {
     RadioGroup rg_modify_activity_rate, rg_modify_gender;
     RadioButton rb_modify_lv1, rb_modify_lv2, rb_modify_lv3, rb_modify_lv4, rb_modify_man, rb_modify_woman;
     HashMap<String, Object> accounts = new HashMap<>();
-    int rb_activity_rate,modify_gender;
+    private int rb_activity_rate,modify_gender;
+    private String flag;
 
     com.android.aifoodapp.domain.user user;
 
@@ -109,7 +112,65 @@ public class UserSettingActivity extends AppCompatActivity {
         btn_withdrawal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = getIntent();
+                flag=intent.getStringExtra("flag");
 
+                if(flag.equals("kakao")){
+                    new AlertDialog.Builder(UserSettingActivity.this).setMessage("회원 탈퇴 하시겠습니까?")
+                            .setPositiveButton("네", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                // 카카오 연결 끊기
+                                public void onClick(DialogInterface dialog, int which) {
+                                    UserApiClient.getInstance().unlink(new Function1<Throwable, Unit>() {
+                                        @Override
+                                        public Unit invoke(Throwable throwable) {
+                                            //db에서 해당 id 지워야 함
+                                            Retrofit retrofit = new Retrofit.Builder()
+                                                    .baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
+
+                                            RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+                                            retrofitAPI.getDeleteUser(tv_userIdInfo.getText().toString()).enqueue(new Callback<user>() {
+                                                @Override
+                                                public void onResponse(Call<user> call, Response<user> response) {
+                                                    if(response.isSuccessful()){
+                                                        Log.d("delete user","Post 성공");
+                                                    }
+                                                    else{
+                                                        String body = response.errorBody().toString();
+                                                        Log.d("delete user", "error - body : " + body);
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<user> call, Throwable t) {
+                                                    Log.d("postUpdateUser","Post 실패 ");
+                                                }
+                                            });
+
+                                            MainActivity MA = (MainActivity)MainActivity._MainActivity; // https://itun.tistory.com/357 [Bino]
+                                            MA.finish();
+
+                                            Intent intent = new Intent(activity, LoginActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                            return null;
+                                        }
+                                    });
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
+                }
+                else if(flag.equals("google")){
+
+                }
             }
         });
 
