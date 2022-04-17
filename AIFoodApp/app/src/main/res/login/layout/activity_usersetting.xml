@@ -127,7 +127,6 @@
             android:layout_weight="0.5"
             android:focusableInTouchMode="false"
             android:maxLines="1"
-            android:maxLength="7"
             android:textSize="17sp"
             android:text="아이디 표시 " />
 
@@ -148,15 +147,29 @@
             android:textStyle="bold"
             android:text="성별" />
 
-        <EditText
-            android:id="@+id/tv_sex"
+        <RadioGroup
+            android:id="@+id/rg_modify_gender"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:maxLines="1"
-            android:maxLength="7"
-            android:textSize="17sp"
-            android:text="성별 표시" />
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_modify_man"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="남"
+                android:text="남" />
+
+            <RadioButton
+                android:id="@+id/rb_modify_woman"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="여"
+                android:text="여" />
+        </RadioGroup>
 
     </LinearLayout>
 
@@ -181,7 +194,7 @@
             android:layout_height="50dp"
             android:layout_weight="0.5"
             android:maxLines="1"
-            android:maxLength="7"
+            android:maxLength="3"
             android:textSize="17sp"
             android:text="나이 표시" />
     </LinearLayout>
@@ -207,7 +220,7 @@
             android:layout_height="50dp"
             android:layout_weight="0.5"
             android:maxLines="1"
-            android:maxLength="7"
+            android:maxLength="3"
             android:textSize="17sp"
             android:text="키표시" />
 
@@ -234,7 +247,7 @@
             android:layout_height="50dp"
             android:layout_weight="0.5"
             android:maxLines="1"
-            android:maxLength="7"
+            android:maxLength="3"
             android:textSize="17sp"
             android:text="몸무게 표시" />
 
@@ -244,26 +257,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="2">
+        android:weightSum="3">
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_weight="1.5"
+            android:layout_weight="1.82"
             android:focusableInTouchMode="false"
             android:textSize="17sp"
             android:textStyle="bold"
-            android:text="BMI" />
+            android:text="목표칼로리" />
 
         <EditText
             android:id="@+id/tv_bmi"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_weight="0.5"
+            android:layout_weight="1.3"
             android:maxLines="1"
-            android:maxLength="7"
+            android:maxLength="6"
             android:textSize="17sp"
             android:text="BMI 표시" />
+
+        <Button
+            android:id="@+id/btn_bmi_modify"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/round_rect_button"
+            android:backgroundTint="#3A531C"
+            android:padding="10dp"
+            android:text="자동"
+            android:textColor="#FFFFFF" />
 
     </LinearLayout>
 
@@ -275,23 +299,56 @@
 
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:layout_weight="1.5"
             android:focusableInTouchMode="false"
+            android:text="활동량"
             android:textSize="17sp"
-            android:textStyle="bold"
-            android:text="활동량" />
+            android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/tv_activity_rate"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:maxLines="1"
-            android:maxLength="7"
-            android:textSize="17sp"
-            android:text="활동량 표시" />
+            android:orientation="vertical">
 
+            <RadioGroup
+                android:id="@+id/rg_modify_activity_rate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/rb_modify_lv1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:contentDescription="activity_lv1"
+                    android:text="30분 이하" />
+
+                <RadioButton
+                    android:id="@+id/rb_modify_lv2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:contentDescription="activity_lv2"
+                    android:text="30분 - 1시간" />
+
+                <RadioButton
+                    android:id="@+id/rb_modify_lv3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:contentDescription="activity_lv"
+                    android:text="1시간 - 2시간" />
+
+                <RadioButton
+                    android:id="@+id/rb_modify_lv4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="activity_lv"
+                    android:text="2시간 이상" />
+            </RadioGroup>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
 

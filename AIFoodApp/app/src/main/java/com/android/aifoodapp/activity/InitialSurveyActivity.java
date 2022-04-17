@@ -85,8 +85,7 @@ public class InitialSurveyActivity extends AppCompatActivity {
             personGivenName = acct.getGivenName();
             personEmail = acct.getEmail();
             personId = acct.getId();
-            //personPhoto = acct.getPhotoUrl().toString();
-
+            if(acct.getPhotoUrl()!=null) personPhoto = acct.getPhotoUrl().toString();
             //user account = new user();
             //user(String id, String nickname, char sex, int age, int height, int weight, int activity_index, int target_calories)
         }
@@ -98,8 +97,7 @@ public class InitialSurveyActivity extends AppCompatActivity {
             Intent intent = getIntent();
             personId=intent.getStringExtra("kakao_userId");
             personName=intent.getStringExtra("kakao_userNickName");
-            personPhoto=intent.getParcelableExtra("kakao_img");
-
+            personPhoto=intent.getStringExtra("kakao_img");
         }
 
         setContentView(R.layout.activity_initial_survey);

@@ -106,12 +106,16 @@ public class MainActivity<Unit> extends AppCompatActivity {
     private ArrayList<MealMemberVo> memberList;
     FloatingActionButton fab_add_meal;
 
+    private String flag;
+
+    public static Activity _MainActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initialize();
-
+        _MainActivity = MainActivity.this;
         Intent intent = getIntent();
         user = intent.getParcelableExtra("user");
         //서버에서 dailymeal을 받아오는데 비 동기적으로 작동해서 뒤에코드가 먼저 실행되는 에러 발
@@ -125,7 +129,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         /*Log.e("userERRRRRRRR",user.pringStirng());*/
 
 
-        String flag=intent.getStringExtra("flag"); //현재 계정이 구글인지 카카오인지
+        flag=intent.getStringExtra("flag"); //현재 계정이 구글인지 카카오인지
 
         if(flag.equals("kakao")){
             btn_logout.setOnClickListener(new View.OnClickListener() {
@@ -176,26 +180,6 @@ public class MainActivity<Unit> extends AppCompatActivity {
                 }
             });
         }
-
-        /*사진 이메일등 구글 정보 가져오는*/
-        /*GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
-        if (acct != null) {
-
-            String personName = acct.getDisplayName();
-            String personGivenName = acct.getGivenName();
-            String personEmail = acct.getEmail();
-            String personId = acct.getId();
-            Uri personPhoto = acct.getPhotoUrl();
-
-            tv_userId.setText(personId);
-            tv_userName.setText(personName);
-            //tv_userEmail.setText(personEmail);
-            //Glide 사용 가능
-            //https://bumptech.github.io/glide/
-            //Glide.with(this).load(String.valueOf(personPhoto)).into(tv_userPhoto);
-            //tv_userPhoto.setImageIcon(Icon.createWithContentUri(personPhoto));
-
-        }*/
         /*juhee modify--fin*/
 
         //로그인 닉네임
@@ -274,6 +258,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         public void onClick(View view) {
             Intent intent = new Intent(activity, UserSettingActivity.class);
             intent.putExtra("user",user);
+            intent.putExtra("flag",flag);
             startActivity(intent);
         }
     };
