@@ -4,6 +4,8 @@ import static android.graphics.Color.*;
 
 import static com.android.aifoodapp.interfaceh.baseURL.url;
 
+import static java.lang.Thread.sleep;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,8 +14,8 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -29,12 +31,13 @@ import android.widget.Toast;
 
 import com.android.aifoodapp.R;
 import com.android.aifoodapp.adapter.MealAdapter;
+import com.android.aifoodapp.domain.dailymeal;
 import com.android.aifoodapp.domain.user;
+import com.android.aifoodapp.interfaceh.GsonDateFormatAdapter;
 import com.android.aifoodapp.interfaceh.NullOnEmptyConverterFactory;
 import com.android.aifoodapp.interfaceh.OnEditMealHeight;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
 import com.android.aifoodapp.vo.MealMemberVo;
-import com.bumptech.glide.Glide;
 
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -46,12 +49,13 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kakao.sdk.user.UserApiClient;
 
 
@@ -61,6 +65,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -93,6 +99,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
     int percent_of_fat;
 
     user user;
+    dailymeal dailymeal;
 
     private ListView lv_meal_item;
     private MealAdapter mealAdapter;
@@ -104,11 +111,19 @@ public class MainActivity<Unit> extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initialize();
-        setting();
-        addListener();
 
         Intent intent = getIntent();
         user = intent.getParcelableExtra("user");
+        //서버에서 dailymeal을 받아오는데 비 동기적으로 작동해서 뒤에코드가 먼저 실행되는 에러 발
+        setDailymeal();
+
+
+        //setting();
+        addListener();
+
+
+        /*Log.e("userERRRRRRRR",user.pringStirng());*/
+
 
         String flag=intent.getStringExtra("flag"); //현재 계정이 구글인지 카카오인지
 
@@ -440,6 +455,8 @@ public class MainActivity<Unit> extends AppCompatActivity {
         int target_calorie, gram_of_carbohydrate, gram_of_protein, gram_of_fat;
 
         Intent intent = getIntent();
+        /*
+        Log.i("HashMapTest", user.pringStirng());
         if(intent.getSerializableExtra("survey_result") != null){
             HashMap<String, Integer> survey_result = (HashMap<String, Integer>)intent.getSerializableExtra("survey_result");
             Log.i("HashMapTest", String.valueOf(survey_result));
@@ -462,6 +479,18 @@ public class MainActivity<Unit> extends AppCompatActivity {
         int current_carbohydrate = 50;
         int current_protein = 30;
         int current_fat = 20;
+        */
+        target_calorie = user.getTarget_calories();
+
+        gram_of_carbohydrate = (int) (target_calorie * 0.5 / 4);
+        gram_of_protein = (int) (target_calorie * 0.3 / 4);
+        gram_of_fat = (int) (target_calorie * 0.2 / 9);
+
+        int current_calories = dailymeal.getCalorie();
+        int current_carbohydrate = dailymeal.getCarbohydrate();
+        int current_protein = dailymeal.getProtein();
+        int current_fat = dailymeal.getFat();
+
 
         tv_total_calories.setText(current_calories + " / " + target_calorie + "kcal");
         tv_gram_of_carbohydrate.setText(current_carbohydrate + " / " + gram_of_carbohydrate + "g");
@@ -624,5 +653,56 @@ public class MainActivity<Unit> extends AppCompatActivity {
         listView.setLayoutParams(params);
 
         listView.requestLayout();
+    }
+    public void setDailymeal(){
+
+        //https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=gracefulife&logNo=220992369673
+        //https://velog.io/@ptm0304/Android-Retrofit%EC%9C%BC%EB%A1%9C-DateTime-%ED%98%95%EC%8B%9D-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EB%B0%9B%EC%95%84%EC%98%A4%EA%B8%B0
+        //GsonBuilder gson = new GsonBuilder();
+        //gson.registerTypeAdapter(Date.class , new GsonDateFormatAdapter());
+
+        //Gson gson = new GsonBuilder()
+        //        .setDateFormat("yyyy-MM-dd")
+        //        .create();
+        //"2022-04-16T15:00:00.000+00:00"//"2022-04-16T15:00:00.000+00:00",
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create()).build();
+
+        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+        //현재 시간을 UNIX타입 으로 저장하는 코드
+        Long now1 = System.currentTimeMillis();
+
+        //현재 시간을 yyyy-MM-dd HH:mm:ss 포맷으로 저장하는 코드
+        Date now = new Date(); //Date타입으로 변수 선언
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //데이트 포맷
+        String date_string = dateFormat.format(now); //날짜가 string으로 저장
+
+        //Date datekey = new Date(sdf.format(date)); //똥 코드..
+
+        Log.e("Retrodate",date_string);
+
+
+        retrofitAPI.getDailyMeal(user.getId(),date_string).enqueue(new Callback<dailymeal>() {
+            @Override
+            public void onResponse(Call<dailymeal> call, Response<dailymeal> response) {
+                dailymeal = response.body();
+                Log.e("dailymeal",Integer.toString(dailymeal.getCalorie()));
+                try {
+                    Thread.sleep(1000);
+                    setting();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<dailymeal> call, Throwable t) {
+                Log.e("Error! call msg",call.toString());
+                Log.e("Error! t messge",t.getMessage());
+            }
+        });
     }
 }

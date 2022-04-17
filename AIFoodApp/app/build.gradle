@@ -68,7 +68,7 @@ dependencies {
 
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.6.0'
-    implementation 'com.squareup.retrofit2:converter-gson'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
     //gson은 json을 자바 클래스로 바꿔
 
 }

@@ -8,21 +8,21 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 
 public class dailymeal implements Parcelable {
-    @SerializedName("")
+    @SerializedName("userid")
     private String userid;
-    @SerializedName("")
+    @SerializedName("datekey")
     private Date datekey;
-    @SerializedName("")
+    @SerializedName("stepcount")
     private int stepcount;
-    @SerializedName("")
+    @SerializedName("calorie")
     private int calorie;
-    @SerializedName("")
+    @SerializedName("protein")
     private int protein;
-    @SerializedName("")
+    @SerializedName("carbohydrate")
     private int carbohydrate;
-    @SerializedName("")
+    @SerializedName("fat")
     private int fat;
-    @SerializedName("")
+    @SerializedName("dailymealid")
     private long dailymealid;
 
     public dailymeal(){
