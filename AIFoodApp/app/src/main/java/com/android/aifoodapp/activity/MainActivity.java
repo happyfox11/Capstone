@@ -691,7 +691,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
                 dailymeal = response.body();
                 Log.e("dailymeal",Integer.toString(dailymeal.getCalorie()));
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(100);
                     setting();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
