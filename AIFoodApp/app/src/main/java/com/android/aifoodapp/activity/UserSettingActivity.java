@@ -3,9 +3,14 @@ package com.android.aifoodapp.activity;
 import static com.android.aifoodapp.interfaceh.baseURL.url;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,8 +27,10 @@ import com.android.aifoodapp.R;
 import com.android.aifoodapp.domain.user;
 import com.android.aifoodapp.interfaceh.NullOnEmptyConverterFactory;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
+import com.bumptech.glide.Glide;
 import com.kakao.sdk.user.UserApiClient;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import retrofit2.Call;
@@ -98,6 +105,7 @@ public class UserSettingActivity extends AppCompatActivity {
             }
         });
 
+        //TODO 회원탈퇴
         btn_withdrawal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,68 +117,93 @@ public class UserSettingActivity extends AppCompatActivity {
         btn_modifyInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //수정하시겠습니까 ? 경고창 필요
 
-                String personId=tv_userIdInfo.getText().toString();
-                String personName=tv_userName.getText().toString();
-                char sex=(modify_gender==1)?'M':'F';
-                int age=Integer.parseInt(tv_age.getText().toString());
-                int height=Integer.parseInt(tv_height.getText().toString());
-                int weight=Integer.parseInt(tv_kg.getText().toString());
-                int activity_rate=rb_activity_rate;
-                int target_calorie=Integer.parseInt(tv_bmi.getText().toString());
-                String personPhoto="";
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
 
+                alertDialog.setIcon(R.drawable.alert_icon);
+                alertDialog.setTitle("알림");
+                alertDialog.setMessage("수정하시겠습니까?");
 
-                user account = new user(personId,personName,sex,age,
-                        height,weight,activity_rate,target_calorie,personPhoto);
-
-                accounts.put("id",account.getId());
-                accounts.put("nickname",account.getNickname());
-                accounts.put("sex",account.getSex());
-                accounts.put("age",account.getAge());
-                accounts.put("height",account.getHeight());
-                accounts.put("weight",account.getWeight());
-                accounts.put("activity_index",account.getActivity_index());
-                accounts.put("target_calories",account.getTarget_calories());
-                accounts.put("profile",account.getProfile());
+                alertDialog.setPositiveButton("Ok",new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog,int which){
+                        String personId=tv_userIdInfo.getText().toString();
+                        String personName=tv_userName.getText().toString();
+                        char sex=(modify_gender==1)?'M':'F';
+                        int age=Integer.parseInt(tv_age.getText().toString());
+                        int height=Integer.parseInt(tv_height.getText().toString());
+                        int weight=Integer.parseInt(tv_kg.getText().toString());
+                        int activity_rate=rb_activity_rate;
+                        int target_calorie=Integer.parseInt(tv_bmi.getText().toString());
+                        String personPhoto=user.getProfile();
 
 
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
+                        user account = new user(personId,personName,sex,age,
+                                height,weight,activity_rate,target_calorie,personPhoto);
 
-                RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+                        accounts.put("id",account.getId());
+                        accounts.put("nickname",account.getNickname());
+                        accounts.put("sex",account.getSex());
+                        accounts.put("age",account.getAge());
+                        accounts.put("height",account.getHeight());
+                        accounts.put("weight",account.getWeight());
+                        accounts.put("activity_index",account.getActivity_index());
+                        accounts.put("target_calories",account.getTarget_calories());
+                        accounts.put("profile",account.getProfile());
 
-                retrofitAPI.postUpdateUser(accounts).enqueue(new Callback<user>() {
-                    @Override
-                    public void onResponse(Call<user> call, Response<user> response) {
-                        if(response.isSuccessful()){
-                            Log.d("Modify userInfo","Post 성공");
-                        }
-                        else{
-                            String body = response.errorBody().toString();
-                            Log.d("Modify userInfo", "error - body : " + body);
-                        }
-                    }
 
-                    @Override
-                    public void onFailure(Call<user> call, Throwable t) {
-                        Log.d("postUpdateUser","Post 실패 ");
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
+
+                        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+                        retrofitAPI.postUpdateUser(accounts).enqueue(new Callback<user>() {
+                            @Override
+                            public void onResponse(Call<user> call, Response<user> response) {
+                                if(response.isSuccessful()){
+                                    Log.d("Modify userInfo","Post 성공");
+                                }
+                                else{
+                                    String body = response.errorBody().toString();
+                                    Log.d("Modify userInfo", "error - body : " + body);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<user> call, Throwable t) {
+                                Log.d("postUpdateUser","Post 실패 ");
+                            }
+                        });
+
+                        MainActivity MA = (MainActivity)MainActivity._MainActivity; // https://itun.tistory.com/357 [Bino]
+                        MA.finish();
+                        Intent intent = new Intent(activity, LoginActivity.class);
+                        //수정 후 user 정보 업데이트를 하고 새로 user정보를 가져오기 위해 다시 LoginActivity
+                        startActivity(intent);
+                        finish();
                     }
                 });
+                alertDialog.show();
 
-                Intent intent = new Intent(activity, LoginActivity.class);
-                //수정 후 user 정보 업데이트를 위해 다시 LoginActivity
-                startActivity(intent);
-                finish();
             }
         });
 
     }
 
     private void settingText(){
-        if(user.getProfile()=="") {  }
-        else iv_profile.setImageURI(Uri.parse(user.getProfile()));
+        if(user.getProfile().equals("")) {  }
+        else {
+            Glide.with(iv_profile).load(user.getProfile()).circleCrop().into(iv_profile);
+            Uri uri = Uri.parse(user.getProfile());
+            try {
+                Bitmap bm = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                iv_profile.setImageBitmap(bm);
+
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            //iv_profile.setImageURI(Uri.parse(user.getProfile()));
+        }
         tv_userName.setText(user.getNickname());
         tv_userIdInfo.setText(user.getId());
         //btn_modifyInfo
