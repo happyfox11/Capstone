@@ -37,6 +37,10 @@ public interface RetrofitAPI {
     Call<user> postSaveUser(@FieldMap HashMap<String, Object>param);
 
     @FormUrlEncoded
+    @POST("/updatePost.do")
+    Call<user> postUpdateUser(@FieldMap HashMap<String, Object>param);
+
+    @FormUrlEncoded
     @POST("/dailymealSave.do")
     Call<dailymeal> postSaveDailyMeal(@FieldMap HashMap<String,Object>param);
 
