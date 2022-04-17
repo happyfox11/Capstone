@@ -147,15 +147,29 @@
             android:textStyle="bold"
             android:text="성별" />
 
-        <EditText
-            android:id="@+id/tv_sex"
+        <RadioGroup
+            android:id="@+id/rg_modify_gender"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:layout_weight="0.5"
-            android:maxLines="1"
-            android:maxLength="1"
-            android:textSize="17sp"
-            android:text="성별 표시" />
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_modify_man"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="남"
+                android:text="남" />
+
+            <RadioButton
+                android:id="@+id/rb_modify_woman"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:contentDescription="여"
+                android:text="여" />
+        </RadioGroup>
 
     </LinearLayout>
 

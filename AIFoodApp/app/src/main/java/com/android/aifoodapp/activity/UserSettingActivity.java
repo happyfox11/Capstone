@@ -44,10 +44,10 @@ public class UserSettingActivity extends AppCompatActivity {
     EditText tv_kg;
     EditText tv_bmi;
     EditText tv_sex;
-    RadioGroup rg_modify_activity_rate;
-    RadioButton rb_modify_lv1, rb_modify_lv2, rb_modify_lv3, rb_modify_lv4;
+    RadioGroup rg_modify_activity_rate, rg_modify_gender;
+    RadioButton rb_modify_lv1, rb_modify_lv2, rb_modify_lv3, rb_modify_lv4, rb_modify_man, rb_modify_woman;
     HashMap<String, Object> accounts = new HashMap<>();
-    int rb_activity_rate;
+    int rb_activity_rate,modify_gender;
 
     com.android.aifoodapp.domain.user user;
 
@@ -61,18 +61,19 @@ public class UserSettingActivity extends AppCompatActivity {
         user = intent.getParcelableExtra("user");
         settingText();
 
+        rg_modify_gender.setOnCheckedChangeListener(listener_modify_gender);
         rg_modify_activity_rate.setOnCheckedChangeListener(listener_select_activity_rate);
 
         /*목표 칼로리 자동 계산*/
         btn_bmi_modify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int age_point = (Integer.valueOf(tv_age.getText().toString()) == 1)? 5 : -151;
+                int gender_point = (modify_gender == 1)? 5 : -151;
                 int basic_calories =
                         (int) ((10*(Integer.parseInt(tv_kg.getText().toString()))
                                 +6.25*(Integer.parseInt(tv_height.getText().toString()))
                                 -5.0*(Integer.valueOf(tv_age.getText().toString())))
-                                + age_point);
+                                + gender_point);
 
                 double activity_point = 0;
                 switch(rb_activity_rate){
@@ -112,7 +113,7 @@ public class UserSettingActivity extends AppCompatActivity {
 
                 String personId=tv_userIdInfo.getText().toString();
                 String personName=tv_userName.getText().toString();
-                char sex=tv_sex.getText().charAt(0);
+                char sex=(modify_gender==1)?'M':'F';
                 int age=Integer.parseInt(tv_age.getText().toString());
                 int height=Integer.parseInt(tv_height.getText().toString());
                 int weight=Integer.parseInt(tv_kg.getText().toString());
@@ -168,16 +169,29 @@ public class UserSettingActivity extends AppCompatActivity {
     }
 
     private void settingText(){
-        if(user.getProfile()!=null) { iv_profile.setImageURI(Uri.parse(user.getProfile())); }
+        if(user.getProfile()=="") {  }
+        else iv_profile.setImageURI(Uri.parse(user.getProfile()));
         tv_userName.setText(user.getNickname());
         tv_userIdInfo.setText(user.getId());
-        tv_sex.setText(String.valueOf(user.getSex()));
         //btn_modifyInfo
         //btn_withdrawal
         tv_age.setText(String.valueOf(user.getAge()));
         tv_height.setText(String.valueOf(user.getHeight()));
         tv_kg.setText(String.valueOf(user.getWeight()));
         tv_bmi.setText(String.valueOf(user.getTarget_calories()));
+
+
+        modify_gender=(user.getSex()=='M')?1:2;
+        switch(modify_gender){
+            case 1:
+                rb_modify_man.setChecked(true);
+                break;
+            case 2:
+                rb_modify_woman.setChecked(true);
+                break;
+            default:
+                break;
+        }
 
         rb_activity_rate=user.getActivity_index();
         switch(rb_activity_rate){
@@ -211,7 +225,10 @@ public class UserSettingActivity extends AppCompatActivity {
         tv_height = findViewById(R.id.tv_height);
         tv_kg = findViewById(R.id.tv_kg);
         tv_bmi = findViewById(R.id.tv_bmi);
-        tv_sex=findViewById(R.id.tv_sex);
+
+        rg_modify_gender=findViewById(R.id.rg_modify_gender);
+        rb_modify_man=findViewById(R.id.rb_modify_man);
+        rb_modify_woman=findViewById(R.id.rb_modify_woman);
 
         rg_modify_activity_rate = findViewById(R.id.rg_modify_activity_rate);
         rb_modify_lv1 = findViewById(R.id.rb_modify_lv1);
@@ -223,20 +240,36 @@ public class UserSettingActivity extends AppCompatActivity {
 
     }
 
+    private RadioGroup.OnCheckedChangeListener listener_modify_gender = new RadioGroup.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+            switch(checkedId){
+                case R.id.rb_modify_man:
+                    modify_gender=1;
+                    break;
+                case R.id.rb_modify_woman:
+                    modify_gender=2;
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
     private RadioGroup.OnCheckedChangeListener listener_select_activity_rate = new RadioGroup.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
             switch(checkedId){
-                case R.id.rb_lv1:
+                case R.id.rb_modify_lv1:
                     rb_activity_rate=1;
                     break;
-                case R.id.rb_lv2:
+                case R.id.rb_modify_lv2:
                     rb_activity_rate=2;
                     break;
-                case R.id.rb_lv3:
+                case R.id.rb_modify_lv3:
                     rb_activity_rate=3;
                     break;
-                case R.id.rb_lv4:
+                case R.id.rb_modify_lv4:
                     rb_activity_rate=4;
                     break;
                 default:
