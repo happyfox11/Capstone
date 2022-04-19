@@ -279,20 +279,29 @@ public class MainActivity<Unit> extends AppCompatActivity {
             customDialog.setCalendarDialogClickListener(new SelectCalendarDialog.OnCalendarDialogClickListener() {
                 @Override
                 public void onDoneClick(Date selectDate) {
-
-//                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
-//                    tv_dialog_result.setText(simpleDateFormat.format(selectDate) + "을 선택하셨습니다.");
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//                  tv_dialog_result.setText(simpleDateFormat.format(selectDate) + "을 선택하셨습니다.");
 
                     Calendar selected_past_day = Calendar.getInstance();
                     selected_past_day.setTime(selectDate);
                     //Log.i("check1",selected_past_day.get(Calendar.YEAR)+"/"+(selected_past_day.get(Calendar.MONTH)+1)+"/"+selected_past_day.get(Calendar.DATE)+"/"+selected_past_day.get(Calendar.DAY_OF_WEEK));
 
+
                     Intent intent = new Intent(activity, MainActivity.class);
-                    intent.putExtra("flag", true);
+
+
+                    intent.putExtra("main_flag", true);
                     intent.putExtra("selected_year", selected_past_day.get(Calendar.YEAR));
                     intent.putExtra("selected_month", selected_past_day.get(Calendar.MONTH));
                     intent.putExtra("selected_date", selected_past_day.get(Calendar.DATE));
                     intent.putExtra("kakao_userNickName", tv_userId.getText().toString());
+
+
+                    Log.e("date",simpleDateFormat.format(selectDate));
+                    intent.putExtra("selected_day",simpleDateFormat.format(selectDate));
+                    intent.putExtra("user",user);
+                    intent.putExtra("flag",flag);
+                    //TODO: flag는 무슨 의민인가여여ㅛ.. ㅠㅜ 카카오?구글? flase..?! 일단 flag 이름 하나 바꿈
                     startActivity(intent);
 
                     finish();
@@ -307,7 +316,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         today.setFirstDayOfWeek(Calendar.MONDAY);
 
         Intent get_selected_data = getIntent();
-        if(get_selected_data.getBooleanExtra("flag", false)) {
+        if(get_selected_data.getBooleanExtra("main_flag", false)) {
             today.set(Calendar.YEAR, get_selected_data.getIntExtra("selected_year",0));
             today.set(Calendar.MONTH, get_selected_data.getIntExtra("selected_month",0));
             today.set(Calendar.DATE, get_selected_data.getIntExtra("selected_date",0));
@@ -372,7 +381,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
             */
             Date date1 = today.getTime();
             Date date2 = day_of_this_week.getTime();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
             if(sdf.format(date1).equals(sdf.format(date2))) {
                 textView.setBackground(getDrawable(R.drawable.roundtv));
@@ -650,6 +659,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         //        .setDateFormat("yyyy-MM-dd")
         //        .create();
         //"2022-04-16T15:00:00.000+00:00"//"2022-04-16T15:00:00.000+00:00",
+        Intent intent = getIntent();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -657,17 +667,17 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
-        //현재 시간을 UNIX타입 으로 저장하는 코드
-        Long now1 = System.currentTimeMillis();
+        String date_string="";
 
-        //현재 시간을 yyyy-MM-dd HH:mm:ss 포맷으로 저장하는 코드
-        Date now = new Date(); //Date타입으로 변수 선언
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //데이트 포맷
-        String date_string = dateFormat.format(now); //날짜가 string으로 저장
-
-        //Date datekey = new Date(sdf.format(date)); //똥 코드..
-
-        Log.e("Retrodate",date_string);
+        if(intent.getStringExtra("selected_day")!=null){
+            date_string = intent.getStringExtra("selected_day");
+        }
+        else{
+            //현재 시간을 yyyy-MM-dd HH:mm:ss 포맷으로 저장하는 코드
+            Date now = new Date(); //Date타입으로 변수 선언
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //데이트 포맷
+            date_string = dateFormat.format(now); //날짜가 string으로 저장
+        }
 
 
         retrofitAPI.getDailyMeal(user.getId(),date_string).enqueue(new Callback<dailymeal>() {
@@ -678,6 +688,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
                 try {
                     Thread.sleep(100);
                     setting();
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
