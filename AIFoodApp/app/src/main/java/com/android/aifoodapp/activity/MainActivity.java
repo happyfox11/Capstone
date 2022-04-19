@@ -97,6 +97,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
     int percent_of_carbohydrate;
     int percent_of_protein;
     int percent_of_fat;
+    int[] calories = new int[7];
 
     user user;
     dailymeal dailymeal;
@@ -109,6 +110,9 @@ public class MainActivity<Unit> extends AppCompatActivity {
     private String flag;
 
     public static Activity _MainActivity;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -383,6 +387,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
             Date date2 = day_of_this_week.getTime();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
+            //출력되는 시작날짜와 나중날짜 알려주면 서버로 전송해서 처음에 받아오고 싶음..
             if(sdf.format(date1).equals(sdf.format(date2))) {
                 textView.setBackground(getDrawable(R.drawable.roundtv));
             }
@@ -407,8 +412,8 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
 
         //DB에서 하루 총 섭취칼로리 받아오기
-        int[] calories = new int[]{2100, 3800, 1200, 2200, 1000, 0, 0};
-        int target_calorie = 2150;
+        //int[] calories = new int[]{2100, 3800, 1200, 2200, 1000, 0, 0};
+        int target_calorie = user.getTarget_calories();
 
         LinearLayout row_calories = new LinearLayout(activity);
         row_calories.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -668,7 +673,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
         String date_string="";
-
+        //위에서 캘린더 세팅부분에서 오늘날짜를 보내주면 이렇게 하지 않고 세팅 가능 (selecday intent 에 넣는거 삭제해야함)
         if(intent.getStringExtra("selected_day")!=null){
             date_string = intent.getStringExtra("selected_day");
         }
