@@ -278,11 +278,11 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
     //설정
     private void setting(){
-        setting_weekly_calendar();
-        setting_nutri_progress();
-        setting_balance_graph();
-        setting_meal_adapter();
-        setting_initial_meal();
+        settingWeeklyCalendar();
+        settingNutriProgress();
+        settingBalanceGraph();
+        settingMealAdapter();
+        settingInitialMeal();
     }
 
     //리스너 추가
@@ -353,7 +353,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
                     /*
                         hanbyul comment:
                         flag는 초기값이 false이고 이 값은 캘린더에서 날짜를 선택한 경우에 true가 됩니다.
-                        그래서 setting_weekly_calendar()에서 이 값이 false이면 현재 오늘 날짜를 세팅하고,
+                        그래서 settingWeeklyCalendar()에서 이 값이 false이면 현재 오늘 날짜를 세팅하고,
                         true인 경우에는 캘린더에서 선택한 값을 전달하여 받아온 날짜를 세팅합니다.
                         일반적인 변수 flag로 변수명을 설정해서 다른 부분에서도 flag라는 변수를 이용하여 부가 데이터로 전달하여
                         충돌(?)이 발생하여, 날짜 선택 시 오류가 발생한게 아닌가 싶습니다..
@@ -367,7 +367,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         }
     };
 
-    private void setting_weekly_calendar(){
+    private void settingWeeklyCalendar(){
         Calendar today = Calendar.getInstance();
         today.setFirstDayOfWeek(Calendar.MONDAY);
 
@@ -498,7 +498,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         layout_calories.addView(row_calories);
     }
 
-    private void setting_nutri_progress(){
+    private void settingNutriProgress(){
         /*
             회원가입 후, 초기 개인정보 화면에서 넘어온 경우, 값을 바로 받아서 적용한다.(InitialSurveyActivity에서 DB에 저장되어야 함)
             DB 생성 후 이하 getIntent()에서 받아오는 HashMap은 사용하지 않아도 됨
@@ -576,7 +576,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
     }
 
-    private void setting_balance_graph(){
+    private void settingBalanceGraph(){
 
         /*밸런스 그래프 출력*/
         ArrayList<RadarEntry> visitors = new ArrayList<>();
@@ -655,7 +655,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
     }
 
-    private void setting_meal_adapter(){
+    private void settingMealAdapter(){
 
         lv_meal_item.setAdapter(mealAdapter);
 
@@ -702,7 +702,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         }
     }
 
-    private void setting_initial_meal(){
+    private void settingInitialMeal(){
         addMeal();
         addMeal();
     }
