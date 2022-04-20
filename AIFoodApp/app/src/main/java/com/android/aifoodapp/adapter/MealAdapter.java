@@ -5,6 +5,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +22,14 @@ import android.widget.Toast;
 
 import com.android.aifoodapp.R;
 import com.android.aifoodapp.activity.FoodAnalysisActivity;
+import com.android.aifoodapp.activity.MainActivity;
+import com.android.aifoodapp.interfaceh.OnCameraClick;
 import com.android.aifoodapp.interfaceh.OnEditMealHeight;
+import com.android.aifoodapp.interfaceh.OnGalleryClick;
 import com.android.aifoodapp.vo.MealMemberVo;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 public class MealAdapter extends BaseAdapter {
@@ -29,15 +39,17 @@ public class MealAdapter extends BaseAdapter {
     private MealHolder holder;
 
     private OnEditMealHeight onEditMealHeight;
+    private OnCameraClick onCameraClick;
+    private OnGalleryClick onGalleryClick;
 
 
     public class MealHolder {
         private TextView tv_custom_item_name;
         private Button btn_meal_detail;
         private Button btn_meal_delete;
-//        private Button btn_from_camera;
-//        private Button btn_from_gallery;
-//        private ImageView iv_img;
+        private Button btn_from_camera;
+        private Button btn_from_gallery;
+        private ImageView iv_img;
     }
 
     public MealAdapter(Activity activity, List<MealMemberVo> memberList) {
@@ -73,9 +85,9 @@ public class MealAdapter extends BaseAdapter {
             holder.tv_custom_item_name = convertView.findViewById(R.id.tv_custom_item_name);
             holder.btn_meal_detail = convertView.findViewById(R.id.btn_meal_detail);
             holder.btn_meal_delete = convertView.findViewById(R.id.btn_meal_delete);
-//            holder.btn_from_camera = convertView.findViewById(R.id.btn_from_camera);
-//            holder.btn_from_gallery = convertView.findViewById(R.id.btn_from_gallery);
-//            holder.iv_img = convertView.findViewById(R.id.iv_img);
+            holder.btn_from_camera = convertView.findViewById(R.id.btn_from_camera);
+            holder.btn_from_gallery = convertView.findViewById(R.id.btn_from_gallery);
+            holder.iv_img = convertView.findViewById(R.id.iv_img);
 
             convertView.setTag(holder);
             Log.i("check", "holdergetView:"+holder);
@@ -89,7 +101,7 @@ public class MealAdapter extends BaseAdapter {
         holder.btn_meal_detail.setTag("detail"+(getItemId(position)+1));
 
         holder.tv_custom_item_name.setText(" 식사 "+(getItemId(position)+1));
-
+        memberList.get(position).setName(holder.tv_custom_item_name.getText().toString());
 
         holder.btn_meal_detail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,6 +144,88 @@ public class MealAdapter extends BaseAdapter {
             }
         });
 
+        View finalConvertView = convertView;
+        holder.btn_from_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCameraClick.onCameraClick();
+                Log.i("check", "camerabtn:"+(getItemId(position)+1));
+                Log.i("check", "holdercamera:"+holder);
+
+                MealHolder cholder = (MealHolder) finalConvertView.getTag();
+                MainActivity mainActivity = (MainActivity) activity;
+                //View finalConvertView = convertView;
+                mainActivity.setOnSetImageListener(new MainActivity.OnSetImage() {
+                    @Override
+                    public void onSetImage(Uri photoUri) {
+
+                        //holder.iv_img = (ImageView) finalConvertView.findViewWithTag("fh");
+                        Log.i("check", "img:"+(getItemId(position)+1));
+                        Log.i("check", "holderimg:"+holder);
+                        Bitmap bitmap = null;
+                        try {
+                            bitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), photoUri);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG,80, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
+
+                        cholder.iv_img.setImageBitmap(bitmap);
+                        memberList.get(position).setMealImg(bitmap);
+                        //holder.iv_img.setImageURI(photoUri);
+                        //holder.iv_img.setRotation(90f);
+                        //holder.iv_img.setScaleType(ImageView.ScaleType.FIT_XY);
+
+                    }
+                });
+            }
+        });
+
+        holder.btn_from_gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onGalleryClick.onGalleryClick();
+                Log.i("check", "gallerybtn:"+(getItemId(position)+1));
+                Log.i("check", "holdergallery:"+holder);
+
+                MealHolder cholder = (MealHolder) finalConvertView.getTag();
+                MainActivity mainActivity = (MainActivity) activity;
+                //View finalConvertView = convertView;
+
+                mainActivity.setOnSetImageListener(new MainActivity.OnSetImage() {
+                    @Override
+                    public void onSetImage(Uri photoUri) {
+
+                        //holder.iv_img = (ImageView) finalConvertView.findViewWithTag("fh");
+                        Log.i("check", "img:"+(getItemId(position)+1));
+                        Log.i("check", "holderimg:"+holder);
+                        Bitmap bitmap = null;
+                        try {
+                            bitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), photoUri);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG,80, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
+
+                        cholder.iv_img.setImageBitmap(bitmap);
+                        memberList.get(position).setMealImg(bitmap);
+                        //holder.iv_img.setImageURI(photoUri);
+                        //holder.iv_img.setRotation(90f);
+                        //holder.iv_img.setScaleType(ImageView.ScaleType.FIT_XY);
+
+                    }
+                });
+            }
+        });
+
 
         return convertView;
     }
@@ -144,6 +238,14 @@ public class MealAdapter extends BaseAdapter {
 
     public void setOnEditMealHeightListener(OnEditMealHeight onEditMealHeightListener) {
         this.onEditMealHeight = onEditMealHeightListener;
+    }
+
+    public void setOnCameraClickListener(OnCameraClick onCameraClickListener) {
+        this.onCameraClick = onCameraClickListener;
+    }
+
+    public void setOnGalleryClickListener(OnGalleryClick onGalleryClickListener) {
+        this.onGalleryClick = onGalleryClickListener;
     }
 
 

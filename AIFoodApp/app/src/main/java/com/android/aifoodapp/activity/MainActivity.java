@@ -6,16 +6,31 @@ import static com.android.aifoodapp.interfaceh.baseURL.url;
 
 import static java.lang.Thread.sleep;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -35,7 +50,9 @@ import com.android.aifoodapp.domain.dailymeal;
 import com.android.aifoodapp.domain.user;
 import com.android.aifoodapp.interfaceh.GsonDateFormatAdapter;
 import com.android.aifoodapp.interfaceh.NullOnEmptyConverterFactory;
+import com.android.aifoodapp.interfaceh.OnCameraClick;
 import com.android.aifoodapp.interfaceh.OnEditMealHeight;
+import com.android.aifoodapp.interfaceh.OnGalleryClick;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
 import com.android.aifoodapp.vo.MealMemberVo;
 
@@ -59,6 +76,7 @@ import com.google.gson.GsonBuilder;
 import com.kakao.sdk.user.UserApiClient;
 
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -111,7 +129,30 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
     public static Activity _MainActivity;
 
+    //Camera & Gallery
+    private final int REQUEST_WRITE_EXTERNAL_STORAGE = 1005;
+    private final int REQUEST_READ_EXTERNAL_STORAGE = 1006;
 
+    private Uri photoUri;
+
+    private ActivityResultLauncher<Intent> cameraLauncher;
+    private ActivityResultLauncher<Intent> galleryLauncher;
+
+    public interface OnSetImage {
+        void onSetImage(Uri photoUri);
+    }
+
+    private OnSetImage onSetImage;
+
+    public void setOnSetImageListener(OnSetImage onSetImageListener) {
+        this.onSetImage = onSetImageListener;
+    }
+
+    //카메라 촬영 회전시 오류 해결
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
 
 
     @Override
@@ -230,6 +271,9 @@ public class MainActivity<Unit> extends AppCompatActivity {
         memberList = new ArrayList<>();
         mealAdapter = new MealAdapter(activity, memberList);
         fab_add_meal = findViewById(R.id.fab_add_meal);
+
+        cameraLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), cameraResultCallback);
+        galleryLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), galleryResultCallback);
     }
 
     //설정
@@ -306,6 +350,14 @@ public class MainActivity<Unit> extends AppCompatActivity {
                     intent.putExtra("user",user);
                     intent.putExtra("flag",flag);
                     //TODO: flag는 무슨 의민인가여여ㅛ.. ㅠㅜ 카카오?구글? flase..?! 일단 flag 이름 하나 바꿈
+                    /*
+                        hanbyul comment:
+                        flag는 초기값이 false이고 이 값은 캘린더에서 날짜를 선택한 경우에 true가 됩니다.
+                        그래서 setting_weekly_calendar()에서 이 값이 false이면 현재 오늘 날짜를 세팅하고,
+                        true인 경우에는 캘린더에서 선택한 값을 전달하여 받아온 날짜를 세팅합니다.
+                        일반적인 변수 flag로 변수명을 설정해서 다른 부분에서도 flag라는 변수를 이용하여 부가 데이터로 전달하여
+                        충돌(?)이 발생하여, 날짜 선택 시 오류가 발생한게 아닌가 싶습니다..
+                     */
                     startActivity(intent);
 
                     finish();
@@ -611,8 +663,39 @@ public class MainActivity<Unit> extends AppCompatActivity {
             mealAdapter.setOnEditMealHeightListener(new OnEditMealHeight() {
                 @Override
                 public void onEditMealHeight() {
-                    //콜백 메소드로 전달받은 값을 프래그먼트 쪽 멤버 변수에 할당해준다.
                     setListViewHeightBasedOnChildren(lv_meal_item);
+                }
+            });
+
+            mealAdapter.setOnCameraClickListener(new OnCameraClick() {
+                @Override
+                public void onCameraClick() {
+
+                    if(
+                            checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                    ){
+                        String[] permissions = {
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        };
+                        requestPermissions(permissions, REQUEST_WRITE_EXTERNAL_STORAGE);
+                    }else{
+                        loadCameraImage();
+                    }
+                }
+            });
+
+            mealAdapter.setOnGalleryClickListener(new OnGalleryClick() {
+                @Override
+                public void onGalleryClick() {
+
+                    if(
+                            checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                    ){
+                        String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
+                        requestPermissions(permissions, REQUEST_READ_EXTERNAL_STORAGE);
+                    }else{
+                        loadGalleryImage();
+                    }
                 }
             });
         }
@@ -653,6 +736,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
         listView.requestLayout();
     }
+
     public void setDailymeal(){
 
         //https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=gracefulife&logNo=220992369673
@@ -705,5 +789,137 @@ public class MainActivity<Unit> extends AppCompatActivity {
                 Log.e("Error! t messge",t.getMessage());
             }
         });
+    }
+
+    private ActivityResultCallback<ActivityResult> cameraResultCallback = new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if(result.getResultCode() == RESULT_OK){
+                activity.getWindow().getDecorView().setEnabled(false);
+
+                Toast toast;
+                toast = Toast.makeText(activity, "잠시만 기다려주세요!", Toast.LENGTH_LONG);
+                toast.show();
+                //img_photo.setImageURI(photoUri);
+                onSetImage.onSetImage(photoUri);
+                toast.cancel();
+                activity.getWindow().getDecorView().setEnabled(true);
+
+/*                Intent intent = new Intent(activity, FoodAnalysisActivity.class);
+                intent.putExtra("full_meal_img", photoUri);
+                startActivity(intent);*/
+
+            }
+        }
+    };
+
+    private ActivityResultCallback<ActivityResult> galleryResultCallback = new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+
+            if(result.getResultCode() == RESULT_OK){
+                activity.getWindow().getDecorView().setEnabled(false);
+
+                Toast toast;
+                toast = Toast.makeText(activity, "잠시만 기다려주세요!", Toast.LENGTH_LONG);
+                toast.show();
+
+                Uri uri = result.getData().getData();
+                //img_photo.setImageURI(uri);
+                onSetImage.onSetImage(uri);
+                toast.cancel();
+                activity.getWindow().getDecorView().setEnabled(true);
+            }
+        }
+    };
+
+    private void loadCameraImage(){
+        try{
+
+            Intent intent = new Intent();
+            intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+
+            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String tmpFileName = timestamp;
+
+            File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            File photoFile = File.createTempFile(tmpFileName, ".jpg", storageDir);
+
+            photoUri = FileProvider.getUriForFile(activity, getPackageName(),photoFile);
+
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            cameraLauncher.launch(intent);
+
+        }catch(Exception ex){
+
+        }
+    }
+
+    private void loadGalleryImage(){
+        try{
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+
+            galleryLauncher.launch(intent);
+
+        }catch(Exception ex){
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(grantResults.length > 0){
+
+            if(requestCode == REQUEST_WRITE_EXTERNAL_STORAGE){
+
+                if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    loadCameraImage();
+                }else{
+                    requestUserPermission();
+                }
+
+            }else if(requestCode == REQUEST_READ_EXTERNAL_STORAGE){
+
+                if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    loadGalleryImage();
+                }else{
+                    requestUserPermission();
+                }
+            }
+        }
+    }
+
+    private void requestUserPermission(){
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+
+        alertDialog.setIcon(R.drawable.alert_icon);
+        alertDialog.setTitle("권한");
+        alertDialog.setMessage("권한 허용하시겠습니까?");
+
+        alertDialog.setPositiveButton("허용",new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int which){
+
+                //알림창의 확인 버튼 클릭
+                Intent appDetail = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.parse("package:"+getPackageName()));
+                appDetail.addCategory(Intent.CATEGORY_DEFAULT);
+                appDetail.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(appDetail);
+            }
+        });
+
+        alertDialog.setNegativeButton("거부",new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog,int which){
+
+            }
+        });
+
+        alertDialog.show();
     }
 }
