@@ -1,10 +1,10 @@
 package com.android.aifoodapp.vo;
 
-import android.widget.ImageView;
+import android.graphics.Bitmap;
 
 public class MealMemberVo {
     private String name;
-    private ImageView mealImg;
+    private Bitmap mealImg;
 
     public MealMemberVo() {
 
@@ -19,11 +19,11 @@ public class MealMemberVo {
         this.name = name;
     }
 
-    public ImageView getMealImg() {
+    public Bitmap getMealImg() {
         return mealImg;
     }
 
-    public void setMealImg(ImageView mealImg) {
+    public void setMealImg(Bitmap mealImg) {
         this.mealImg = mealImg;
     }
 
