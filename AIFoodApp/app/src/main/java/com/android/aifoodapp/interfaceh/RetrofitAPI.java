@@ -6,6 +6,7 @@ import com.android.aifoodapp.domain.user;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -39,9 +40,14 @@ public interface RetrofitAPI {
             @Query("datekey") String datekey
     );
 
-    //하루 조회용
-    // https://jaejong.tistory.com/38
-    //주간 조회용..
+    @GET("/checkWeeklyMealCalories.do")
+    Call<List<Integer>> getWeeklyCalories(
+            @Query("id") String id,
+            @Query("startDate") String startDate,
+            @Query("endDate") String endDate
+    );
+
+    //weekyl"/checkWeeklyMeal.do")
 
     @FormUrlEncoded
     @POST("/dailymealSave.do")
