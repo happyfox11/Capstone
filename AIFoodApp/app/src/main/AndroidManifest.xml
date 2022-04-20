@@ -4,11 +4,9 @@
     <!-- 인터넷 사용 권한 설정 (카카오 서버와 통신하기 위하여) -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 스마트폰 메모리 접근 -->
-
     <!-- 외부 저장소 접근 권한 설정 (카메라와 갤러리 이용) -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
 
     <application
         android:name=".KakaoApplication"
@@ -19,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AIFoodApp"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".activity.FoodInputActivity"
+            android:exported="true" />
         <!-- http 접근을 허용 -->
         <activity
             android:name=".activity.InitialSurveyActivity"
@@ -71,7 +72,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/photo_file_path" />
         </provider>
-
     </application>
 
 </manifest>

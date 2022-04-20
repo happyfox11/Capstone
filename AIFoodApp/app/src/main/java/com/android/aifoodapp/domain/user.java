@@ -144,7 +144,7 @@ public class user implements Parcelable {
         //이미지 저장부분 일단 살려둠..
         profile=in.readString();
     }
-
+/*
     public static final Creator<user> USER_CREATOR = new Creator<user>() {
         @Override
         public user createFromParcel(Parcel parcel) {
@@ -156,7 +156,7 @@ public class user implements Parcelable {
             return new user[size];
         }
     };
-
+*/
     @Override
     public int describeContents() {
         return 0;

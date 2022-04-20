@@ -32,7 +32,7 @@
             app:srcCompat="@drawable/character" />
 
 
-        <!--<LinearLayout
+        <LinearLayout
             android:id="@+id/btn_kakao"
             android:layout_width="300dp"
             android:layout_height="50dp"
@@ -60,15 +60,15 @@
                 android:text="카카오로 쉬운 시작"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
-        </LinearLayout>-->
-
+        </LinearLayout>
+<!--
         <ImageView
             android:id="@+id/btn_kakao"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             app:srcCompat="@drawable/kakao_login_medium_wide" />
-
+-->
         <!-- 메뉴얼 구글 로그인
                 <com.google.android.gms.common.SignInButton
                     android:id="@+id/sign_in_button"
@@ -106,7 +106,7 @@
                 android:textSize="16sp" />
         </LinearLayout>
 
-
+<!--
         <LinearLayout
             android:id="@+id/btn_email"
             android:layout_width="300dp"
@@ -136,8 +136,7 @@
                 android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
-
+-->
     </LinearLayout>
-
 
 </LinearLayout>
