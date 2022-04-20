@@ -651,6 +651,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         radarChart.setWebColor(parseColor("#3A531C"));
 
         radarChart.setData(radarData);
+        radarChart.invalidate();
 
     }
 
