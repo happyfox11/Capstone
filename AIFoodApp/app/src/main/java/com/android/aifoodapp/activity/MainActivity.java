@@ -358,6 +358,11 @@ public class MainActivity<Unit> extends AppCompatActivity {
                         일반적인 변수 flag로 변수명을 설정해서 다른 부분에서도 flag라는 변수를 이용하여 부가 데이터로 전달하여
                         충돌(?)이 발생하여, 날짜 선택 시 오류가 발생한게 아닌가 싶습니다..
                      */
+                    /*
+                        jisoo
+                        카카오 로그인한건지 구글 로그인한건지 구분하려고 flag="kakao" or "google"로 넘겨주고 받고 있는데
+                        날짜 flag 변수가 겹친것 같습니다..?
+                    * */
                     startActivity(intent);
 
                     finish();

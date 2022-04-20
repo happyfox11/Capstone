@@ -239,6 +239,8 @@ public class UserSettingActivity extends AppCompatActivity {
                         MA.finish();
                         Intent intent = new Intent(activity, LoginActivity.class);
                         //수정 후 user 정보 업데이트를 하고 새로 user정보를 가져오기 위해 다시 LoginActivity
+                        intent.putExtra("load",true);
+
                         startActivity(intent);
                         finish();
                     }

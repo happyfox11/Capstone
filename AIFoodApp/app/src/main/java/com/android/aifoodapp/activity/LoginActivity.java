@@ -50,8 +50,7 @@ import android.widget.Toast;
 public class LoginActivity extends AppCompatActivity {
 
     Activity activity;
-    LinearLayout  btn_google, btn_email;
-    ImageView btn_kakao;
+    LinearLayout  btn_google, btn_email, btn_kakao;
     static Context mContext;
 
     GoogleSignInClient mGoogleSignInClient;
@@ -63,7 +62,10 @@ public class LoginActivity extends AppCompatActivity {
         mContext = this;
         setContentView(R.layout.activity_login);
         initialize();
-        addListener();
+        if(getIntent().getBooleanExtra("load",false)){
+            btn_kakao.setVisibility(View.INVISIBLE);
+            btn_google.setVisibility(View.INVISIBLE);
+        };
         //getKeyHash();
 
 
@@ -205,28 +207,12 @@ public class LoginActivity extends AppCompatActivity {
     //변수 초기화
     private void initialize(){
         activity = this;
-        btn_kakao = (ImageView) findViewById(R.id.btn_kakao);
+        btn_kakao = findViewById(R.id.btn_kakao);
         btn_google = findViewById(R.id.btn_google);
-        btn_email = findViewById(R.id.btn_email);
+        //btn_email = findViewById(R.id.btn_email);
 
         //test = findViewById(R.id.textView19);
     }
-
-    //리스너 생성
-    private void addListener(){
-        //btn_kakao.setOnClickListener(listener_kakao_sign);
-        //btn_google.setOnClickListener(listener_google_sign);
-        btn_email.setOnClickListener(listener_email_sign);
-    }
-
-    //3. 이메일 로그인 리스너 등록
-    private final View.OnClickListener listener_email_sign = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            Intent intent = new Intent(activity, InitialSurveyActivity.class);
-            startActivity(intent);
-        }
-    };
 
     //카카오
     public void updateKakaoLoginUi() {

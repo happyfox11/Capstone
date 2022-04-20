@@ -17,6 +17,7 @@ import com.android.aifoodapp.RecyclerView.FoodInfo;
 import com.android.aifoodapp.RecyclerView.FoodItem;
 import com.android.aifoodapp.RecyclerView.myRecyclerViewAdapter;
 import com.android.aifoodapp.RecyclerView.myRecyclerViewAdapter2;
+import com.android.aifoodapp.domain.user;
 
 import java.util.ArrayList;
 
@@ -31,7 +32,9 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     com.android.aifoodapp.RecyclerView.myRecyclerViewAdapter myRecyclerViewAdapter;
     myRecyclerViewAdapter2 myRecyclerViewAdapter2;
     RecyclerView recyclerView ,recyclerView2;
-
+    ImageView iv_plusBtn;
+    user user;
+    private String flag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +42,9 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         setContentView(R.layout.activity_food_analysis);
         initialize();
 
+        Intent intent = getIntent();
+        user = intent.getParcelableExtra("user");
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         linearLayoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false); //가로 방향으로 저장
         recyclerView.setLayoutManager(linearLayoutManager);
 
@@ -72,20 +76,25 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         //테스트
         for( int i=1; i<=4; i++){
             myRecyclerViewAdapter2.addItem(new FoodInfo(R.drawable.ic_launcher_background,"음식"+i,"칼로리","0.5","음식"+i));
-
         }
 
         recyclerView2.setAdapter(myRecyclerViewAdapter2);
 
-
-
+        iv_plusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(activity, FoodInputActivity.class);
+                intent.putExtra("user",user);
+                startActivity(intent);
+            }
+        });
 
     }
 
     //변수 초기화
     private void initialize(){
         activity = this;
-
-
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        iv_plusBtn=findViewById(R.id.iv_plusBtn);
     }
 }

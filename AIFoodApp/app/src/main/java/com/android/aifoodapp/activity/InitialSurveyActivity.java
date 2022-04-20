@@ -149,12 +149,12 @@ public class InitialSurveyActivity extends AppCompatActivity {
         활동적	1.7	: 매일 운동을 1시간 이상씩 하며 활동적인 사람
         매우 활동적	2.4	: 육체노동직장이나 매일 2시간이상씩 운동하는 사람*/
 
-        int age_point = (survey_result.get("age") == 1)? 5 : -151;
+        int gender_point = (survey_result.get("gender") == 1)? 5 : -151;
         int basic_calories =
                 (int) ((10*(survey_result.get("weight"))
                         +6.25*(survey_result.get("height"))
                         -5.0*survey_result.get("age"))
-                        + age_point);
+                        + gender_point);
 
         double activity_point = 0;
         switch(survey_result.get("activity_rate")){
@@ -268,6 +268,7 @@ public class InitialSurveyActivity extends AppCompatActivity {
                 });
 
                 Intent intent2 = new Intent(activity, LoginActivity.class);
+                intent2.putExtra("load",true);
                 //Intent intent = new Intent(activity, RequestUserInfo.class);
 /*
                 //TODO survery_result를 넘기는게 아니라 Main에서 db로부터 바로 받는 방식으로 고쳐야 할듯
