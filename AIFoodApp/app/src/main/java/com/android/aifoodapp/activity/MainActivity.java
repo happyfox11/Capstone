@@ -83,6 +83,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -115,8 +116,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
     int percent_of_carbohydrate;
     int percent_of_protein;
     int percent_of_fat;
-    int[] calories = new int[7];
-
+    Integer[] calories=new Integer[7];
     user user;
     dailymeal dailymeal;
 
@@ -129,6 +129,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
     public static Activity _MainActivity;
 
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //데이트 포맷(sql)
     //Camera & Gallery
     private final int REQUEST_WRITE_EXTERNAL_STORAGE = 1005;
     private final int REQUEST_READ_EXTERNAL_STORAGE = 1006;
@@ -165,14 +166,8 @@ public class MainActivity<Unit> extends AppCompatActivity {
         user = intent.getParcelableExtra("user");
         //서버에서 dailymeal을 받아오는데 비 동기적으로 작동해서 뒤에코드가 먼저 실행되는 에러 발
         setDailymeal();
-
-
-        //setting();
+        //setting(); //retrofit callback 문제로 아래로 내려둠
         addListener();
-
-
-        /*Log.e("userERRRRRRRR",user.pringStirng());*/
-
 
         flag=intent.getStringExtra("flag"); //현재 계정이 구글인지 카카오인지
 
@@ -327,7 +322,6 @@ public class MainActivity<Unit> extends AppCompatActivity {
             customDialog.setCalendarDialogClickListener(new SelectCalendarDialog.OnCalendarDialogClickListener() {
                 @Override
                 public void onDoneClick(Date selectDate) {
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 //                  tv_dialog_result.setText(simpleDateFormat.format(selectDate) + "을 선택하셨습니다.");
 
                     Calendar selected_past_day = Calendar.getInstance();
@@ -345,8 +339,8 @@ public class MainActivity<Unit> extends AppCompatActivity {
                     intent.putExtra("kakao_userNickName", tv_userId.getText().toString());
 
 
-                    Log.e("date",simpleDateFormat.format(selectDate));
-                    intent.putExtra("selected_day",simpleDateFormat.format(selectDate));
+                    Log.e("date",dateFormat.format(selectDate));
+                    intent.putExtra("selected_day",dateFormat.format(selectDate));
                     intent.putExtra("user",user);
                     intent.putExtra("flag",flag);
                     //TODO: flag는 무슨 의민인가여여ㅛ.. ㅠㅜ 카카오?구글? flase..?! 일단 flag 이름 하나 바꿈
@@ -373,6 +367,9 @@ public class MainActivity<Unit> extends AppCompatActivity {
     };
 
     private void settingWeeklyCalendar(){
+        //juhee
+        String startDate = null,endDate=null;
+
         Calendar today = Calendar.getInstance();
         today.setFirstDayOfWeek(Calendar.MONDAY);
 
@@ -417,8 +414,16 @@ public class MainActivity<Unit> extends AppCompatActivity {
             day_of_this_week.set(Calendar.DAY_OF_WEEK, i+2);
             //Log.i("check3",day_of_this_week.get(Calendar.YEAR)+"/"+(day_of_this_week.get(Calendar.MONTH)+1)+"/"+day_of_this_week.get(Calendar.DATE)+"/"+day_of_this_week.get(Calendar.DAY_OF_WEEK));
 
-            if(i==0) month1 = day_of_this_week.get(Calendar.MONTH) + 1;
-            if(i==6) month2 = day_of_this_week.get(Calendar.MONTH) + 1;
+
+            Date dat = day_of_this_week.getTime();
+            if(i==0) {
+                month1 = day_of_this_week.get(Calendar.MONTH) + 1;
+                startDate = dateFormat.format(dat);
+            }
+            if(i==6) {
+                month2 = day_of_this_week.get(Calendar.MONTH) + 1;
+                endDate = dateFormat.format(dat);
+            }
 
             LinearLayout col = new LinearLayout(activity);
             col.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
@@ -442,10 +447,9 @@ public class MainActivity<Unit> extends AppCompatActivity {
             */
             Date date1 = today.getTime();
             Date date2 = day_of_this_week.getTime();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-            //출력되는 시작날짜와 나중날짜 알려주면 서버로 전송해서 처음에 받아오고 싶음..
-            if(sdf.format(date1).equals(sdf.format(date2))) {
+            if(dateFormat.format(date1).equals(dateFormat.format(date2))) {
                 textView.setBackground(getDrawable(R.drawable.roundtv));
             }
             if(day_of_this_week.compareTo(Calendar.getInstance()) != 1)
@@ -455,6 +459,52 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
             row_date.addView(col);
         }
+
+
+        //https://www.daleseo.com/js-async-callback/
+        try {
+            Thread.sleep(1000);
+            Log.e("week22", Arrays.toString(calories));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        /*juhee */
+        //setWeelklyCalories(startDate,endDate);
+
+        //calorie 초기화
+        for(int i=0;i<7;i++)calories[i]=0;
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create()).build();
+
+        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+        retrofitAPI.getWeeklyCalories(user.getId(),startDate,endDate).enqueue(new Callback<List<Integer>>() {
+            @Override
+            public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
+                calories=response.body().toArray(new Integer[7]);
+                //Log.e("weekly", Arrays.toString(calories));
+                Log.e("week", String.valueOf(response.body()));
+                //setting_weekly_calendar();
+            }
+
+            @Override
+            public void onFailure(Call<List<Integer>> call, Throwable t) {
+                Log.e("Error! call msg",call.toString());
+                Log.e("Error! t messge",t.getMessage());
+            }
+        });
+
+        try {
+            Thread.sleep(1000);
+            Log.e("week22", Arrays.toString(calories));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        /* juhee --fin */
+
         layout_date.addView(row_date);
 
         int year = day_of_this_week.get(Calendar.YEAR);//마지막 날의 연도
@@ -770,7 +820,6 @@ public class MainActivity<Unit> extends AppCompatActivity {
         else{
             //현재 시간을 yyyy-MM-dd HH:mm:ss 포맷으로 저장하는 코드
             Date now = new Date(); //Date타입으로 변수 선언
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //데이트 포맷
             date_string = dateFormat.format(now); //날짜가 string으로 저장
         }
 
@@ -928,4 +977,33 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
         alertDialog.show();
     }
+
+    /*
+    public void setWeelklyCalories(String startDate, String endDate){
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create()).build();
+
+        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+        retrofitAPI.getWeeklyCalories(user.getId(),startDate,endDate).enqueue(new Callback<List<Integer>>() {
+            @Override
+            public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
+                calories = response.body().toArray(new Integer[7]);
+                try {
+                    Log.e("weekly", String.valueOf(calories));
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Integer>> call, Throwable t) {
+                Log.e("Error! call msg",call.toString());
+                Log.e("Error! t messge",t.getMessage());
+            }
+        });
+    }*/
 }
