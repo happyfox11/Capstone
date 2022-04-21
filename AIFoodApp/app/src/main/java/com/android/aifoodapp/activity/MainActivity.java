@@ -99,7 +99,6 @@ public class MainActivity<Unit> extends AppCompatActivity {
     int percent_of_protein;
     int percent_of_fat;
     Integer[] calories=new Integer[7];
-
     user user;
     dailymeal dailymeal;
 
@@ -300,7 +299,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
                     intent.putExtra("selected_day",dateFormat.format(selectDate));
                     intent.putExtra("user",user);
                     intent.putExtra("flag",flag);
-                    //TODO: flag는 무슨 의민인가여여ㅛ.. ㅠㅜ 카카오?구글? flase..?! 일단 flag 이름 하나 바꿈
+                    //TODO: flag는 무슨 의민인가여여ㅛ.. ㅠㅜ  일단 flag 이름 하나 바꿈
                     startActivity(intent);
 
                     finish();
@@ -405,9 +404,20 @@ public class MainActivity<Unit> extends AppCompatActivity {
         }
 
 
+        //https://www.daleseo.com/js-async-callback/
+        try {
+            Thread.sleep(1000);
+            Log.e("week22", Arrays.toString(calories));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         /*juhee */
         //setWeelklyCalories(startDate,endDate);
+
+        //calorie 초기화
+        for(int i=0;i<7;i++)calories[i]=0;
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create()).build();
@@ -417,9 +427,10 @@ public class MainActivity<Unit> extends AppCompatActivity {
         retrofitAPI.getWeeklyCalories(user.getId(),startDate,endDate).enqueue(new Callback<List<Integer>>() {
             @Override
             public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
-                calories = response.body().toArray(new Integer[7]);
+                calories=response.body().toArray(new Integer[7]);
                 //Log.e("weekly", Arrays.toString(calories));
                 Log.e("week", String.valueOf(response.body()));
+                //setting_weekly_calendar();
             }
 
             @Override
@@ -430,11 +441,11 @@ public class MainActivity<Unit> extends AppCompatActivity {
         });
 
         try {
-            Thread.sleep(10000);
+            Thread.sleep(1000);
+            Log.e("week22", Arrays.toString(calories));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         /* juhee --fin */
 
         layout_date.addView(row_date);
