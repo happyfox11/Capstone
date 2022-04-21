@@ -498,8 +498,8 @@ public class MainActivity<Unit> extends AppCompatActivity {
         });
 
         try {
-            Thread.sleep(1000);
-            Log.e("week22", Arrays.toString(calories));
+            Thread.sleep(100);
+            Log.e("week22", Arrays.toString(calories)); //이것이 왜 먼저 나오는가.. .ㅠㅜㅜㅠ
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
