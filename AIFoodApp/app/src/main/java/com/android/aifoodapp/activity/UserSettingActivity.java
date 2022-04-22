@@ -21,6 +21,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.aifoodapp.R;
@@ -28,6 +29,11 @@ import com.android.aifoodapp.domain.user;
 import com.android.aifoodapp.interfaceh.NullOnEmptyConverterFactory;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.kakao.sdk.user.UserApiClient;
 
 import java.io.IOException;
@@ -58,6 +64,9 @@ public class UserSettingActivity extends AppCompatActivity {
     HashMap<String, Object> accounts = new HashMap<>();
     private int rb_activity_rate,modify_gender;
     private String flag;
+
+
+    GoogleSignInClient mGoogleSignInClient;
 
     com.android.aifoodapp.domain.user user;
 
@@ -169,6 +178,72 @@ public class UserSettingActivity extends AppCompatActivity {
                             }).show();
                 }
                 else if(flag.equals("google")){
+                    new AlertDialog.Builder(UserSettingActivity.this).setMessage("회원 탈퇴 하시겠습니까?")
+                            .setPositiveButton("네", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                // google
+                                public void onClick(DialogInterface dialog, int which) {
+                                    /*juhee modify*/
+                                    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                            .requestEmail()
+                                            .build();
+                                    // Build a GoogleSignInClient with the options specified by gso.
+                                    mGoogleSignInClient = GoogleSignIn.getClient(UserSettingActivity.this, gso);
+
+                                    mGoogleSignInClient.signOut().addOnCompleteListener(UserSettingActivity.this, new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            //Toast.makeText(UserSettingActivity.this,"Signed Out ok ",Toast.LENGTH_LONG).show();
+                                            //finish();
+                                        }
+                                    });
+
+                                    UserApiClient.getInstance().unlink(new Function1<Throwable, Unit>() {
+                                        @Override
+                                        public Unit invoke(Throwable throwable) {
+                                            //db에서 해당 id 지워야 함
+                                            Retrofit retrofit = new Retrofit.Builder()
+                                                    .baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
+
+                                            RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+                                            retrofitAPI.getDeleteUser(tv_userIdInfo.getText().toString()).enqueue(new Callback<user>() {
+                                                @Override
+                                                public void onResponse(Call<user> call, Response<user> response) {
+                                                    if(response.isSuccessful()){
+                                                        Log.d("delete user","Post 성공");
+                                                    }
+                                                    else{
+                                                        String body = response.errorBody().toString();
+                                                        Log.d("delete user", "error - body : " + body);
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<user> call, Throwable t) {
+                                                    Log.d("postUpdateUser","Post 실패 ");
+                                                }
+                                            });
+
+                                            MainActivity MA = (MainActivity)MainActivity._MainActivity; // https://itun.tistory.com/357 [Bino]
+                                            MA.finish();
+
+                                            Intent intent = new Intent(activity, LoginActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                            return null;
+                                        }
+                                    });
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
 
                 }
             }
