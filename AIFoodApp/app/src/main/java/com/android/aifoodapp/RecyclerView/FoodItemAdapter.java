@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.aifoodapp.R;
+import com.android.aifoodapp.domain.fooddata;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -19,125 +20,111 @@ import java.util.ArrayList;
 
 public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.CustomViewHolder> {
 
-    public interface ItemClickListener {
-        public void onItemClicked(FoodItem item);
+    private final ArrayList<FoodItem> arrayList;
+    private ItemClickListener itemClickListener;
 
-        public void onRemoveButtonClicked(FoodItem item);
+    public FoodItemAdapter(ArrayList<FoodItem> arrayList) {
+        this.arrayList = arrayList;
     }
 
-        private final  ArrayList<FoodItem> arrayList;
-        private ItemClickListener itemClickListener;
-        public FoodItemAdapter(ArrayList<FoodItem> arrayList) {
-            this.arrayList = arrayList;
-        }
+    public interface ItemClickListener {
+        public void onItemClicked(FoodItem item);
+        public void onRemoveButtonClicked(int position);
+    }
 
-        public void setItemClickListener(ItemClickListener itemClickListener) {
+    public void setItemClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
 
-        @NonNull
-        @Override //뷰홀더 객체 생성
-        public FoodItemAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.food_list_item, parent, false);
+    //Holder
+    @NonNull
+    @Override
+    public FoodItemAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.food_list_item, parent, false);
 
-            CustomViewHolder holder = new CustomViewHolder(view);
+        CustomViewHolder holder = new CustomViewHolder(view);
 
-            return holder;
-        }
+        return holder;
+    }
 
-        @Override //어떤 객체를 바인딩할지 설정
-        public void onBindViewHolder(@NonNull FoodItemAdapter.CustomViewHolder holder, int position) {
+    @Override //어떤 객체를 바인딩할지 설정
+    public void onBindViewHolder(@NonNull FoodItemAdapter.CustomViewHolder holder, int position) {
 
-            holder.fl_foodInfo.setImageResource(arrayList.get(position).getFl_foodInfo());
-            holder.fl_foodInfo.setBorderColor(Color.WHITE);
+        holder.fl_foodInfo.setImageResource(Integer.parseInt(arrayList.get(position).getFl_image()));
+        holder.fl_foodInfo.setBorderColor(Color.WHITE);
+        holder.iv_minusBtn.setImageResource(arrayList.get(position).getMinusBtn());
+        holder.fl_foodName.setText(arrayList.get(position).getFl_foodName());
 
-            holder.fl_foodInfo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+        holder.fl_foodInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int position = holder.getAdapterPosition(); //holder.getBindingAdapterPosition()
 
-                    int position = holder.getBindingAdapterPosition();
+                if (itemClickListener != null) {
+                    itemClickListener.onItemClicked(arrayList.get(position));
+                }
 
-                    if (itemClickListener != null) {
-                        itemClickListener.onItemClicked(arrayList.get(position));
-                    }
-
-                    holder.fl_foodInfo.setBorderColor(Color.RED);
-                    // notifyDataSetChanged();
-                    for (int i = 0; i < arrayList.size(); i++) {
-
-                        if (i != position) {
-                            notifyItemChanged(i, null);
-                        }
+                holder.fl_foodInfo.setBorderColor(Color.RED); //바깥 외부선 빨간색
+                // notifyDataSetChanged();
+                for (int i = 0; i < arrayList.size(); i++) {
+                    if (i != position) {
+                        notifyItemChanged(i, null);
                     }
                 }
-            });
+            }
+        });
 
-            holder.iv_minusBtn.setImageResource(arrayList.get(position).getMinusBtn());
+        holder.iv_minusBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int position = holder.getAdapterPosition();
+                //holder.getBindingAdapterPosition()
 
-            holder.iv_minusBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = holder.getBindingAdapterPosition();
-
-                    if (itemClickListener != null) {
-                        itemClickListener.onRemoveButtonClicked(arrayList.get(position));
-                    }
-
-                    remove(position);
+                if (itemClickListener != null) {
+                    itemClickListener.onRemoveButtonClicked(position);
                 }
-            });
-
-            holder.fl_foodName.setText(arrayList.get(position).getFl_foodName());
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return arrayList.size();
-        }
-
-
-        //아이템 추가
-        public void addItem(FoodItem food) {
-            arrayList.add(food);
-        }
-
-
-        //아이템 삭제
-        public void remove(int position) {
-            try {
-                arrayList.remove(position);
-                notifyItemRemoved(position);
-                //notifyDataSetChanged();
-            } catch (IndexOutOfBoundsException e) {
-                e.printStackTrace();
+                remove(position);
             }
-        }
+        });
 
+    }
 
+    @Override
+    public int getItemCount() {
+        return arrayList.size();
+    }
 
-        public class CustomViewHolder extends RecyclerView.ViewHolder {
+    //아이템 추가
+    public void addItem(FoodItem food) {
+        arrayList.add(food);
+    }
 
-            protected CircleImageView fl_foodInfo;
-            protected ImageView iv_minusBtn;
-            protected TextView fl_foodName;
-
-
-            public CustomViewHolder(@NonNull View itemView) {
-
-                super(itemView);
-
-                this.fl_foodInfo = (CircleImageView) itemView.findViewById(R.id.fl_foodInfo);
-                this.iv_minusBtn = (ImageView) itemView.findViewById(R.id.iv_minusBtn);
-                this.fl_foodName = (TextView) itemView.findViewById(R.id.fl_foodName);
-
-
-            }
-
-
-
+    //아이템 삭제
+    public void remove(int position) {
+        try {
+            arrayList.remove(position);
+            notifyItemRemoved(position);
+            //notifyDataSetChanged();
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
         }
     }
+
+    public class CustomViewHolder extends RecyclerView.ViewHolder {
+
+        protected CircleImageView fl_foodInfo;
+        protected ImageView iv_minusBtn;
+        protected TextView fl_foodName;
+
+        public CustomViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            this.fl_foodInfo = (CircleImageView) itemView.findViewById(R.id.fl_foodInfo); //이미지
+            this.iv_minusBtn = (ImageView) itemView.findViewById(R.id.iv_minusBtn);
+            this.fl_foodName = (TextView) itemView.findViewById(R.id.fl_foodName);
+        }
+    }
+}
 
 
 

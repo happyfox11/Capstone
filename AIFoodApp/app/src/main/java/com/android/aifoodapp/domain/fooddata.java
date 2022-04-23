@@ -64,8 +64,8 @@ public class fooddata implements Parcelable {
     private double vitamin_c;
     @SerializedName("cholesterol")
     private double cholesterol;
-    @SerializedName("total_saturated_fatty_adds")
-    private double total_saturated_fatty_adds;
+    @SerializedName("total_saturated_fatty_acids")
+    private double total_saturated_fatty_acids;
     @SerializedName("trans_fatty_acids")
     private double trans_fatty_acids;
     @SerializedName("several_times")
@@ -82,7 +82,7 @@ public class fooddata implements Parcelable {
             double glucose, double fructose, double lactose, double maltose, double total_dietary_fiber,
             double calcium, double iron, double magnesium, double in, double potassium, double sodium, double zinc,
             double copper, double manganese, double vitamin_b1, double vitamin_b2, double vitamin_c, double cholesterol,
-            double total_saturated_fatty_adds, double trans_fatty_acids, double several_times, double caffeine) {
+            double total_saturated_fatty_acids, double trans_fatty_acids, double several_times, double caffeine) {
         this.id=id;
         this.name=name;
         this.one_serving=one_serving;
@@ -112,7 +112,7 @@ public class fooddata implements Parcelable {
         this.vitamin_b2=vitamin_b2;
         this.vitamin_c=vitamin_c;
         this.cholesterol=cholesterol;
-        this.total_saturated_fatty_adds=total_saturated_fatty_adds;
+        this.total_saturated_fatty_acids=total_saturated_fatty_acids;
         this.trans_fatty_acids=trans_fatty_acids;
         this.several_times=several_times;
         this.caffeine=caffeine;
@@ -321,11 +321,11 @@ public class fooddata implements Parcelable {
         this.cholesterol=cholesterol;
     }
 
-    public double getTotal_saturated_fatty_adds(){
-        return total_saturated_fatty_adds;
+    public double getTotal_saturated_fatty_acids(){
+        return total_saturated_fatty_acids;
     }
-    public void setTotal_saturated_fatty_adds(double saturated_fatty_adds){
-        this.total_saturated_fatty_adds=total_saturated_fatty_adds;
+    public void setTotal_saturated_fatty_acids(double saturated_fatty_acids){
+        this.total_saturated_fatty_acids=total_saturated_fatty_acids;
     }
 
     public double getTrans_fatty_acids(){
@@ -392,7 +392,7 @@ public class fooddata implements Parcelable {
         vitamin_b2=in2.readDouble();
         vitamin_c=in2.readDouble();
         cholesterol=in2.readDouble();
-        total_saturated_fatty_adds=in2.readDouble();
+        total_saturated_fatty_acids=in2.readDouble();
         trans_fatty_acids=in2.readDouble();
         several_times=in2.readDouble();
         caffeine=in2.readDouble();
@@ -434,7 +434,7 @@ public class fooddata implements Parcelable {
         parcel.writeDouble(vitamin_b2);
         parcel.writeDouble(vitamin_c);
         parcel.writeDouble(cholesterol);
-        parcel.writeDouble(total_saturated_fatty_adds);
+        parcel.writeDouble(total_saturated_fatty_acids);
         parcel.writeDouble(trans_fatty_acids);
         parcel.writeDouble(several_times);
         parcel.writeDouble(caffeine);

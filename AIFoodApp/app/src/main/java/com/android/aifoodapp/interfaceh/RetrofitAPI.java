@@ -1,6 +1,7 @@
 package com.android.aifoodapp.interfaceh;
 
 import com.android.aifoodapp.domain.dailymeal;
+import com.android.aifoodapp.domain.fooddata;
 import com.android.aifoodapp.domain.meal;
 import com.android.aifoodapp.domain.user;
 
@@ -57,4 +58,6 @@ public interface RetrofitAPI {
     @POST("/mealSave.do")
     Call<meal> postSaveMeal(@FieldMap HashMap<String,Object>param);
 
+    @GET("/selectFoodName.do")
+    Call<List<fooddata>> getFood(@Query("name") String name);
 }
