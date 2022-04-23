@@ -56,7 +56,8 @@ public class FoodInfoAdapter extends RecyclerView.Adapter<FoodInfoAdapter.Custom
                 fooddata food = items.get(holder.getAdapterPosition()).getFood();
                 Intent intent = new Intent (view.getContext(), FoodDetailInfoActivity.class);
 
-                intent.putExtra("foodDetail",food);
+                intent.putExtra("foodImg",items.get(holder.getAdapterPosition()).getCl_img());
+                intent.putExtra("foodDetail",food);//선택한 food 상세페이지
                 view.getContext().startActivity(intent);
             }
         });

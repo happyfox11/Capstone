@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,6 +31,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     FoodItemAdapter foodItemAdapter;
     FoodInfoAdapter foodInfoAdapter;
     RecyclerView recyclerView ,recyclerView2;
+    TextView tv_foodName;
     ImageView iv_plusBtn;
     user user;
     fooddata addFoodData;
@@ -51,7 +53,8 @@ public class FoodAnalysisActivity extends AppCompatActivity {
 
         if(foodList!=null){
             for(fooddata repo : foodList){
-                String img = String.valueOf(R.drawable.ic_launcher_background); //기본 사진
+                //String img = String.valueOf(R.drawable.ic_launcher_background); //기본 사진
+                String img=String.valueOf(R.drawable.icon);
                 foodItemList.add(new FoodItem(img,R.drawable.minusbtn,repo.getName()));
                 foodInfoList.add(new FoodInfo(repo,img,1.0)); //음식객체, 이미지, 인분
             }
@@ -71,7 +74,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         foodItemAdapter.setItemClickListener(new FoodItemAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(FoodItem item) {
-
+                tv_foodName.setText(item.getFl_foodName());
             }
             @Override
             public void onRemoveButtonClicked(int position) {
@@ -98,5 +101,6 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView2 = (RecyclerView) findViewById(R.id.recyclerView2);
         iv_plusBtn=findViewById(R.id.iv_plusBtn);
+        tv_foodName = findViewById(R.id.tv_foodName);
     }
 }
