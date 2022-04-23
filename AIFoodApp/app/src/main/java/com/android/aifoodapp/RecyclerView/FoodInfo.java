@@ -2,6 +2,8 @@ package com.android.aifoodapp.RecyclerView;
 
 
 public class FoodInfo {
+
+    int id;
     int cl_foodInfo;
     String cl_foodName;
     String cl_caloriesInfo;
@@ -15,12 +17,21 @@ public class FoodInfo {
 
     //int modifyBtn;
 
-    public FoodInfo(int cl_foodInfo, String cl_foodName, String cl_caloriesInfo, String cl_intake, String food_list_name){
+    public FoodInfo(int id, int cl_foodInfo, String cl_foodName, String cl_caloriesInfo, String cl_intake, String food_list_name){
+        this.id = id;
         this.cl_foodInfo=cl_foodInfo;
         this.cl_foodName = cl_foodName;
         this.cl_caloriesInfo = cl_caloriesInfo;
         this.cl_intake = cl_intake;
         this.food_list_name = food_list_name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getCl_foodInfo() {

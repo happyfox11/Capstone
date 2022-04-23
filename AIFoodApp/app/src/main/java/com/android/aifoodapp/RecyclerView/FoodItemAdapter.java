@@ -15,42 +15,38 @@ import com.android.aifoodapp.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-
-import android.graphics.Color;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.CustomViewHolder> {
 
-    public class myRecyclerViewAdapter extends RecyclerView.Adapter<myRecyclerViewAdapter.CustomViewHolder> {
+    public interface ItemClickListener {
+        public void onItemClicked(FoodItem item);
 
-        private ArrayList<FoodItem> arrayList;
+        public void onRemoveButtonClicked(FoodItem item);
+    }
 
-        public myRecyclerViewAdapter(ArrayList<FoodItem> arrayList) {
+        private final  ArrayList<FoodItem> arrayList;
+        private ItemClickListener itemClickListener;
+        public FoodItemAdapter(ArrayList<FoodItem> arrayList) {
             this.arrayList = arrayList;
         }
 
+        public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
 
         @NonNull
         @Override //뷰홀더 객체 생성
-        public myRecyclerViewAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public FoodItemAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.food_list_item, parent, false);
+
             CustomViewHolder holder = new CustomViewHolder(view);
 
             return holder;
         }
 
         @Override //어떤 객체를 바인딩할지 설정
-        public void onBindViewHolder(@NonNull myRecyclerViewAdapter.CustomViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull FoodItemAdapter.CustomViewHolder holder, int position) {
 
             holder.fl_foodInfo.setImageResource(arrayList.get(position).getFl_foodInfo());
             holder.fl_foodInfo.setBorderColor(Color.WHITE);
@@ -58,18 +54,22 @@ import de.hdodenhof.circleimageview.CircleImageView;
             holder.fl_foodInfo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    holder.fl_foodInfo.setBorderColor(Color.RED);
-                    // notifyDataSetChanged();
-                    for (int i=0; i< arrayList.size();i++){
 
-                        if( i != holder.getAdapterPosition()){
-                            notifyItemChanged(i,null);
-                        }
+                    int position = holder.getBindingAdapterPosition();
+
+                    if (itemClickListener != null) {
+                        itemClickListener.onItemClicked(arrayList.get(position));
                     }
 
+                    holder.fl_foodInfo.setBorderColor(Color.RED);
+                    // notifyDataSetChanged();
+                    for (int i = 0; i < arrayList.size(); i++) {
 
+                        if (i != position) {
+                            notifyItemChanged(i, null);
+                        }
+                    }
                 }
-
             });
 
             holder.iv_minusBtn.setImageResource(arrayList.get(position).getMinusBtn());
@@ -77,7 +77,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
             holder.iv_minusBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    remove(holder.getAdapterPosition());
+                    int position = holder.getBindingAdapterPosition();
+
+                    if (itemClickListener != null) {
+                        itemClickListener.onRemoveButtonClicked(arrayList.get(position));
+                    }
+
+                    remove(position);
                 }
             });
 
