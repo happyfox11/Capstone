@@ -227,7 +227,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     //Log.i(TAG, "id " + user.getId());
                     //Log.i(TAG, "invoke: nickname=" + user.getKakaoAccount().getProfile().getNickname());
-                    Toast.makeText(getApplicationContext(),"카카오 로그인 되었습니다.", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(),"카카오 로그인 되었습니다.", Toast.LENGTH_SHORT).show();
 
                     Retrofit retrofit = new Retrofit.Builder()
                             .baseUrl(url).addConverterFactory(new NullOnEmptyConverterFactory())

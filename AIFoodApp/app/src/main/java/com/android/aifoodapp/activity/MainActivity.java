@@ -119,6 +119,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
     Integer[] calories=new Integer[7];
     user user;
     dailymeal dailymeal;
+    long dailymealid;
 
     private ListView lv_meal_item;
     private MealAdapter mealAdapter;
@@ -310,10 +311,11 @@ public class MainActivity<Unit> extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(activity, FoodAnalysisActivity.class);
+            intent.putExtra("dailymeal",dailymeal);
             startActivity(intent);
+            finish();
         }
     };
-
 
     private final View.OnClickListener listener_select_calendar = new View.OnClickListener() {
         @Override
@@ -828,6 +830,9 @@ public class MainActivity<Unit> extends AppCompatActivity {
             @Override
             public void onResponse(Call<dailymeal> call, Response<dailymeal> response) {
                 dailymeal = response.body();
+                //dailymealid = dailymeal.getDailymealid();//해당 유저의 오늘 날짜 dailyId
+
+                Log.e("dailymeal-userId",dailymeal.getUserid());
                 Log.e("dailymeal",Integer.toString(dailymeal.getCalorie()));
                 try {
                     Thread.sleep(100);

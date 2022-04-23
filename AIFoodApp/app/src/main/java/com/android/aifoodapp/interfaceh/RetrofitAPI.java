@@ -5,12 +5,14 @@ import com.android.aifoodapp.domain.fooddata;
 import com.android.aifoodapp.domain.meal;
 import com.android.aifoodapp.domain.user;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
+import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -56,7 +58,7 @@ public interface RetrofitAPI {
 
     @FormUrlEncoded
     @POST("/mealSave.do")
-    Call<meal> postSaveMeal(@FieldMap HashMap<String,Object>param);
+    Call<meal> postSaveMeal(@FieldMap HashMap<String,Object> param);
 
     @GET("/selectFoodName.do")
     Call<List<fooddata>> getFood(@Query("name") String name);

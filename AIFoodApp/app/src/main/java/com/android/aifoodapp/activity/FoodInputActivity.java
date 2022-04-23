@@ -17,8 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.aifoodapp.R;
 import com.android.aifoodapp.adapter.itemSearchAdapter;
+import com.android.aifoodapp.domain.dailymeal;
 import com.android.aifoodapp.domain.fooddata;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
+import com.android.aifoodapp.domain.dailymeal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,7 @@ public class FoodInputActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     EditText et_search;
     Button btn_search;
+    dailymeal dailymeal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,7 @@ public class FoodInputActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         foodList=intent.getParcelableArrayListExtra("foodList");
+        dailymeal=intent.getParcelableExtra("dailymeal");
 
         itemSearchAdapter adapter=new itemSearchAdapter(arrayList,activity);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -89,8 +93,12 @@ public class FoodInputActivity extends AppCompatActivity {
                 if(foodList==null) foodList=new ArrayList<fooddata>();
                 foodList.add(food);//선택한 food
 
+                FoodAnalysisActivity FA = (FoodAnalysisActivity)FoodAnalysisActivity._FoodAnalysis_Activity; // https://itun.tistory.com/357 [Bino]
+                FA.finish();
+
                 Intent intent = new Intent(activity, FoodAnalysisActivity.class);
                 intent.putParcelableArrayListExtra("foodList",foodList); //선택한 음식데이터 넘기기
+                intent.putExtra("dailymeal",dailymeal);
                 startActivity(intent);
                 finish();
             }
