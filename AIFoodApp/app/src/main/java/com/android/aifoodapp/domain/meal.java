@@ -15,7 +15,7 @@ public class meal implements Parcelable {
     @SerializedName("mealid")
     private long mealid;
     @SerializedName("calorie")
-    private char calorie;
+    private int calorie;
     @SerializedName("protein")
     private int protein;
     @SerializedName("carbohydrate")
@@ -27,7 +27,7 @@ public class meal implements Parcelable {
     @SerializedName("mealphoto")
     private String mealphoto;
     @SerializedName("savetime")
-    private Date savetime;
+    private String savetime;
     @SerializedName("timeflag")
     private int timeflag;
 
@@ -35,7 +35,7 @@ public class meal implements Parcelable {
 
     }
 
-    public meal(String userid, long dailymealid, long mealid, char calorie, int protein, int carbohydrate, int fat, String mealname, String mealphoto, Date savetime, int timeflag) {
+    public meal(String userid, long dailymealid, long mealid, int calorie, int protein, int carbohydrate, int fat, String mealname, String mealphoto, String savetime, int timeflag) {
         this.userid = userid;
         this.dailymealid = dailymealid;
         this.mealid = mealid;
@@ -73,7 +73,7 @@ public class meal implements Parcelable {
         this.mealid = mealid;
     }
 
-    public char getCalorie() {
+    public int getCalorie() {
         return calorie;
     }
 
@@ -121,11 +121,11 @@ public class meal implements Parcelable {
         this.mealphoto = mealphoto;
     }
 
-    public Date getSavetime() {
+    public String getSavetime() {
         return savetime;
     }
 
-    public void setSavetime(Date savetime) {
+    public void setSavetime(String savetime) {
         this.savetime = savetime;
     }
 
@@ -141,12 +141,13 @@ public class meal implements Parcelable {
         userid = in.readString();
         dailymealid = in.readLong();
         mealid = in.readLong();
-        calorie = (char) in.readInt();
+        calorie = in.readInt();
         protein = in.readInt();
         carbohydrate = in.readInt();
         fat = in.readInt();
         mealname = in.readString();
         mealphoto = in.readString();
+        savetime = in.readString();
         timeflag = in.readInt();
     }
 
@@ -155,12 +156,13 @@ public class meal implements Parcelable {
         dest.writeString(userid);
         dest.writeLong(dailymealid);
         dest.writeLong(mealid);
-        dest.writeInt((int) calorie);
+        dest.writeInt(calorie);
         dest.writeInt(protein);
         dest.writeInt(carbohydrate);
         dest.writeInt(fat);
         dest.writeString(mealname);
         dest.writeString(mealphoto);
+        dest.writeString(savetime);
         dest.writeInt(timeflag);
     }
 

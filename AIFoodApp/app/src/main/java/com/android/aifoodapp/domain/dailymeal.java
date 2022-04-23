@@ -11,7 +11,7 @@ public class dailymeal implements Parcelable {
     @SerializedName("userid")
     private String userid;
     @SerializedName("datekey")
-    private Date datekey;
+    private String datekey;
     @SerializedName("stepcount")
     private int stepcount;
     @SerializedName("calorie")
@@ -29,7 +29,7 @@ public class dailymeal implements Parcelable {
 
     }
 
-    public dailymeal(String userid, Date datekey, int stepcount, int calorie, int protein, int carbohydrate, int fat, long dailymealid) {
+    public dailymeal(String userid, String datekey, int stepcount, int calorie, int protein, int carbohydrate, int fat, long dailymealid) {
         this.userid = userid;
         this.datekey = datekey;
         this.stepcount = stepcount;
@@ -48,11 +48,11 @@ public class dailymeal implements Parcelable {
         this.userid = userid;
     }
 
-    public Date getDatekey() {
+    public String getDatekey() {
         return datekey;
     }
 
-    public void setDatekey(Date datekey) {
+    public void setDatekey(String datekey) {
         this.datekey = datekey;
     }
 

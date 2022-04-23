@@ -6,6 +6,35 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#80B542"
+        android:gravity="right|center_vertical"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_insert_dailymeal"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/round_rect_button"
+                android:backgroundTint="#3A531C"
+                android:padding="5dp"
+                android:text="기록하기"
+                android:textColor="#FFFFFF" />
+
+        </LinearLayout>
+    </LinearLayout>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="300dp">
@@ -20,7 +49,8 @@
             android:id="@+id/tv_foodName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|bottom"
+            android:layout_gravity="center|center"
+            android:textSize="30sp"
             android:text="음식 이름 표시" />
 
     </FrameLayout>
@@ -33,18 +63,20 @@
         android:orientation="horizontal">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_weight="1"
+            android:layout_weight="8"
             android:id="@+id/recyclerView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
+
         <LinearLayout
-            android:layout_width="200dp"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_weight="3"
+            android:orientation="vertical"
+            android:layout_gravity="right|right">
 
             <ImageView
                 android:id="@+id/iv_plusBtn"

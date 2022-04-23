@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.aifoodapp.R;
 import com.android.aifoodapp.activity.FoodDetailInfoActivity;
+import com.android.aifoodapp.domain.fooddata;
 
 import java.util.ArrayList;
 
@@ -20,19 +21,19 @@ import java.util.ArrayList;
 public class FoodInfoAdapter extends RecyclerView.Adapter<FoodInfoAdapter.CustomViewHolder> {
 
     private ArrayList<FoodInfo> items = new ArrayList<FoodInfo>();
-    double num = 0;
 
     public FoodInfoAdapter() {
     }
     public FoodInfoAdapter(ArrayList<FoodInfo> items) {
         this.items = items;
     }
+
+
     @NonNull
-    @Override //뷰홀더 객체 생성
+    @Override //뷰홀더 객체 생성 Holder
     public FoodInfoAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.food_list_item2, parent, false);
         CustomViewHolder holder = new CustomViewHolder(view);
-
         return holder;
     }
 
@@ -40,49 +41,50 @@ public class FoodInfoAdapter extends RecyclerView.Adapter<FoodInfoAdapter.Custom
     @Override //어떤 객체를 바인딩할지 설정
     public void onBindViewHolder(@NonNull FoodInfoAdapter.CustomViewHolder holder, int position) {
 
-        FoodInfo item = items.get(position);
-        holder.setItem(item);
-
+        /* setting */
+        holder.cl_foodInfo.setImageResource(Integer.parseInt(items.get(position).getCl_img()));
+        holder.cl_foodName.setText(items.get(position).getFood().getName());
+        holder.cl_caloriesInfo.setText(String.valueOf(items.get(position).getFood().getCalorie()));
+        holder.cl_intake.setText(String.valueOf(items.get(position).getCl_intake()));
+        holder.food_list_name.setText(items.get(position).getFood().getName());
 
         //화살표 버튼 클릭 시 상세정보 액티비티로 이동
         holder.iv_arrowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String foodName = holder.cl_foodName.getText().toString();
+                fooddata food = items.get(holder.getAdapterPosition()).getFood();
                 Intent intent = new Intent (view.getContext(), FoodDetailInfoActivity.class);
 
-                intent.putExtra("foodName",foodName);
+                intent.putExtra("foodImg",items.get(holder.getAdapterPosition()).getCl_img());
+                intent.putExtra("foodDetail",food);//선택한 food 상세페이지
                 view.getContext().startActivity(intent);
             }
         });
 
         holder.iv_scrollUpBtn.setOnClickListener(new View.OnClickListener() {
-
-
             @Override
             public void onClick(View view) {
-
-                num +=0.5;
-                holder.cl_intake.setText("" + num);
+                int position=holder.getAdapterPosition();
+                double intake=items.get(position).getCl_intake();
+                intake +=0.5;
+                items.set(position,new FoodInfo(items.get(position).getFood(),items.get(position).getCl_img(),intake));
+                notifyDataSetChanged();
             }
         });
-
 
         holder.iv_scrollDownBtn.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
-
-                if(num >0){
-                    num -=0.5;
-                    holder.cl_intake.setText("" + num);
+                int position=holder.getAdapterPosition();
+                double intake=items.get(position).getCl_intake();
+                if(intake >0){
+                    intake -=0.5;
+                    items.set(position,new FoodInfo(items.get(position).getFood(),items.get(position).getCl_img(),intake));
+                    notifyDataSetChanged();
                 }
-
             }
         });
-
-
 
     }
 
@@ -91,23 +93,20 @@ public class FoodInfoAdapter extends RecyclerView.Adapter<FoodInfoAdapter.Custom
         return items.size();
     }
 
-
     //아이템 추가
     public void addItem(FoodInfo item) {
         items.add(item);
     }
-
     public void setItems(ArrayList<FoodInfo> items) {
         this.items = items;
     }
-
     public FoodInfo getItem(int position) {
         return items.get(position);
     }
-
     public void setItem(int position, FoodInfo item) {
         items.get(position);
     }
+
 
     //아이템 삭제
     public void remove(int position) {
@@ -121,27 +120,26 @@ public class FoodInfoAdapter extends RecyclerView.Adapter<FoodInfoAdapter.Custom
     }
 
 
-    public void removeById(int id) {
+    public void removeById(int position) {
+        /*
         int index = -1;
-
         for (int i = 0; i < items.size(); i++) {
             if (items.get(i).getId() == id) {
                 index = i;
                 break;
             }
         }
-
         if (index < 0) return;
+        */
 
         try {
-            items.remove(index);
-            notifyItemRemoved(index);
+            items.remove(position);
+            notifyItemRemoved(position);
             //notifyDataSetChanged();
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
         }
     }
-
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
 
@@ -167,15 +165,6 @@ public class FoodInfoAdapter extends RecyclerView.Adapter<FoodInfoAdapter.Custom
             this.iv_scrollDownBtn = (ImageView) view.findViewById(R.id.iv_scrollDownBtn);
             this.iv_arrowBtn = (ImageView) view.findViewById(R.id.iv_arrowBtn);
             this.modifyBtn = (Button) view.findViewById(R.id.modifyBtn);
-
-        }
-
-        public void setItem(FoodInfo item) {
-            cl_foodInfo.setImageResource(item.getCl_foodInfo());
-            cl_foodName.setText(item.getCl_foodName());
-            cl_caloriesInfo.setText(item.getCl_caloriesInfo());
-            cl_intake.setText((item.getCl_intake()));
-            food_list_name.setText(item.getFood_list_name());
 
         }
     }

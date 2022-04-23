@@ -22,8 +22,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
-                android:padding="7dp"
+                android:background="@null"
                 android:gravity="center_vertical"
+                android:padding="7dp"
                 android:text="db에 저장된 음식이름"
                 android:textSize="20sp" />
         </LinearLayout>
