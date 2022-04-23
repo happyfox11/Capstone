@@ -4,33 +4,29 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.aifoodapp.R;
 import com.android.aifoodapp.RecyclerView.FoodInfo;
 import com.android.aifoodapp.RecyclerView.FoodItem;
-import com.android.aifoodapp.RecyclerView.myRecyclerViewAdapter;
-import com.android.aifoodapp.RecyclerView.myRecyclerViewAdapter2;
+import com.android.aifoodapp.RecyclerView.FoodItemAdapter;
+import com.android.aifoodapp.RecyclerView.FoodInfoAdapter;
 import com.android.aifoodapp.domain.user;
 
 import java.util.ArrayList;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FoodAnalysisActivity extends AppCompatActivity {
 
     Activity activity;
 
-    ArrayList<FoodItem> arrayFoodList;
-    LinearLayoutManager linearLayoutManager, linearLayoutManager2;
-    com.android.aifoodapp.RecyclerView.myRecyclerViewAdapter myRecyclerViewAdapter;
-    myRecyclerViewAdapter2 myRecyclerViewAdapter2;
+    ArrayList<FoodItem> foodItemList = new ArrayList<>();
+    ArrayList<FoodInfo> foodInfoList = new ArrayList<>();
+
+    FoodItemAdapter foodItemAdapter;
+    FoodInfoAdapter foodInfoAdapter;
     RecyclerView recyclerView ,recyclerView2;
     ImageView iv_plusBtn;
     user user;
@@ -45,40 +41,35 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         Intent intent = getIntent();
         user = intent.getParcelableExtra("user");
 
-        linearLayoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false); //가로 방향으로 저장
-        recyclerView.setLayoutManager(linearLayoutManager);
+        //테스트
 
-        arrayFoodList = new ArrayList<>();
+        for (int id = 1; id <= 5; id++) {
+            int foodInfo = R.drawable.ic_launcher_background;
+            String foodName = "음식" + id;
 
-        /*for( int i= 1; i<=4;i++){
-            arrayList.add(new FoodLIst(R.drawable.ic_launcher_background,R.drawable.minusbtn,"음식"+i));
-        }*/
+            foodItemList.add(new FoodItem(id, foodInfo, R.drawable.minusbtn, foodName));
+            foodInfoList.add(new FoodInfo(id, foodInfo, foodName, "칼로리", "0", "음식" + id));
+        }
 
         //어댑터 연결
-        myRecyclerViewAdapter = new myRecyclerViewAdapter(arrayFoodList);
-        recyclerView.setAdapter(myRecyclerViewAdapter);
+        foodItemAdapter = new FoodItemAdapter(foodItemList);
+        foodItemAdapter.setItemClickListener(new FoodItemAdapter.ItemClickListener() {
+            @Override
+            public void onItemClicked(FoodItem item) {
+            }
 
-        //테스트
-        for ( int i=1; i<=4;i++) {
-            myRecyclerViewAdapter.addItem(new FoodItem(R.drawable.ic_launcher_background, R.drawable.minusbtn, "음식" + i));
+            @Override
+            public void onRemoveButtonClicked(FoodItem item) {
+                foodInfoAdapter.removeById(item.getId());
+            }
+        });
 
-        }
+        recyclerView.setAdapter(foodItemAdapter);
 
+        //2번째 어댑터 연결
+        foodInfoAdapter = new FoodInfoAdapter(foodInfoList);
+        recyclerView2.setAdapter(foodInfoAdapter);
 
-        //2번째 어댑터
-        recyclerView2 = (RecyclerView) findViewById(R.id.recyclerView2);
-        linearLayoutManager2 = new LinearLayoutManager(this);
-        recyclerView2.setLayoutManager(linearLayoutManager2);
-        myRecyclerViewAdapter2 = new myRecyclerViewAdapter2();
-
-
-
-        //테스트
-        for( int i=1; i<=4; i++){
-            myRecyclerViewAdapter2.addItem(new FoodInfo(R.drawable.ic_launcher_background,"음식"+i,"칼로리","0.5","음식"+i));
-        }
-
-        recyclerView2.setAdapter(myRecyclerViewAdapter2);
 
         iv_plusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +86,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     private void initialize(){
         activity = this;
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView2 = (RecyclerView) findViewById(R.id.recyclerView2);
         iv_plusBtn=findViewById(R.id.iv_plusBtn);
     }
 }
