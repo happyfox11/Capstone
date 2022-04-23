@@ -17,14 +17,19 @@ import com.android.aifoodapp.activity.FoodDetailInfoActivity;
 import java.util.ArrayList;
 
 
-public class myRecyclerViewAdapter2 extends RecyclerView.Adapter<myRecyclerViewAdapter2.CustomViewHolder> {
+public class FoodInfoAdapter extends RecyclerView.Adapter<FoodInfoAdapter.CustomViewHolder> {
 
     private ArrayList<FoodInfo> items = new ArrayList<FoodInfo>();
+    double num = 0;
 
-
+    public FoodInfoAdapter() {
+    }
+    public FoodInfoAdapter(ArrayList<FoodInfo> items) {
+        this.items = items;
+    }
     @NonNull
     @Override //뷰홀더 객체 생성
-    public myRecyclerViewAdapter2.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FoodInfoAdapter.CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.food_list_item2, parent, false);
         CustomViewHolder holder = new CustomViewHolder(view);
 
@@ -33,11 +38,10 @@ public class myRecyclerViewAdapter2 extends RecyclerView.Adapter<myRecyclerViewA
 
 
     @Override //어떤 객체를 바인딩할지 설정
-    public void onBindViewHolder(@NonNull myRecyclerViewAdapter2.CustomViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FoodInfoAdapter.CustomViewHolder holder, int position) {
 
         FoodInfo item = items.get(position);
         holder.setItem(item);
-        final double[] num = {0};
 
 
         //화살표 버튼 클릭 시 상세정보 액티비티로 이동
@@ -59,8 +63,8 @@ public class myRecyclerViewAdapter2 extends RecyclerView.Adapter<myRecyclerViewA
             @Override
             public void onClick(View view) {
 
-                num[0] +=0.5;
-                holder.cl_intake.setText("" + num[0]);
+                num +=0.5;
+                holder.cl_intake.setText("" + num);
             }
         });
 
@@ -70,13 +74,11 @@ public class myRecyclerViewAdapter2 extends RecyclerView.Adapter<myRecyclerViewA
             @Override
             public void onClick(View view) {
 
-                if(num[0] >0){
-                    num[0] -=0.5;
-                    holder.cl_intake.setText("" + num[0]);
+                if(num >0){
+                    num -=0.5;
+                    holder.cl_intake.setText("" + num);
                 }
 
-
-                //Toast.makeText(view.getContext(), "아래버튼 누름",Toast.LENGTH_LONG).show();
             }
         });
 
@@ -112,6 +114,28 @@ public class myRecyclerViewAdapter2 extends RecyclerView.Adapter<myRecyclerViewA
         try {
             items.remove(position);
             notifyItemRemoved(position);
+            //notifyDataSetChanged();
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void removeById(int id) {
+        int index = -1;
+
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).getId() == id) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index < 0) return;
+
+        try {
+            items.remove(index);
+            notifyItemRemoved(index);
             //notifyDataSetChanged();
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
