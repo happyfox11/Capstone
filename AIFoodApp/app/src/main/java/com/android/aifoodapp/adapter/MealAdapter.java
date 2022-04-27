@@ -41,7 +41,11 @@ public class MealAdapter extends BaseAdapter {
     private OnEditMealHeight onEditMealHeight;
     private OnCameraClick onCameraClick;
     private OnGalleryClick onGalleryClick;
+    private MealAdapter.ItemClickListener itemClickListener;
 
+    public interface ItemClickListener {
+        public void onDetailButtonClicked(int position);
+    }
 
     public class MealHolder {
         private TextView tv_custom_item_name;
@@ -103,13 +107,19 @@ public class MealAdapter extends BaseAdapter {
         holder.tv_custom_item_name.setText(" 식사 "+(getItemId(position)+1));
         memberList.get(position).setName(holder.tv_custom_item_name.getText().toString());
 
+        //상세보기 버튼
         holder.btn_meal_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i("check", "detail:"+(getItemId(position)+1));
                 Log.i("check", "holderdetail:"+holder);
-                Intent intent = new Intent(activity, FoodAnalysisActivity.class);
-                activity.startActivity(intent);
+
+                if (itemClickListener != null) {
+                    itemClickListener.onDetailButtonClicked(position);
+                }
+
+                //Intent intent = new Intent(activity, FoodAnalysisActivity.class);
+                //activity.startActivity(intent);
 
                 Toast.makeText(activity, "click"+holder.btn_meal_detail.getTag(), Toast.LENGTH_SHORT).show(); }
         });
@@ -248,5 +258,8 @@ public class MealAdapter extends BaseAdapter {
         this.onGalleryClick = onGalleryClickListener;
     }
 
+    public void setItemClickListener(MealAdapter.ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
 
 }

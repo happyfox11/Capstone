@@ -45,8 +45,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.aifoodapp.R;
+import com.android.aifoodapp.RecyclerView.FoodItem;
+import com.android.aifoodapp.RecyclerView.FoodItemAdapter;
 import com.android.aifoodapp.adapter.MealAdapter;
 import com.android.aifoodapp.domain.dailymeal;
+import com.android.aifoodapp.domain.fooddata;
 import com.android.aifoodapp.domain.user;
 import com.android.aifoodapp.interfaceh.GsonDateFormatAdapter;
 import com.android.aifoodapp.interfaceh.NullOnEmptyConverterFactory;
@@ -126,8 +129,10 @@ public class MainActivity<Unit> extends AppCompatActivity {
     private ArrayList<MealMemberVo> memberList;
     FloatingActionButton fab_add_meal;
 
-    private String flag;
+    ArrayList<fooddata> foodList=new ArrayList<>();
+    List<fooddata> list;
 
+    private String flag;
     public static Activity _MainActivity;
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //데이트 포맷(sql)
@@ -754,6 +759,55 @@ public class MainActivity<Unit> extends AppCompatActivity {
                     }else{
                         loadGalleryImage();
                     }
+                }
+            });
+
+            mealAdapter.setItemClickListener(new MealAdapter.ItemClickListener() {
+                @Override
+                public void onDetailButtonClicked(int position){//position은 0부터 시작
+
+                    //해당 list position에 저장되어 있는 foodList 불러오기
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl(url)
+                            .addConverterFactory(GsonConverterFactory.create()).build();
+
+                    RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+                    /*
+                    try {//retrofit 동기식 처리
+                        list = retrofitAPI.getFoodFromMeal(dailymeal.getUserid(),dailymeal.getDatekey(),position).execute().body();
+                        for(fooddata fd : list) {
+                            foodList.add(fd);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }*/
+
+                    retrofitAPI.getFoodFromMeal(dailymeal.getUserid(),dailymeal.getDatekey(),position).enqueue(new Callback<List<fooddata>>() {
+                        @Override
+                        public void onResponse(Call<List<fooddata>> call, Response<List<fooddata>> response) {
+                            if(response.isSuccessful()) {
+                                list=response.body();
+                                //Log.e("@@@@",list.toString());
+                                for(fooddata fd : list){
+                                    foodList.add(fd);
+                                }
+
+                                Intent intent = new Intent(activity, FoodAnalysisActivity.class);
+                                intent.putExtra("dailymeal",dailymeal);
+                                intent.putParcelableArrayListExtra("foodList",foodList);
+                                startActivity(intent);
+                                finish();
+
+                            }
+                            else{
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<List<fooddata>> call, Throwable t) {
+                            Log.e("food search","실패"+t);
+                        }
+                    });
                 }
             });
         }

@@ -60,6 +60,12 @@ public interface RetrofitAPI {
     @POST("/mealSave.do")
     Call<Void> postSaveMeal(@FieldMap HashMap<String,Object> param);
 
+    @GET("/selectFoodFromMeal.do")
+    Call<List<fooddata>> getFoodFromMeal(@Query("userid") String userid,
+                                         @Query("savetime") String savetime,
+                                         @Query("timeflag") int timeflag
+    );
+
     @GET("/selectFoodName.do")
     Call<List<fooddata>> getFood(@Query("name") String name);
 }

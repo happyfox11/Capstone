@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -72,6 +73,9 @@ public class FoodInputActivity extends AppCompatActivity {
                             arrayList.clear();
                             list= response.body();
                             //Log.e("fooddata 목록",list.toString());
+                            if(list.isEmpty()) {
+                                Toast.makeText(getApplicationContext(),"검색 결과가 없습니다.", Toast.LENGTH_SHORT).show();
+                            }
                             for (fooddata repo : list) {
                                 arrayList.add(repo);
                             }
@@ -82,6 +86,9 @@ public class FoodInputActivity extends AppCompatActivity {
                             Log.e("food search","실패");
                         }
                     });
+                }
+                else{
+                    Toast.makeText(getApplicationContext(),"검색어를 입력해주세요", Toast.LENGTH_SHORT).show();
                 }
             }
         });

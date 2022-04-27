@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,8 +27,10 @@ import com.android.aifoodapp.domain.fooddata;
 import com.android.aifoodapp.domain.meal;
 import com.android.aifoodapp.domain.user;
 import com.android.aifoodapp.domain.dailymeal;
+import com.android.aifoodapp.interfaceh.NullOnEmptyConverterFactory;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ArrayList;
@@ -57,14 +60,16 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     user user;
     dailymeal dailymeal;
     fooddata addFoodData;
-    ArrayList<fooddata> foodList=new ArrayList<>(); //담은 식단 목록
+    ArrayList<fooddata> foodList=new ArrayList<>(); //기존에 담아두었던 식단 목록
+    List<fooddata> list;
     //List<meal> mealList=new ArrayList<>();
     //HashMap<String, List<meal>> map = new HashMap<>();
     HashMap<String, Object> map = new HashMap<>();
     HashMap<String, Object> dailyMap = new HashMap<>();
 
+    int position;
     String userid, mealname, mealphoto;
-    long dailymealid, mealid;
+    long dailymealid, mealid, fooddataid;
     int calorie, protein, carbohydrate, fat, timeflag, sumCalorie=0, sumProtein=0,sumCarbohydrate=0, sumFat=0;
     String savetime;
 
@@ -72,12 +77,16 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_analysis);
-        initialize();
-        _FoodAnalysis_Activity = FoodAnalysisActivity.this;
 
         Intent intent = getIntent();
         foodList=intent.getParcelableArrayListExtra("foodList");
         dailymeal=intent.getParcelableExtra("dailymeal");
+        position=intent.getIntExtra("position",0);
+
+        initialize();
+        //setFoodList();
+        _FoodAnalysis_Activity = FoodAnalysisActivity.this;
+
         Log.e("dailymeal- userid",dailymeal.getUserid());
         //addFoodData=intent.getParcelableExtra("addFoodData"); //수기입력에서 넘어온 값 -> 음식 하나
         /*
@@ -143,7 +152,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 for(fooddata repo : foodList){
                     userid = dailymeal.getUserid();
                     dailymealid = dailymeal.getDailymealid();
-                    mealid=cnt+1;//repo.getId();
+                    mealid=cnt+1;
                     calorie=(int)repo.getCalorie();
                     protein=(int)repo.getProtein();
                     carbohydrate=(int)repo.getCarbohydrate();
@@ -153,9 +162,10 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                     savetime=dailymeal.getDatekey();//해당 달력 날짜(과거날짜에서 데이터 추가하는 경우도 있기 때문)
                     //savetime = dateFormat.format(now); //날짜가 string으로 저장
                     //savetime=now;//형식없이 괜찮나?
-                    timeflag=dailymeal.getStepcount()+1;//끼니별 식단 구분용으로?
+                    timeflag=position;//끼니별 식단 구분용으로? //main화면에서 list 식단 위치
+                    fooddataid=repo.getId();
 
-                    meal meal = new meal(userid,dailymealid,mealid,calorie,protein,carbohydrate,fat,mealname,mealphoto,savetime,timeflag);
+                    meal meal = new meal(userid,dailymealid,mealid,calorie,protein,carbohydrate,fat,mealname,mealphoto,savetime,timeflag,fooddataid);
                     map.put("userid",meal.getUserid());
                     map.put("dailymealid",meal.getDailymealid());
                     map.put("mealid",meal.getMealid());
@@ -167,6 +177,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                     map.put("mealphoto",meal.getMealphoto());
                     map.put("savetime",meal.getSavetime());
                     map.put("timeflag",meal.getTimeflag());
+                    map.put("fooddataid",meal.getFooddataid());
 
                     cnt++;
                     sumCalorie+=calorie;
