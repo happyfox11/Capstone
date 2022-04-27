@@ -832,8 +832,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
                 dailymeal = response.body();
                 //dailymealid = dailymeal.getDailymealid();//해당 유저의 오늘 날짜 dailyId
 
-                Log.e("dailymeal-userId",dailymeal.getUserid());
-                Log.e("dailymeal",Integer.toString(dailymeal.getCalorie()));
+                Log.e("dailymeal-datekey",dailymeal.getDatekey());
                 try {
                     Thread.sleep(100);
                     setting();

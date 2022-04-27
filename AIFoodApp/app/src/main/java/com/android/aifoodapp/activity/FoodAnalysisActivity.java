@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -57,12 +58,14 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     dailymeal dailymeal;
     fooddata addFoodData;
     ArrayList<fooddata> foodList=new ArrayList<>(); //담은 식단 목록
-    ArrayList<meal> mealList=new ArrayList<>();
+    //List<meal> mealList=new ArrayList<>();
+    //HashMap<String, List<meal>> map = new HashMap<>();
     HashMap<String, Object> map = new HashMap<>();
+    HashMap<String, Object> dailyMap = new HashMap<>();
 
     String userid, mealname, mealphoto;
     long dailymealid, mealid;
-    int calorie, protein, carbohydrate, fat, timeflag;
+    int calorie, protein, carbohydrate, fat, timeflag, sumCalorie=0, sumProtein=0,sumCarbohydrate=0, sumFat=0;
     String savetime;
 
     @Override
@@ -131,10 +134,16 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 Date now = new Date();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //데이트 포맷(sql)
 
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
+
+                RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+                int cnt=0;
                 for(fooddata repo : foodList){
                     userid = dailymeal.getUserid();
                     dailymealid = dailymeal.getDailymealid();
-                    mealid=0;//repo.getId();
+                    mealid=cnt+1;//repo.getId();
                     calorie=(int)repo.getCalorie();
                     protein=(int)repo.getProtein();
                     carbohydrate=(int)repo.getCarbohydrate();
@@ -145,32 +154,74 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                     //savetime = dateFormat.format(now); //날짜가 string으로 저장
                     //savetime=now;//형식없이 괜찮나?
                     timeflag=dailymeal.getStepcount()+1;//끼니별 식단 구분용으로?
+
                     meal meal = new meal(userid,dailymealid,mealid,calorie,protein,carbohydrate,fat,mealname,mealphoto,savetime,timeflag);
-                    mealList.add(meal);
+                    map.put("userid",meal.getUserid());
+                    map.put("dailymealid",meal.getDailymealid());
+                    map.put("mealid",meal.getMealid());
+                    map.put("calorie",meal.getCalorie());
+                    map.put("protein",meal.getProtein());
+                    map.put("carbohydrate",meal.getCarbohydrate());
+                    map.put("fat",meal.getFat());
+                    map.put("mealname",meal.getMealname());
+                    map.put("mealphoto",meal.getMealphoto());
+                    map.put("savetime",meal.getSavetime());
+                    map.put("timeflag",meal.getTimeflag());
+
+                    cnt++;
+                    sumCalorie+=calorie;
+                    sumCarbohydrate+=carbohydrate;
+                    sumProtein+=protein;
+                    sumFat+=fat;
+
+                    //mealList.add(meal);
+                    retrofitAPI.postSaveMeal(map).enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if(response.isSuccessful()) {
+                                Log.e("★","추가완료");
+                            }
+                            else{
+                                Log.e("★","!response.isSuccessful()");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Log.e("★","call 실패"+t);
+                        }
+                    });
                 }
 
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
+                //map.put("mealList",mealList);//서버 측에서 받는 key값 : mealList
 
-                RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
-
-                map.put("mealList",mealList);
-                retrofitAPI.postSaveMeal(map).enqueue(new Callback<meal>() {
-                    @Override
-                    public void onResponse(Call<meal> call, Response<meal> response) {
-                        if(response.isSuccessful()) {
-                            Log.e("★","추가완료");
-                        }
-                        else{
-                            Log.e("★","!response.isSuccessful()");
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<meal> call, Throwable t) {
-                        Log.e("★","call 실패");
-                    }
-                });
+                /*dailymeal update*/
+//                dailymeal updatedailymeal = new dailymeal(userid,savetime,timeflag,sumCalorie, sumProtein,sumCarbohydrate, sumFat,dailymealid);
+//                dailyMap.put("userid",updatedailymeal.getUserid());
+//                dailyMap.put("datekey",updatedailymeal.getDatekey());
+//                dailyMap.put("stepcount",updatedailymeal.getStepcount());
+//                dailyMap.put("calorie",updatedailymeal.getCalorie());
+//                dailyMap.put("protein",updatedailymeal.getProtein());
+//                dailyMap.put("carbohydrate",updatedailymeal.getCarbohydrate());
+//                dailyMap.put("fat",updatedailymeal.getFat());
+//                dailyMap.put("dailymealid",updatedailymeal.getDailymealid());
+//
+//                retrofitAPI.postUpdateDailyMeal(dailyMap).enqueue(new Callback<Void>() {
+//                    @Override
+//                    public void onResponse(Call<Void> call, Response<Void> response) {
+//                        if(response.isSuccessful()) {
+//                            Log.e("★","dailymealUpdate");
+//                        }
+//                        else{
+//                            Log.e("★","!response.isSuccessful()");
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<Void> call, Throwable t) {
+//                        Log.e("★","call 실패"+t);
+//                    }
+//                });
 
                 Intent intent = new Intent(activity, LoginActivity.class);
                 intent.putExtra("load",true);//로딩화면(call받기위해?)

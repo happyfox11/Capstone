@@ -106,6 +106,7 @@ public class dailymeal implements Parcelable {
 
     protected dailymeal(Parcel in) {
         userid = in.readString();
+        datekey=in.readString();
         stepcount = in.readInt();
         calorie = in.readInt();
         protein = in.readInt();
@@ -134,6 +135,7 @@ public class dailymeal implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(userid);
+        parcel.writeString(datekey);
         parcel.writeInt(stepcount);
         parcel.writeInt(calorie);
         parcel.writeInt(protein);

@@ -54,11 +54,11 @@ public interface RetrofitAPI {
 
     @FormUrlEncoded
     @POST("/dailymealSave.do")
-    Call<dailymeal> postSaveDailyMeal(@FieldMap HashMap<String,Object>param);
+    Call<Void> postSaveDailyMeal(@FieldMap HashMap<String,Object>param);
 
     @FormUrlEncoded
     @POST("/mealSave.do")
-    Call<meal> postSaveMeal(@FieldMap HashMap<String,Object> param);
+    Call<Void> postSaveMeal(@FieldMap HashMap<String,Object> param);
 
     @GET("/selectFoodName.do")
     Call<List<fooddata>> getFood(@Query("name") String name);
