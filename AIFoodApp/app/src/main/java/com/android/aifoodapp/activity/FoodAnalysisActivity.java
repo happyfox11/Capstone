@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,12 +27,15 @@ import com.android.aifoodapp.domain.fooddata;
 import com.android.aifoodapp.domain.meal;
 import com.android.aifoodapp.domain.user;
 import com.android.aifoodapp.domain.dailymeal;
+import com.android.aifoodapp.interfaceh.NullOnEmptyConverterFactory;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,25 +60,33 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     user user;
     dailymeal dailymeal;
     fooddata addFoodData;
-    ArrayList<fooddata> foodList=new ArrayList<>(); //담은 식단 목록
-    ArrayList<meal> mealList=new ArrayList<>();
+    ArrayList<fooddata> foodList=new ArrayList<>(); //기존에 담아두었던 식단 목록
+    List<fooddata> list;
+    //List<meal> mealList=new ArrayList<>();
+    //HashMap<String, List<meal>> map = new HashMap<>();
     HashMap<String, Object> map = new HashMap<>();
+    HashMap<String, Object> dailyMap = new HashMap<>();
 
+    int position;
     String userid, mealname, mealphoto;
-    long dailymealid, mealid;
-    int calorie, protein, carbohydrate, fat, timeflag;
+    long dailymealid, mealid, fooddataid;
+    int calorie, protein, carbohydrate, fat, timeflag, sumCalorie=0, sumProtein=0,sumCarbohydrate=0, sumFat=0;
     String savetime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_analysis);
-        initialize();
-        _FoodAnalysis_Activity = FoodAnalysisActivity.this;
 
         Intent intent = getIntent();
         foodList=intent.getParcelableArrayListExtra("foodList");
         dailymeal=intent.getParcelableExtra("dailymeal");
+        position=intent.getIntExtra("position",0);
+
+        initialize();
+        //setFoodList();
+        _FoodAnalysis_Activity = FoodAnalysisActivity.this;
+
         Log.e("dailymeal- userid",dailymeal.getUserid());
         //addFoodData=intent.getParcelableExtra("addFoodData"); //수기입력에서 넘어온 값 -> 음식 하나
         /*
@@ -131,10 +143,16 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 Date now = new Date();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //데이트 포맷(sql)
 
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
+
+                RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+                int cnt=0;
                 for(fooddata repo : foodList){
                     userid = dailymeal.getUserid();
                     dailymealid = dailymeal.getDailymealid();
-                    mealid=0;//repo.getId();
+                    mealid=cnt+1;
                     calorie=(int)repo.getCalorie();
                     protein=(int)repo.getProtein();
                     carbohydrate=(int)repo.getCarbohydrate();
@@ -144,33 +162,77 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                     savetime=dailymeal.getDatekey();//해당 달력 날짜(과거날짜에서 데이터 추가하는 경우도 있기 때문)
                     //savetime = dateFormat.format(now); //날짜가 string으로 저장
                     //savetime=now;//형식없이 괜찮나?
-                    timeflag=dailymeal.getStepcount()+1;//끼니별 식단 구분용으로?
-                    meal meal = new meal(userid,dailymealid,mealid,calorie,protein,carbohydrate,fat,mealname,mealphoto,savetime,timeflag);
-                    mealList.add(meal);
+                    timeflag=position;//끼니별 식단 구분용으로? //main화면에서 list 식단 위치
+                    fooddataid=repo.getId();
+
+                    meal meal = new meal(userid,dailymealid,mealid,calorie,protein,carbohydrate,fat,mealname,mealphoto,savetime,timeflag,fooddataid);
+                    map.put("userid",meal.getUserid());
+                    map.put("dailymealid",meal.getDailymealid());
+                    map.put("mealid",meal.getMealid());
+                    map.put("calorie",meal.getCalorie());
+                    map.put("protein",meal.getProtein());
+                    map.put("carbohydrate",meal.getCarbohydrate());
+                    map.put("fat",meal.getFat());
+                    map.put("mealname",meal.getMealname());
+                    map.put("mealphoto",meal.getMealphoto());
+                    map.put("savetime",meal.getSavetime());
+                    map.put("timeflag",meal.getTimeflag());
+                    map.put("fooddataid",meal.getFooddataid());
+
+                    cnt++;
+                    sumCalorie+=calorie;
+                    sumCarbohydrate+=carbohydrate;
+                    sumProtein+=protein;
+                    sumFat+=fat;
+
+                    //mealList.add(meal);
+                    retrofitAPI.postSaveMeal(map).enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if(response.isSuccessful()) {
+                                Log.e("★","추가완료");
+                            }
+                            else{
+                                Log.e("★","!response.isSuccessful()");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Log.e("★","call 실패"+t);
+                        }
+                    });
                 }
 
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
+                //map.put("mealList",mealList);//서버 측에서 받는 key값 : mealList
 
-                RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
-
-                map.put("mealList",mealList);
-                retrofitAPI.postSaveMeal(map).enqueue(new Callback<meal>() {
-                    @Override
-                    public void onResponse(Call<meal> call, Response<meal> response) {
-                        if(response.isSuccessful()) {
-                            Log.e("★","추가완료");
-                        }
-                        else{
-                            Log.e("★","!response.isSuccessful()");
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<meal> call, Throwable t) {
-                        Log.e("★","call 실패");
-                    }
-                });
+                /*dailymeal update*/
+//                dailymeal updatedailymeal = new dailymeal(userid,savetime,timeflag,sumCalorie, sumProtein,sumCarbohydrate, sumFat,dailymealid);
+//                dailyMap.put("userid",updatedailymeal.getUserid());
+//                dailyMap.put("datekey",updatedailymeal.getDatekey());
+//                dailyMap.put("stepcount",updatedailymeal.getStepcount());
+//                dailyMap.put("calorie",updatedailymeal.getCalorie());
+//                dailyMap.put("protein",updatedailymeal.getProtein());
+//                dailyMap.put("carbohydrate",updatedailymeal.getCarbohydrate());
+//                dailyMap.put("fat",updatedailymeal.getFat());
+//                dailyMap.put("dailymealid",updatedailymeal.getDailymealid());
+//
+//                retrofitAPI.postUpdateDailyMeal(dailyMap).enqueue(new Callback<Void>() {
+//                    @Override
+//                    public void onResponse(Call<Void> call, Response<Void> response) {
+//                        if(response.isSuccessful()) {
+//                            Log.e("★","dailymealUpdate");
+//                        }
+//                        else{
+//                            Log.e("★","!response.isSuccessful()");
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<Void> call, Throwable t) {
+//                        Log.e("★","call 실패"+t);
+//                    }
+//                });
 
                 Intent intent = new Intent(activity, LoginActivity.class);
                 intent.putExtra("load",true);//로딩화면(call받기위해?)
