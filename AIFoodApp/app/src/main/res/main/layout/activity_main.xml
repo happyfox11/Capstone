@@ -21,6 +21,12 @@ tools:context=".activity.MainActivity">
             android:layout_height="wrap_content"
             android:gravity="right"
             android:orientation="horizontal">
+            <Button
+                android:id="@+id/btn_weekly_report"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="주간통계" />
 
             <TextView
                 android:id="@+id/tv_userId"
@@ -375,7 +381,7 @@ tools:context=".activity.MainActivity">
                 android:layout_marginTop="20dp"
                 android:background="#C1BDBD" />
 
-            <LinearLayout
+  <!--          <LinearLayout
                 android:id="@+id/layout_meal1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -437,7 +443,7 @@ tools:context=".activity.MainActivity">
                         android:textColor="#FFFFFF" />
                 </LinearLayout>
 
-            </LinearLayout>
+            </LinearLayout>-->
 
 <!--            <LinearLayout
                 android:id="@+id/layout_meal2"

@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,8 @@ import com.android.aifoodapp.vo.MealMemberVo;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MealAdapter extends BaseAdapter {
@@ -54,6 +57,11 @@ public class MealAdapter extends BaseAdapter {
         private Button btn_from_camera;
         private Button btn_from_gallery;
         private ImageView iv_img;
+
+        private LinearLayout layout_use_img_qa;
+        private LinearLayout layout_use_img;
+        private Button btn_use_img_qa;
+        private Button btn_use_img_exit;
     }
 
     public MealAdapter(Activity activity, List<MealMemberVo> memberList) {
@@ -93,6 +101,11 @@ public class MealAdapter extends BaseAdapter {
             holder.btn_from_gallery = convertView.findViewById(R.id.btn_from_gallery);
             holder.iv_img = convertView.findViewById(R.id.iv_img);
 
+            holder.layout_use_img_qa = convertView.findViewById(R.id.layout_use_img_qa);
+            holder.layout_use_img = convertView.findViewById(R.id.layout_use_img);
+            holder.btn_use_img_qa = convertView.findViewById(R.id.btn_use_img_qa);
+            holder.btn_use_img_exit = convertView.findViewById(R.id.btn_use_img_exit);
+
             convertView.setTag(holder);
             Log.i("check", "holdergetView:"+holder);
 
@@ -124,9 +137,13 @@ public class MealAdapter extends BaseAdapter {
                 Toast.makeText(activity, "click"+holder.btn_meal_detail.getTag(), Toast.LENGTH_SHORT).show(); }
         });
 
+        View finalConvertView = convertView;
+
         holder.btn_meal_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MealHolder cholder = (MealHolder) finalConvertView.getTag();
+                Log.i("check", "holderdelete:"+cholder);
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
 
                 alertDialog.setIcon(R.drawable.alert_icon);
@@ -136,11 +153,18 @@ public class MealAdapter extends BaseAdapter {
                 alertDialog.setPositiveButton("예",new DialogInterface.OnClickListener(){
                     public void onClick(DialogInterface dialog,int which){
                         //알림창의 확인 버튼 클릭
+                        Log.i("checkcheck","position:"+position);
+                        Log.i("checkcheck","before:"+memberList);
+                        cholder.iv_img.setImageBitmap(null);
+
                         memberList.remove(position);
                         notifyDataSetChanged();
 
-                        //MainActivity에서 처리
                         onEditMealHeight.onEditMealHeight();
+
+                        Log.i("checkcheck","after:"+memberList);
+                        Log.i("checkcheck","count:"+getCount());
+                        //MainActivity에서 처리
                     }
                 });
                 alertDialog.setNegativeButton("아니오",new DialogInterface.OnClickListener(){
@@ -154,7 +178,46 @@ public class MealAdapter extends BaseAdapter {
             }
         });
 
-        View finalConvertView = convertView;
+        holder.btn_use_img_qa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MealHolder cholder = (MealHolder) finalConvertView.getTag();
+
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+
+                alertDialog.setIcon(R.drawable.alert_icon);
+                alertDialog.setTitle("이미지 사용 여부 확인");
+                alertDialog.setMessage("이미지를 이용하여 식사를 기록하시겠습니까?");
+
+                alertDialog.setPositiveButton("이미지 사용",new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog,int which){
+                        //알림창의 이미지 사용 버튼 클릭
+                        cholder.layout_use_img_qa.setVisibility(View.GONE);
+                        cholder.layout_use_img.setVisibility(View.VISIBLE);
+                    }
+                });
+                alertDialog.setNegativeButton("수기 입력",new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog,int which){
+                        //알림창의 수기 입력 버튼 클릭
+                        if (itemClickListener != null) {
+                            itemClickListener.onDetailButtonClicked(position);
+                        }
+                    }
+                });
+                alertDialog.show();
+
+            }
+        });
+
+        holder.btn_use_img_exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MealHolder cholder = (MealHolder) finalConvertView.getTag();
+                cholder.layout_use_img_qa.setVisibility(View.VISIBLE);
+                cholder.layout_use_img.setVisibility(View.GONE);
+            }
+        });
+
         holder.btn_from_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,6 +249,7 @@ public class MealAdapter extends BaseAdapter {
 
                         cholder.iv_img.setImageBitmap(bitmap);
                         memberList.get(position).setMealImg(bitmap);
+                        //Log.i("checkcheck","img:"+position);
                         //holder.iv_img.setImageURI(photoUri);
                         //holder.iv_img.setRotation(90f);
                         //holder.iv_img.setScaleType(ImageView.ScaleType.FIT_XY);
