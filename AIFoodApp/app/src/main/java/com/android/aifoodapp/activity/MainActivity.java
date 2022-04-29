@@ -112,7 +112,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
     TextView tv_total_calories, tv_gram_of_carbohydrate, tv_gram_of_protein, tv_gram_of_fat;
 
     ImageView iv_user_setting_update;
-    Button btn_meal1_detail;
+    //Button btn_meal1_detail;
 
     RadarChart radarChart;
 
@@ -264,7 +264,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         tv_gram_of_protein = findViewById(R.id.tv_gram_of_protein);
         tv_gram_of_fat = findViewById(R.id.tv_gram_of_fat);
         iv_user_setting_update = findViewById(R.id.iv_user_setting_update);
-        btn_meal1_detail = findViewById(R.id.btn_meal1_detail);
+        //btn_meal1_detail = findViewById(R.id.btn_meal1_detail);
 
         radarChart = (RadarChart) findViewById(R.id.radarchart);
 
@@ -290,7 +290,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
     private void addListener(){
         btn_select_calendar.setOnClickListener(listener_select_calendar);
         iv_user_setting_update.setOnClickListener(listener_setting_update);
-        btn_meal1_detail.setOnClickListener(listener_meal1_detail);
+        //btn_meal1_detail.setOnClickListener(listener_meal1_detail);
         fab_add_meal.setOnClickListener(listener_add_meal);
     }
 
@@ -312,7 +312,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         }
     };
 
-    private final View.OnClickListener listener_meal1_detail = new View.OnClickListener() {
+    /*private final View.OnClickListener listener_meal1_detail = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(activity, FoodAnalysisActivity.class);
@@ -320,7 +320,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-    };
+    };*/
 
     private final View.OnClickListener listener_select_calendar = new View.OnClickListener() {
         @Override
@@ -820,6 +820,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
     private void addMeal(){
         mealAdapter.addItem(new MealMemberVo());
+        mealAdapter.notifyDataSetChanged();
         setListViewHeightBasedOnChildren(lv_meal_item);
     }
 

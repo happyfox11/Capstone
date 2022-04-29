@@ -53,34 +53,68 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layout_use_img_qa"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="250dp"
             android:orientation="horizontal"
             android:visibility="visible">
 
             <Button
-                android:id="@+id/btn_from_camera"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="#C5DDAA"
-                android:text="사진촬영" />
-
-            <Button
-                android:id="@+id/btn_from_gallery"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="#78AE3A"
-                android:text="갤러리" />
+                android:id="@+id/btn_use_img_qa"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/round_rect"
+                android:backgroundTint="#C5DDAA"
+                android:text="이미지를 이용하여 식단을 기록하시겠습니까?" />
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/iv_img"
+        <LinearLayout
+            android:id="@+id/layout_use_img"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="#B5B2B2" />
+            android:layout_height="250dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_from_camera"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:background="#C5DDAA"
+                    android:text="사진촬영" />
+
+                <Button
+                    android:id="@+id/btn_from_gallery"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:background="#78AE3A"
+                    android:text="갤러리" />
+
+                <Button
+                    android:id="@+id/btn_use_img_exit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="#F44336"
+                    android:text="x"
+                    android:textColor="#FFFFFF" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/iv_img"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="#B5B2B2" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
