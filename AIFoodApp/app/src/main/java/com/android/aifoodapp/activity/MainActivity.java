@@ -27,35 +27,27 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Build;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.aifoodapp.R;
-import com.android.aifoodapp.RecyclerView.FoodItem;
-import com.android.aifoodapp.RecyclerView.FoodItemAdapter;
 import com.android.aifoodapp.adapter.MealAdapter;
 import com.android.aifoodapp.domain.dailymeal;
 import com.android.aifoodapp.domain.fooddata;
 import com.android.aifoodapp.domain.user;
-import com.android.aifoodapp.interfaceh.GsonDateFormatAdapter;
-import com.android.aifoodapp.interfaceh.NullOnEmptyConverterFactory;
 import com.android.aifoodapp.interfaceh.OnCameraClick;
 import com.android.aifoodapp.interfaceh.OnEditMealHeight;
 import com.android.aifoodapp.interfaceh.OnGalleryClick;
@@ -77,12 +69,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.kakao.sdk.user.UserApiClient;
 
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,8 +81,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -492,21 +481,14 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
-        retrofitAPI.getWeeklyCalories(user.getId(),startDate,endDate).enqueue(new Callback<List<Integer>>() {
-            @Override
-            public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
-                calories=response.body().toArray(new Integer[7]);
-                //Log.e("weekly", Arrays.toString(calories));
-                Log.e("week", String.valueOf(response.body()));
-                //setting_weekly_calendar();
-            }
+        //juhee
+        //Call<List<Integer>> call = retrofitAPI.getWeeklyCalories(user.getId(),startDate,endDate);
+        //new calorieNetworkCall().execute();
 
-            @Override
-            public void onFailure(Call<List<Integer>> call, Throwable t) {
-                Log.e("Error! call msg",call.toString());
-                Log.e("Error! t messge",t.getMessage());
-            }
-        });
+        //동기적 처리
+        new calorieNetworkCall().execute(retrofitAPI.getWeeklyCalories(user.getId(),startDate,endDate));
+        //main thread error 남
+        //calories= retrofitAPI.getWeeklyCalories(user.getId(),startDate,endDate).execute().body().toArray(new Integer[7]);
 
         try {
             Thread.sleep(100);
@@ -1027,7 +1009,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         alertDialog.show();
     }
 
-    /*
+    /* 비동기적 처리
     public void setWeelklyCalories(String startDate, String endDate){
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -1055,4 +1037,28 @@ public class MainActivity<Unit> extends AppCompatActivity {
             }
         });
     }*/
+
+
+    private class calorieNetworkCall extends AsyncTask<Call, Void, String>{
+
+        //동기적 처
+        @Override
+        protected String doInBackground(Call[] params) {
+
+            try {
+                Call<List<Integer>> call = params[0];
+                Response<List<Integer>> response = call.execute();
+                calories = response.body().toArray(new Integer[7]);
+                Log.e("weekly--test", String.valueOf(calories));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            return null;
+        }
+
+    }
 }
+
