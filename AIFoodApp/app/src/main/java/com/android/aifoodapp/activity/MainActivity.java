@@ -462,12 +462,6 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
 
         //https://www.daleseo.com/js-async-callback/
-        try {
-            Thread.sleep(1000);
-            Log.e("week22", Arrays.toString(calories));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         /*juhee */
         //setWeelklyCalories(startDate,endDate);
@@ -491,7 +485,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         //calories= retrofitAPI.getWeeklyCalories(user.getId(),startDate,endDate).execute().body().toArray(new Integer[7]);
 
         try {
-            Thread.sleep(100);
+            Thread.sleep(200);
             Log.e("week22", Arrays.toString(calories)); //이것이 왜 먼저 나오는가.. .ㅠㅜㅜㅠ
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -861,7 +855,6 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
                 Log.e("dailymeal-datekey",dailymeal.getDatekey());
                 try {
-                    Thread.sleep(100);
                     setting();
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
