@@ -13,6 +13,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
@@ -35,6 +37,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -124,10 +127,11 @@ public class MainActivity<Unit> extends AppCompatActivity {
     dailymeal dailymeal;
     long dailymealid;
 
-    private ListView lv_meal_item;
+    private RecyclerView rv_item;
     private MealAdapter mealAdapter;
     private ArrayList<MealMemberVo> memberList;
     FloatingActionButton fab_add_meal;
+    private int meal_num = 1; // 식사 레이아웃 추가 시 증가되는 값
 
     ArrayList<fooddata> foodList=new ArrayList<>();
     List<fooddata> list;
@@ -268,7 +272,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
         radarChart = (RadarChart) findViewById(R.id.radarchart);
 
-        lv_meal_item = findViewById(R.id.lv_custom_item);
+        rv_item = findViewById(R.id.rv_item);
         memberList = new ArrayList<>();
         mealAdapter = new MealAdapter(activity, memberList);
         fab_add_meal = findViewById(R.id.fab_add_meal);
@@ -298,7 +302,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             addMeal();
-            setListViewHeightBasedOnChildren(lv_meal_item);
+            setListViewHeightBasedOnChildren(rv_item);
         }
     };
 
@@ -719,14 +723,16 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
     private void settingMealAdapter(){
 
-        lv_meal_item.setAdapter(mealAdapter);
+        rv_item.setAdapter(mealAdapter);
+        GridLayoutManager gManager = new GridLayoutManager(activity, 1);
+        rv_item.setLayoutManager(gManager);
 
         // adapter 콜백리스너 등록
         if (mealAdapter != null) {
             mealAdapter.setOnEditMealHeightListener(new OnEditMealHeight() {
                 @Override
                 public void onEditMealHeight() {
-                    setListViewHeightBasedOnChildren(lv_meal_item);
+                    setListViewHeightBasedOnChildren(rv_item);
                 }
             });
 
@@ -819,35 +825,19 @@ public class MainActivity<Unit> extends AppCompatActivity {
     }
 
     private void addMeal(){
-        mealAdapter.addItem(new MealMemberVo());
-        mealAdapter.notifyDataSetChanged();
-        setListViewHeightBasedOnChildren(lv_meal_item);
+        //mealAdapter.addItem(new MealMemberVo());
+        mealAdapter.addItem(new MealMemberVo("식사 " + meal_num));
+        meal_num++;
+        setListViewHeightBasedOnChildren(rv_item);
     }
 
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            // pre-condition
-            return;
-        }
+    public void setListViewHeightBasedOnChildren(RecyclerView recyclerView) {
 
-        int totalHeight = 0;
+        ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
 
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
-
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            ////listItem.measure(0, 0);
-            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-            totalHeight += listItem.getMeasuredHeight();
-
-        }
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-
-        params.height = totalHeight;
-        listView.setLayoutParams(params);
-
-        listView.requestLayout();
+        int cnt = recyclerView.getAdapter().getItemCount();
+        params.height = (int) getResources().getDimension(R.dimen.meal_item_size) * cnt;
+        recyclerView.requestLayout();
     }
 
     public void setDailymeal(){

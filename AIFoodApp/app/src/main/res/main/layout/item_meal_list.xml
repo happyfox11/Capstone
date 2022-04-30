@@ -3,119 +3,134 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="320dp"
-    android:background="#ffffff">
+    android:layout_height="340dp"
+    android:layout_marginTop="20dp">
 
-    <LinearLayout
-        android:id="@+id/layout_meal1"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical">
+        android:layout_height="320dp"
+        android:layout_margin="5dp"
+        app:cardBackgroundColor="#F1EEEE"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="10dp">
 
         <LinearLayout
+            android:id="@+id/layout_meal1"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tv_custom_item_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/meal_icon"
-                android:text=" 식사"
-                android:textSize="20sp" />
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <Button
-                android:id="@+id/btn_meal_detail"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:background="@drawable/round_rect_button"
-                android:backgroundTint="#CAEAA6"
-                android:text="상세보기"
-                android:textSize="10sp" />
-
-            <Button
-                android:id="@+id/btn_meal_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/round_rect_button"
-                android:backgroundTint="#F3C9C9"
-                android:text="삭제하기"
-                android:textSize="10sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_use_img_qa"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:orientation="horizontal"
-            android:visibility="visible">
-
-            <Button
-                android:id="@+id/btn_use_img_qa"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/round_rect"
-                android:backgroundTint="#C5DDAA"
-                android:text="이미지를 이용하여 식단을 기록하시겠습니까?" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_use_img"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="320dp"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:padding="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/btn_from_camera"
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/tv_custom_item_name"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    android:background="#C5DDAA"
-                    android:text="사진촬영" />
+                    android:drawableLeft="@drawable/meal_icon"
+                    android:gravity="center"
+                    android:text=" 식사"
+                    android:textSize="20sp" />
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
 
                 <Button
-                    android:id="@+id/btn_from_gallery"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4"
-                    android:background="#78AE3A"
-                    android:text="갤러리" />
+                    android:id="@+id/btn_meal_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:background="@drawable/round_rect_button"
+                    android:backgroundTint="#505CAE"
+                    android:text="상세보기"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp" />
 
                 <Button
-                    android:id="@+id/btn_use_img_exit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#F44336"
-                    android:text="x"
-                    android:textColor="#FFFFFF" />
+                    android:id="@+id/btn_meal_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/round_rect_button"
+                    android:backgroundTint="#8A3737"
+                    android:text="삭제하기"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp" />
 
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/iv_img"
+            <LinearLayout
+                android:id="@+id/layout_use_img_qa"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="#B5B2B2" />
+                android:layout_height="250dp"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <Button
+                    android:id="@+id/btn_use_img_qa"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/round_rect"
+                    android:backgroundTint="#C5DDAA"
+                    android:lineSpacingExtra="8sp"
+                    android:text="이미지를 이용하여\n식단을 기록하시겠습니까?" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_use_img"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_from_camera"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:background="#78AE3A"
+                        android:text="Camera"
+                        android:textColor="#FFFFFF" />
+
+                    <Button
+                        android:id="@+id/btn_from_gallery"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:background="#538C14"
+                        android:text="Gallery"
+                        android:textColor="#FFFFFF" />
+
+                    <Button
+                        android:id="@+id/btn_use_img_exit"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="#F44336"
+                        android:text="x"
+                        android:textColor="#FFFFFF" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/iv_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="#B5B2B2" />
+
+            </LinearLayout>
 
         </LinearLayout>
-
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>
