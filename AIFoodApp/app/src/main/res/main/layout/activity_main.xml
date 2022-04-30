@@ -9,7 +9,7 @@ tools:context=".activity.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:background="#80B542"
         android:gravity="right|center_vertical"
         android:orientation="vertical"
@@ -18,21 +18,30 @@ tools:context=".activity.MainActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
             android:gravity="right"
             android:orientation="horizontal">
+
             <Button
                 android:id="@+id/btn_weekly_report"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_gravity="left"
                 android:text="주간통계" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
             <TextView
                 android:id="@+id/tv_userId"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginRight="10dp"
+                android:gravity="center|right"
                 android:text="tv_userId"
                 android:textStyle="bold" />
 
@@ -51,6 +60,7 @@ tools:context=".activity.MainActivity">
                 android:id="@+id/iv_user_setting_update"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 app:srcCompat="@drawable/menu_icon" />
 
         </LinearLayout>
@@ -574,12 +584,16 @@ tools:context=".activity.MainActivity">
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <ListView
+<!--                <ListView
                     android:id="@+id/lv_custom_item"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                </ListView>
+                </ListView>-->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
 

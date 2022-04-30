@@ -10,6 +10,10 @@ public class MealMemberVo {
 
     }
 
+    public MealMemberVo(String name) {
+        this.name = name;
+    }
+
 
     public String getName() {
         return name;
