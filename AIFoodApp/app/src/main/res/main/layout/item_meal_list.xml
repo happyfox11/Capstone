@@ -74,11 +74,21 @@
                     android:id="@+id/btn_use_img_qa"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_weight="3"
                     android:background="@drawable/round_rect"
                     android:backgroundTint="#C5DDAA"
                     android:lineSpacingExtra="8sp"
                     android:text="이미지를 이용하여\n식단을 기록하시겠습니까?" />
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycleFood"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="7"
+                    android:fillViewport="true"
+                    android:orientation="vertical"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/food_list_item4" />
             </LinearLayout>
 
             <LinearLayout
