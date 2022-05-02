@@ -161,6 +161,9 @@ public class MainActivity<Unit> extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
     }
 
+    private Button btn_weekly_report;
+    //주간 통계 버튼(임시로 위치시킴 --> 후에 푸시알림으로 확인가능하도록)
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -276,6 +279,8 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
         cameraLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), cameraResultCallback);
         galleryLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), galleryResultCallback);
+
+        btn_weekly_report = findViewById(R.id.btn_weekly_report);
     }
 
     //설정
@@ -293,7 +298,16 @@ public class MainActivity<Unit> extends AppCompatActivity {
         iv_user_setting_update.setOnClickListener(listener_setting_update);
         //btn_meal1_detail.setOnClickListener(listener_meal1_detail);
         fab_add_meal.setOnClickListener(listener_add_meal);
+        btn_weekly_report.setOnClickListener(listener_weekly_report);
     }
+
+    private final View.OnClickListener listener_weekly_report = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(activity, WeeklyReportActivity.class);
+            startActivity(intent);
+        }
+    };
 
     private final View.OnClickListener listener_add_meal = new View.OnClickListener() {
         @Override
@@ -531,7 +545,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
             TextView textView = new TextView(activity);
             textView.setText(Integer.toString(calories[i]));
             textView.setGravity(Gravity.CENTER);
-            textView.setTypeface(null, Typeface.BOLD);
+            textView.setTypeface(Typeface.createFromAsset(getAssets(), "cafe24ssurroundair.ttf"), Typeface.BOLD);
             textView.setTextSize(10);
 
             if(target_calorie - 50 <= calories[i] && calories[i] <= target_calorie + 50)
