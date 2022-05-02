@@ -18,9 +18,11 @@
         android:theme="@style/Theme.AIFoodApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.WeeklyReportActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.FoodInputActivity"
-            android:exported="true" />
-        <!-- http 접근을 허용 -->
+            android:exported="true" /> <!-- http 접근을 허용 -->
         <activity
             android:name=".activity.InitialSurveyActivity"
             android:exported="false" />
