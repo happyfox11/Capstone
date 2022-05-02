@@ -49,6 +49,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
     public MealAdapter(Activity activity, ArrayList<MealMemberVo> memberList) {
         this.activity = activity;
         this.memberList = memberList;
+
     }
 
     public class MealHolder extends RecyclerView.ViewHolder {
@@ -297,5 +298,6 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
     public void setItemClickListener(MealAdapter.ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
+
 
 }

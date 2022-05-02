@@ -41,6 +41,7 @@ public class FoodInputActivity extends AppCompatActivity {
     EditText et_search;
     Button btn_search;
     dailymeal dailymeal;
+    int pos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class FoodInputActivity extends AppCompatActivity {
         Intent intent = getIntent();
         foodList=intent.getParcelableArrayListExtra("foodList");
         dailymeal=intent.getParcelableExtra("dailymeal");
+        pos=intent.getIntExtra("position",0);
 
         itemSearchAdapter adapter=new itemSearchAdapter(arrayList,activity);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -106,6 +108,7 @@ public class FoodInputActivity extends AppCompatActivity {
                 Intent intent = new Intent(activity, FoodAnalysisActivity.class);
                 intent.putParcelableArrayListExtra("foodList",foodList); //선택한 음식데이터 넘기기
                 intent.putExtra("dailymeal",dailymeal);
+                intent.putExtra("position",pos);
                 startActivity(intent);
                 finish();
             }

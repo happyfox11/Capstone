@@ -14,11 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -44,9 +46,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.aifoodapp.R;
+import com.android.aifoodapp.adapter.FoodListAdapter;
 import com.android.aifoodapp.adapter.MealAdapter;
+import com.android.aifoodapp.adapter.itemSearchAdapter;
 import com.android.aifoodapp.domain.dailymeal;
 import com.android.aifoodapp.domain.fooddata;
+import com.android.aifoodapp.domain.meal;
 import com.android.aifoodapp.domain.user;
 import com.android.aifoodapp.interfaceh.OnCameraClick;
 import com.android.aifoodapp.interfaceh.OnEditMealHeight;
@@ -99,10 +104,10 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
     TextView tv_month, tv_dialog_result;
     LinearLayout layout_date, layout_calories;
+    RecyclerView rv_meal;
     Button btn_select_calendar;
     ProgressBar pb_total_calories, pb_carbohydrate, pb_protein, pb_fat;
     TextView tv_total_calories, tv_gram_of_carbohydrate, tv_gram_of_protein, tv_gram_of_fat;
-
     ImageView iv_user_setting_update;
     //Button btn_meal1_detail;
 
@@ -115,6 +120,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
     user user;
     dailymeal dailymeal;
     long dailymealid;
+    String date_string="";
 
     private RecyclerView rv_item;
     private MealAdapter mealAdapter;
@@ -124,6 +130,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
     ArrayList<fooddata> foodList=new ArrayList<>();
     List<fooddata> list;
+    List<meal> ml;
 
     private String flag;
     public static Activity _MainActivity;
@@ -167,6 +174,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         setDailymeal();
         //setting(); //retrofit callback 문제로 아래로 내려둠
         addListener();
+        //settingFoodListAdapter();
 
         flag=intent.getStringExtra("flag"); //현재 계정이 구글인지 카카오인지
 
@@ -696,6 +704,39 @@ public class MainActivity<Unit> extends AppCompatActivity {
         radarChart.invalidate();
 
     }
+    /*
+    private void settingFoodListAdapter(){
+        rv_meal = findViewById(R.id.recycleFood);
+        ArrayList<meal> arrayList=new ArrayList<>();
+
+        FoodListAdapter adapter=new FoodListAdapter(arrayList,activity);
+        rv_meal.setLayoutManager(new LinearLayoutManager(this));
+        rv_meal.setAdapter(adapter);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create()).build();
+
+        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+        retrofitAPI.getMeal(user.getId(),date_string).enqueue(new Callback<List<meal>>() {
+            @Override
+            public void onResponse(Call<List<meal>> call, Response<List<meal>> response) {
+                ml= response.body();
+                //Log.e("fooddata 목록",list.toString());
+                if(ml.isEmpty()) {
+                    //결과 없음.
+                }
+                for (meal repo : ml) {
+                    arrayList.add(repo);
+                }
+                adapter.notifyDataSetChanged(); //list값이 변경되었을때 화면에 보여지는 값들 refresh
+            }
+            @Override
+            public void onFailure(Call<List<meal>> call, Throwable t) { ;
+            }
+        });
+    }*/
 
     private void settingMealAdapter(){
 
@@ -777,6 +818,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
                                 Intent intent = new Intent(activity, FoodAnalysisActivity.class);
                                 intent.putExtra("dailymeal",dailymeal);
+                                intent.putExtra("position",position);
                                 intent.putParcelableArrayListExtra("foodList",foodList);
                                 startActivity(intent);
                                 finish();
@@ -835,7 +877,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
-        String date_string="";
+        //String date_string="";
         //위에서 캘린더 세팅부분에서 오늘날짜를 보내주면 이렇게 하지 않고 세팅 가능 (selecday intent 에 넣는거 삭제해야함)
         if(intent.getStringExtra("selected_day")!=null){
             date_string = intent.getStringExtra("selected_day");
