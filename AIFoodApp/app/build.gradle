@@ -33,7 +33,8 @@ android {
                         [
                                 'src\\main\\res\\common',
                                 'src\\main\\res\\main',
-                                'src\\main\\res\\login'
+                                'src\\main\\res\\login',
+                                'src\\main\\res\\report'
                         ]
             }
         }
@@ -76,4 +77,10 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.15'
 
     implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha03'
+
+    //viewPager 내의 slide
+    implementation 'com.github.hayahyts:PrettyDottedProgressIndicator:1.0.0'
+
+    //주간 통계 1 페이지의 평균 칼로리 표시 원형 프로그레스바
+    implementation 'com.github.jakob-grabner:Circle-Progress-View:1.4'
 }
