@@ -24,7 +24,6 @@ import java.util.ArrayList;
 
 public class WeeklyReportFragment2 extends Fragment {
 
-    MainActivity activity;
     private LineChart lineChart;
 
     ArrayList<Entry> average_chart = new ArrayList<Entry>(); //데이터를 담을 리스트 (평균 3대 비율)
@@ -38,7 +37,6 @@ public class WeeklyReportFragment2 extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.weekly_report_fragment_2, container, false);
-        activity = (MainActivity) getActivity();
         lineChart = (LineChart) rootView.findViewById(R.id.lineChart);
 
         //평균 3대 비율 차트
