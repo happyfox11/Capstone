@@ -11,7 +11,9 @@ import android.widget.ProgressBar;
 import com.android.aifoodapp.R;
 import com.android.aifoodapp.adapter.ReportPagerAdapter;
 import com.android.aifoodapp.fragment.WeeklyReportFragment1;
+import com.android.aifoodapp.fragment.WeeklyReportFragment2;
 import com.android.aifoodapp.fragment.WeeklyReportFragment3;
+import com.android.aifoodapp.fragment.WeeklyReportFragment4;
 import com.hayahyts.dottedprogressindicator.DottedProgressBar;
 
 
@@ -22,9 +24,9 @@ public class WeeklyReportActivity extends AppCompatActivity {
     private ReportPagerAdapter reportPagerAdapter;
 
     private WeeklyReportFragment1 weekly_report_fragment_1;
-    //private WeeklyReportFragment2 weekly_report_fragment_2;
+    private WeeklyReportFragment2 weekly_report_fragment_2;
     private WeeklyReportFragment3 weekly_report_fragment_3;
-    //private WeeklyReportFragment4 weekly_report_fragment_4;
+    private WeeklyReportFragment4 weekly_report_fragment_4;
 
     private ImageButton btn_back_weekly_report;
 
@@ -56,9 +58,9 @@ public class WeeklyReportActivity extends AppCompatActivity {
         reportPagerAdapter = new ReportPagerAdapter(getSupportFragmentManager());
 
         weekly_report_fragment_1 = new WeeklyReportFragment1();
-        //weekly_report_fragment_2 = new WeeklyReportFragment2();
+        weekly_report_fragment_2 = new WeeklyReportFragment2();
         weekly_report_fragment_3 = new WeeklyReportFragment3();
-        //weekly_report_fragment_4 = new WeeklyReportFragment4();
+        weekly_report_fragment_4 = new WeeklyReportFragment4();
 
         dottedProgressBar = findViewById(R.id.dotted_progress_bar);
         btn_back_weekly_report = findViewById(R.id.btn_back_weekly_report);
@@ -71,9 +73,9 @@ public class WeeklyReportActivity extends AppCompatActivity {
 
         reportPagerAdapter.addItem(new WeeklyReportFragment1());
         reportPagerAdapter.addItem(weekly_report_fragment_1);
-        //reportPagerAdapter.addItem(weekly_report_fragment_2);
+        reportPagerAdapter.addItem(weekly_report_fragment_2);
         reportPagerAdapter.addItem(weekly_report_fragment_3);
-        //reportPagerAdapter.addItem(weekly_report_fragment_4);
+        reportPagerAdapter.addItem(weekly_report_fragment_4);
         reportPagerAdapter.addItem(new WeeklyReportFragment3());
 
         pager.setAdapter(reportPagerAdapter);
