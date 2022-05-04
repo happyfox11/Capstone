@@ -122,6 +122,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
     dailymeal dailymeal;
     long dailymealid;
     String date_string="";
+    int time=0;
 
     private RecyclerView rv_item;
     private MealAdapter mealAdapter;
@@ -131,6 +132,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
     private int meal_num = 1; // 식사 레이아웃 추가 시 증가되는 값
 
     ArrayList<fooddata> foodList=new ArrayList<>();
+    ArrayList<Double> mealList=new ArrayList<>();
     List<fooddata> list;
     List<meal> ml;
 
@@ -800,12 +802,25 @@ public class MainActivity<Unit> extends AppCompatActivity {
                                     foodList.add(fd);
                                 }
 
-                                Intent intent = new Intent(activity, FoodAnalysisActivity.class);
-                                intent.putExtra("dailymeal",dailymeal);
-                                intent.putExtra("position",position);
-                                intent.putParcelableArrayListExtra("foodList",foodList);
-                                startActivity(intent);
-                                finish();
+                                retrofitAPI.getMeal(dailymeal.getUserid(),dailymeal.getDatekey(),position).enqueue(new Callback<List<meal>>() {
+                                    @Override
+                                    public void onResponse(Call<List<meal>> call, Response<List<meal>> response) {
+                                        ml= response.body();
+                                        for (meal repo : ml) {
+                                            mealList.add(repo.getIntake());
+                                        }
+                                        Intent intent = new Intent(activity, FoodAnalysisActivity.class);
+                                        intent.putExtra("dailymeal",dailymeal);
+                                        intent.putExtra("position",position);
+                                        intent.putExtra("mealList",mealList);
+                                        intent.putParcelableArrayListExtra("foodList",foodList);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                    @Override
+                                    public void onFailure(Call<List<meal>> call, Throwable t) { ;
+                                    }
+                                });
 
                             }
                             else{
@@ -816,6 +831,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
                             Log.e("food search","실패"+t);
                         }
                     });
+
                 }
                 @Override
                 public void removeButtonClicked(int position){
@@ -885,29 +901,17 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
         new MealNetworkCall().execute(retrofitAPI.getMeal(user.getId(),date_string,meal_num-1));
         try {
-            Thread.sleep(100);
+            if(time==0) {
+                Thread.sleep(300);
+                time++;
+            }
+            else
+                Thread.sleep(150);
 
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         mealAdapter.notifyDataSetChanged();
-        /*
-        retrofitAPI.getMeal(user.getId(),date_string,meal_num-1).enqueue(new Callback<List<meal>>() {
-            @Override
-            public void onResponse(Call<List<meal>> call, Response<List<meal>> response) {
-                ml= response.body();
-                if(ml.isEmpty()) {
-                    //결과 없음.
-                }
-                for (meal repo : ml) {
-                    subItemList.add(repo.getMealname());
-                }
-            }
-            @Override
-            public void onFailure(Call<List<meal>> call, Throwable t) { ;
-            }
-        });
-        */
 
         return subItemList;
     }

@@ -62,7 +62,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     fooddata addFoodData;
     ArrayList<fooddata> foodList=new ArrayList<>(); //기존에 담아두었던 식단 목록
     List<fooddata> list;
-    //List<meal> mealList=new ArrayList<>();
+    ArrayList<Double> mealList=new ArrayList<>();
     //HashMap<String, List<meal>> map = new HashMap<>();
     HashMap<String, Object> map = new HashMap<>();
     HashMap<String, Object> dailyMap = new HashMap<>();
@@ -72,6 +72,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     long dailymealid, mealid, fooddataid;
     int calorie, protein, carbohydrate, fat, timeflag;
     String savetime;
+    double intake=1.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         foodList=intent.getParcelableArrayListExtra("foodList");
+        mealList=(ArrayList<Double>) intent.getSerializableExtra("mealList");
         dailymeal=intent.getParcelableExtra("dailymeal");
         pos=intent.getIntExtra("position",0);
         initialize();
@@ -93,12 +95,14 @@ public class FoodAnalysisActivity extends AppCompatActivity {
             foodList.add(addFoodData);
         }*/
 
-        if(foodList!=null){
+        if(!foodList.isEmpty()){
+            int cnt=0;
             for(fooddata repo : foodList){
                 //String img = String.valueOf(R.drawable.ic_launcher_background); //기본 사진
                 String img=String.valueOf(R.drawable.icon);
                 foodItemList.add(new FoodItem(img,R.drawable.minusbtn,repo.getName()));
-                foodInfoList.add(new FoodInfo(repo,img,1.0)); //음식객체, 이미지, 인분
+                foodInfoList.add(new FoodInfo(repo, img, mealList.get(cnt))); //음식객체, 이미지, 인분
+                cnt++;
             }
         }
         else{
@@ -122,6 +126,14 @@ public class FoodAnalysisActivity extends AppCompatActivity {
             public void onRemoveButtonClicked(int position) {
                 foodInfoAdapter.removeById(position);
                 foodList.remove(position);
+                mealList.remove(position);
+            }
+        });
+
+        foodInfoAdapter.setItemClickListener(new FoodInfoAdapter.ItemClickListener() {
+            @Override
+            public void onIntakeChangeClicked(double cl_intake, int position){
+                mealList.set(position,cl_intake);
             }
         });
 
@@ -130,8 +142,9 @@ public class FoodAnalysisActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(activity, FoodInputActivity.class);
                 intent.putExtra("dailymeal",dailymeal);
-                intent.putExtra("foodList",foodList);
+                intent.putParcelableArrayListExtra("foodList",foodList);
                 intent.putExtra("position",pos);
+                intent.putExtra("mealList",mealList);
                 startActivity(intent);
             }
         });
@@ -178,8 +191,11 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                                 //savetime=now;//형식없이 괜찮나?
                                 timeflag=pos;//끼니별 식단 구분용으로? //main화면에서 list 식단 위치
                                 fooddataid=repo.getId();
+                                intake=mealList.get(cnt);
 
-                                meal meal = new meal(userid,dailymealid,mealid,calorie,protein,carbohydrate,fat,mealname,mealphoto,savetime,timeflag,fooddataid);
+                                Log.e("intake",Double.toString(intake));
+
+                                meal meal = new meal(userid,dailymealid,mealid,calorie,protein,carbohydrate,fat,mealname,mealphoto,savetime,timeflag,fooddataid,intake);
                                 map.put("userid",meal.getUserid());
                                 map.put("dailymealid",meal.getDailymealid());
                                 map.put("mealid",meal.getMealid());
@@ -192,6 +208,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                                 map.put("savetime",meal.getSavetime());
                                 map.put("timeflag",meal.getTimeflag());
                                 map.put("fooddataid",meal.getFooddataid());
+                                map.put("intake",meal.getIntake());
 
                                 cnt++;
 

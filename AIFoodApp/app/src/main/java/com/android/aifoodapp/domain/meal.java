@@ -32,12 +32,14 @@ public class meal implements Parcelable {
     private int timeflag;
     @SerializedName("fooddataid")
     private long fooddataid;
+    @SerializedName("intake")
+    private double intake;
 
     public meal(){
 
     }
 
-    public meal(String userid, long dailymealid, long mealid, int calorie, int protein, int carbohydrate, int fat, String mealname, String mealphoto, String savetime, int timeflag, long fooddataid) {
+    public meal(String userid, long dailymealid, long mealid, int calorie, int protein, int carbohydrate, int fat, String mealname, String mealphoto, String savetime, int timeflag, long fooddataid, double intake) {
         this.userid = userid;
         this.dailymealid = dailymealid;
         this.mealid = mealid;
@@ -50,6 +52,7 @@ public class meal implements Parcelable {
         this.savetime = savetime;
         this.timeflag = timeflag;
         this.fooddataid=fooddataid;
+        this.intake=intake;
     }
 
     public String getUserid() {
@@ -148,6 +151,14 @@ public class meal implements Parcelable {
         this.fooddataid=fooddataid;
     }
 
+    public double getIntake(){
+        return intake;
+    }
+
+    public void setIntake(double intake){
+        this.intake=intake;
+    }
+
     protected meal(Parcel in) {
         userid = in.readString();
         dailymealid = in.readLong();
@@ -161,6 +172,7 @@ public class meal implements Parcelable {
         savetime = in.readString();
         timeflag = in.readInt();
         fooddataid=in.readLong();
+        intake=in.readDouble();
     }
 
     @Override
@@ -177,6 +189,7 @@ public class meal implements Parcelable {
         dest.writeString(savetime);
         dest.writeInt(timeflag);
         dest.writeLong(fooddataid);
+        dest.writeDouble(intake);
     }
 
     @Override

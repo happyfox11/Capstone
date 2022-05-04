@@ -21,6 +21,7 @@ import java.util.ArrayList;
 public class FoodInfoAdapter extends RecyclerView.Adapter<FoodInfoAdapter.CustomViewHolder> {
 
     private ArrayList<FoodInfo> items = new ArrayList<FoodInfo>();
+    private FoodInfoAdapter.ItemClickListener itemClickListener;
 
     public FoodInfoAdapter() {
     }
@@ -28,6 +29,13 @@ public class FoodInfoAdapter extends RecyclerView.Adapter<FoodInfoAdapter.Custom
         this.items = items;
     }
 
+    public interface ItemClickListener {
+        public void onIntakeChangeClicked(double intake,int position);
+    }
+
+    public void setItemClickListener(FoodInfoAdapter.ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
 
     @NonNull
     @Override //뷰홀더 객체 생성 Holder
@@ -70,6 +78,9 @@ public class FoodInfoAdapter extends RecyclerView.Adapter<FoodInfoAdapter.Custom
                 intake +=0.5;
                 items.set(position,new FoodInfo(items.get(position).getFood(),items.get(position).getCl_img(),intake));
                 notifyDataSetChanged();
+                if (itemClickListener != null) {
+                    itemClickListener.onIntakeChangeClicked(intake,position);
+                }
             }
         });
 
@@ -82,6 +93,9 @@ public class FoodInfoAdapter extends RecyclerView.Adapter<FoodInfoAdapter.Custom
                     intake -=0.5;
                     items.set(position,new FoodInfo(items.get(position).getFood(),items.get(position).getCl_img(),intake));
                     notifyDataSetChanged();
+                    if (itemClickListener != null) {
+                        itemClickListener.onIntakeChangeClicked(intake,position);
+                    }
                 }
             }
         });

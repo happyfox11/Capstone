@@ -20,6 +20,7 @@ import com.android.aifoodapp.R;
 import com.android.aifoodapp.adapter.itemSearchAdapter;
 import com.android.aifoodapp.domain.dailymeal;
 import com.android.aifoodapp.domain.fooddata;
+import com.android.aifoodapp.domain.meal;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
 import com.android.aifoodapp.domain.dailymeal;
 
@@ -35,6 +36,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class FoodInputActivity extends AppCompatActivity {
     ArrayList<fooddata> arrayList;
     ArrayList<fooddata> foodList;//foodList : 지금까지 식단으로 담아놓은 음식리스트
+    ArrayList<Double> mealList=new ArrayList<>();
     List<fooddata> list;//검색 결과로 음식 데이터 전체를 가지고 있는 list
     Activity activity;
     RecyclerView recyclerView;
@@ -51,6 +53,7 @@ public class FoodInputActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         foodList=intent.getParcelableArrayListExtra("foodList");
+        mealList=(ArrayList<Double>) intent.getSerializableExtra("mealList");
         dailymeal=intent.getParcelableExtra("dailymeal");
         pos=intent.getIntExtra("position",0);
 
@@ -101,12 +104,13 @@ public class FoodInputActivity extends AppCompatActivity {
                 Log.e("%%%%%%%%%",food.getName());
                 if(foodList==null) foodList=new ArrayList<fooddata>();
                 foodList.add(food);//선택한 food
-
+                mealList.add(1.0);
                 FoodAnalysisActivity FA = (FoodAnalysisActivity)FoodAnalysisActivity._FoodAnalysis_Activity; // https://itun.tistory.com/357 [Bino]
                 FA.finish();
 
                 Intent intent = new Intent(activity, FoodAnalysisActivity.class);
                 intent.putParcelableArrayListExtra("foodList",foodList); //선택한 음식데이터 넘기기
+                intent.putExtra("mealList",mealList);
                 intent.putExtra("dailymeal",dailymeal);
                 intent.putExtra("position",pos);
                 startActivity(intent);
