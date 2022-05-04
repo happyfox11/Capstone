@@ -858,8 +858,12 @@ public class MainActivity<Unit> extends AppCompatActivity {
     }
 
     private void settingInitialMeal(){
-        addMeal();
-        //addMeal();
+        for(;;){
+            if(!buildSubItemList(meal_num).isEmpty()){
+                addMeal();
+            }
+            else break;
+        }
     }
 
     private void addMeal(){
@@ -958,7 +962,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
                 Log.e("dailymeal-datekey",dailymeal.getDatekey());
                 try {
                     setting();
-                    Thread.sleep(800);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
