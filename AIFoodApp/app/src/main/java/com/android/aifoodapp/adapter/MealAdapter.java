@@ -24,6 +24,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.aifoodapp.R;
 import com.android.aifoodapp.activity.MainActivity;
+import com.android.aifoodapp.domain.fooddata;
+import com.android.aifoodapp.domain.meal;
 import com.android.aifoodapp.interfaceh.OnCameraClick;
 import com.android.aifoodapp.interfaceh.OnEditMealHeight;
 import com.android.aifoodapp.interfaceh.OnGalleryClick;
@@ -32,6 +34,10 @@ import com.android.aifoodapp.vo.MealMemberVo;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
 
@@ -44,6 +50,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
 
     public interface ItemClickListener {
         public void onDetailButtonClicked(int position);
+        public void removeButtonClicked(int position);
     }
 
     public MealAdapter(Activity activity, ArrayList<MealMemberVo> memberList) {
@@ -135,6 +142,10 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
                         memberList.remove(position);
                         notifyItemRemoved(position);
 
+                        if (itemClickListener != null) {
+                            itemClickListener.removeButtonClicked(position);
+                        }
+
                         holder.layout_use_img.setVisibility(View.GONE);
                         holder.layout_use_img_qa.setVisibility(View.VISIBLE);
 
@@ -148,7 +159,6 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
                     }
                 });
                 alertDialog.show();
-
             }
         });
 
@@ -298,6 +308,8 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
     public void setItemClickListener(MealAdapter.ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
+
+
 
 
 }

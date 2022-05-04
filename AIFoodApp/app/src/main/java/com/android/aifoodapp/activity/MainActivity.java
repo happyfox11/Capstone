@@ -125,6 +125,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
     private RecyclerView rv_item;
     private MealAdapter mealAdapter;
     private ArrayList<MealMemberVo> memberList;
+    private ArrayList<MealMemberVo> nameList;
     FloatingActionButton fab_add_meal;
     private int meal_num = 1; // 식사 레이아웃 추가 시 증가되는 값
 
@@ -274,6 +275,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
         rv_item = findViewById(R.id.rv_item);
         memberList = new ArrayList<>();
+        nameList=new ArrayList<>();
         mealAdapter = new MealAdapter(activity, memberList);
         fab_add_meal = findViewById(R.id.fab_add_meal);
 
@@ -718,39 +720,6 @@ public class MainActivity<Unit> extends AppCompatActivity {
         radarChart.invalidate();
 
     }
-    /*
-    private void settingFoodListAdapter(){
-        rv_meal = findViewById(R.id.recycleFood);
-        ArrayList<meal> arrayList=new ArrayList<>();
-
-        FoodListAdapter adapter=new FoodListAdapter(arrayList,activity);
-        rv_meal.setLayoutManager(new LinearLayoutManager(this));
-        rv_meal.setAdapter(adapter);
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
-                .addConverterFactory(GsonConverterFactory.create()).build();
-
-        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
-
-        retrofitAPI.getMeal(user.getId(),date_string).enqueue(new Callback<List<meal>>() {
-            @Override
-            public void onResponse(Call<List<meal>> call, Response<List<meal>> response) {
-                ml= response.body();
-                //Log.e("fooddata 목록",list.toString());
-                if(ml.isEmpty()) {
-                    //결과 없음.
-                }
-                for (meal repo : ml) {
-                    arrayList.add(repo);
-                }
-                adapter.notifyDataSetChanged(); //list값이 변경되었을때 화면에 보여지는 값들 refresh
-            }
-            @Override
-            public void onFailure(Call<List<meal>> call, Throwable t) { ;
-            }
-        });
-    }*/
 
     private void settingMealAdapter(){
 
@@ -847,13 +816,49 @@ public class MainActivity<Unit> extends AppCompatActivity {
                         }
                     });
                 }
+                @Override
+                public void removeButtonClicked(int position){
+
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
+
+                    RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+                    Log.e("날짜",date_string);
+                    retrofitAPI.InitPositionMeal(user.getId(),date_string,position).enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if(response.isSuccessful()) {
+                                Log.e("main 삭제 식사 : ",Integer.toString(position));
+
+                            }
+                            else{
+                                Log.e("main 식사","삭제실패");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Log.e("","call 실패"+t);
+                        }
+                    });
+
+                    Toast.makeText(getApplicationContext(),"삭제되었습니다!", Toast.LENGTH_SHORT).show();
+
+                    /* activity 새로고침하기 */
+                    finish();//인텐트 종료
+                    overridePendingTransition(0, 0);//인텐트 효과 없애기
+                    Intent intent = getIntent(); //인텐트
+                    startActivity(intent); //액티비티 열기
+                    overridePendingTransition(0, 0);//인텐트 효과 없애기
+                }
             });
         }
     }
 
     private void settingInitialMeal(){
         addMeal();
-        addMeal();
+        //addMeal();
     }
 
     private void addMeal(){
