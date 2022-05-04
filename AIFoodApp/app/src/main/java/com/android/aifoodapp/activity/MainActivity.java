@@ -59,6 +59,7 @@ import com.android.aifoodapp.interfaceh.OnGalleryClick;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
 import com.android.aifoodapp.vo.MealMemberVo;
 
+import com.android.aifoodapp.vo.SubItem;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -125,7 +126,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
     private RecyclerView rv_item;
     private MealAdapter mealAdapter;
     private ArrayList<MealMemberVo> memberList;
-    private ArrayList<MealMemberVo> nameList;
+    private List<SubItem> subItemList;
     FloatingActionButton fab_add_meal;
     private int meal_num = 1; // 식사 레이아웃 추가 시 증가되는 값
 
@@ -275,7 +276,6 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
         rv_item = findViewById(R.id.rv_item);
         memberList = new ArrayList<>();
-        nameList=new ArrayList<>();
         mealAdapter = new MealAdapter(activity, memberList);
         fab_add_meal = findViewById(R.id.fab_add_meal);
 
@@ -723,6 +723,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
     private void settingMealAdapter(){
 
+        /* 상위 리사이클러뷰 설정*/
         rv_item.setAdapter(mealAdapter);
         GridLayoutManager gManager = new GridLayoutManager(activity, 1);
         rv_item.setLayoutManager(gManager);
@@ -863,10 +864,50 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
     private void addMeal(){
         //mealAdapter.addItem(new MealMemberVo());
-        mealAdapter.addItem(new MealMemberVo("식사 " + meal_num));
+        mealAdapter.addItem(new MealMemberVo("식사 " + meal_num,buildSubItemList(meal_num)));
         meal_num++;
         setListViewHeightBasedOnChildren(rv_item);
     }
+
+    /* 중첩 리사이클러뷰 : https://stickode.tistory.com/271
+    * 현재 식사 위치에 저장된 음식 목록을 출력하기 위함.
+    * */
+    private List<SubItem> buildSubItemList(int meal_num) {
+        subItemList=new ArrayList<>();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create()).build();
+        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+        new MealNetworkCall().execute(retrofitAPI.getMeal(user.getId(),date_string,meal_num-1));
+        try {
+            Thread.sleep(100);
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        mealAdapter.notifyDataSetChanged();
+        /*
+        retrofitAPI.getMeal(user.getId(),date_string,meal_num-1).enqueue(new Callback<List<meal>>() {
+            @Override
+            public void onResponse(Call<List<meal>> call, Response<List<meal>> response) {
+                ml= response.body();
+                if(ml.isEmpty()) {
+                    //결과 없음.
+                }
+                for (meal repo : ml) {
+                    subItemList.add(repo.getMealname());
+                }
+            }
+            @Override
+            public void onFailure(Call<List<meal>> call, Throwable t) { ;
+            }
+        });
+        */
+
+        return subItemList;
+    }
+
 
     public void setListViewHeightBasedOnChildren(RecyclerView recyclerView) {
 
@@ -917,7 +958,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
                 Log.e("dailymeal-datekey",dailymeal.getDatekey());
                 try {
                     setting();
-                    Thread.sleep(100);
+                    Thread.sleep(800);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -1108,11 +1149,32 @@ public class MainActivity<Unit> extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
             return null;
         }
+    }
 
+    private class MealNetworkCall extends AsyncTask<Call, Void, String>{
+        //동기적 처리
+        @Override
+        protected String doInBackground(Call[] params) {
+            try {
+                Call<List<meal>> call = params[0];
+                Response<List<meal>> response = call.execute();
+                ml=response.body();
+                if(ml.isEmpty()) {
+                    return null;
+                }
+                for (meal repo : ml) {
+                    SubItem subItem=new SubItem(repo.getMealname());
+                    subItemList.add(subItem);
+                    //Log.e("mealname",repo.getMealname());
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return "";
+        }
     }
 }
 

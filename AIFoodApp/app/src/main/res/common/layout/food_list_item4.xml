@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/border"
+    android:backgroundTint="#F1EEEE"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,8 +21,9 @@
                 android:id="@+id/tv_search2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                android:gravity="center_vertical"
+                android:background="#F1EEEE"
+                android:textAlignment="center"
+                android:gravity="center"
                 android:padding="7dp"
                 android:text="음식이름"
                 android:textSize="15sp" />

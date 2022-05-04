@@ -2,16 +2,20 @@ package com.android.aifoodapp.vo;
 
 import android.graphics.Bitmap;
 
+import java.util.List;
+
 public class MealMemberVo {
     private String name;
     private Bitmap mealImg;
+    private List<SubItem> subItemList;
 
     public MealMemberVo() {
 
     }
 
-    public MealMemberVo(String name) {
+    public MealMemberVo(String name, List<SubItem> subItemList) {
         this.name = name;
+        this.subItemList = subItemList;
     }
 
 
@@ -31,5 +35,12 @@ public class MealMemberVo {
         this.mealImg = mealImg;
     }
 
+    public List<SubItem> getSubItemList() {
+        return subItemList;
+    }
+
+    public void setSubItemList(List<SubItem> subItemList) {
+        this.subItemList = subItemList;
+    }
 }
 

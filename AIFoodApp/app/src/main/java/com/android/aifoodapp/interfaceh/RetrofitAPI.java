@@ -82,5 +82,6 @@ public interface RetrofitAPI {
     );
 
     @GET("/selectMeal.do")
-    Call<List<meal>> getMeal(@Query("userid") String userid, @Query("savetime") String savetime);
+    Call<List<meal>> getMeal(@Query("userid") String userid, @Query("savetime") String savetime,
+                             @Query("timeflag") int timeflag);
 }
