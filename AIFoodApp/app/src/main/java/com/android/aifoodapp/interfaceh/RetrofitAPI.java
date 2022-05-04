@@ -69,6 +69,12 @@ public interface RetrofitAPI {
     @GET("/selectFoodName.do")
     Call<List<fooddata>> getFood(@Query("name") String name);
 
+    @GET("/InitPositionMeal.do")
+    Call<Void> InitPositionMeal(@Query("userid") String userid,
+                          @Query("savetime") String savetime,
+                          @Query("timeflag") int timeflag
+    );
+
     @GET("/deleteMeal.do")
     Call<Void> deleteMeal(@Query("userid") String userid,
                           @Query("savetime") String savetime,
@@ -76,5 +82,6 @@ public interface RetrofitAPI {
     );
 
     @GET("/selectMeal.do")
-    Call<List<meal>> getMeal(@Query("userid") String userid, @Query("savetime") String savetime);
+    Call<List<meal>> getMeal(@Query("userid") String userid, @Query("savetime") String savetime,
+                             @Query("timeflag") int timeflag);
 }

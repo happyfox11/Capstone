@@ -20,10 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.aifoodapp.R;
 import com.android.aifoodapp.activity.MainActivity;
+import com.android.aifoodapp.domain.fooddata;
+import com.android.aifoodapp.domain.meal;
 import com.android.aifoodapp.interfaceh.OnCameraClick;
 import com.android.aifoodapp.interfaceh.OnEditMealHeight;
 import com.android.aifoodapp.interfaceh.OnGalleryClick;
@@ -33,6 +36,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
 
     private Activity activity;
@@ -41,9 +48,11 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
     private OnCameraClick onCameraClick;
     private OnGalleryClick onGalleryClick;
     private MealAdapter.ItemClickListener itemClickListener;
+    private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
 
     public interface ItemClickListener {
         public void onDetailButtonClicked(int position);
+        public void removeButtonClicked(int position);
     }
 
     public MealAdapter(Activity activity, ArrayList<MealMemberVo> memberList) {
@@ -53,6 +62,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
     }
 
     public class MealHolder extends RecyclerView.ViewHolder {
+
         private TextView tv_custom_item_name;
         private Button btn_meal_detail;
         private Button btn_meal_delete;
@@ -64,6 +74,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
         private LinearLayout layout_use_img;
         private Button btn_use_img_qa;
         private Button btn_use_img_exit;
+        private RecyclerView rvSubItem;
 
         public MealHolder(@NonNull View itemView){
             super(itemView);
@@ -78,6 +89,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
             layout_use_img = itemView.findViewById(R.id.layout_use_img);
             btn_use_img_qa = itemView.findViewById(R.id.btn_use_img_qa);
             btn_use_img_exit = itemView.findViewById(R.id.btn_use_img_exit);
+            rvSubItem = (RecyclerView) itemView.findViewById(R.id.recycleFood);
         }
     }
 
@@ -94,6 +106,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MealHolder holder, int position) {
+        MealMemberVo item=memberList.get(position);
         holder.tv_custom_item_name.setText(memberList.get(position).getName());
         holder.iv_img.setImageBitmap(memberList.get(position).getMealImg());
 
@@ -135,6 +148,10 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
                         memberList.remove(position);
                         notifyItemRemoved(position);
 
+                        if (itemClickListener != null) {
+                            itemClickListener.removeButtonClicked(position);
+                        }
+
                         holder.layout_use_img.setVisibility(View.GONE);
                         holder.layout_use_img_qa.setVisibility(View.VISIBLE);
 
@@ -148,7 +165,6 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
                     }
                 });
                 alertDialog.show();
-
             }
         });
 
@@ -270,6 +286,22 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
                 });
             }
         });
+
+        // 자식 레이아웃 매니저 설정
+        LinearLayoutManager layoutManager = new LinearLayoutManager(
+                holder.rvSubItem.getContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false
+        );
+        layoutManager.setInitialPrefetchItemCount(item.getSubItemList().size());
+
+        //Log.e("size",Integer.toString(item.getSubItemList().size()));
+        // 자식 어답터 설정
+        FoodListAdapter subItemAdapter = new FoodListAdapter(item.getSubItemList());
+
+        holder.rvSubItem.setLayoutManager(layoutManager);
+        holder.rvSubItem.setAdapter(subItemAdapter);
+        holder.rvSubItem.setRecycledViewPool(viewPool);
     }
 
     @Override
@@ -298,6 +330,8 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
     public void setItemClickListener(MealAdapter.ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
+
+
 
 
 }

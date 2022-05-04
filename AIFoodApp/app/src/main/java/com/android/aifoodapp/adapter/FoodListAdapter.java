@@ -1,6 +1,7 @@
 package com.android.aifoodapp.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,45 +13,47 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.aifoodapp.R;
 import com.android.aifoodapp.domain.fooddata;
 import com.android.aifoodapp.domain.meal;
+import com.android.aifoodapp.vo.SubItem;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class FoodListAdapter extends RecyclerView.Adapter<Holder2> {
+public class FoodListAdapter extends RecyclerView.Adapter<FoodListHolder> {
 
-    ArrayList<meal> arrayList=new ArrayList<>();
+    private List<SubItem> subItemList;
     private Context context;
 
-    public FoodListAdapter(ArrayList<meal> arrayList, Context context) {
-        this.arrayList = arrayList;
-        this.context = context;
+    public FoodListAdapter(List<SubItem> subItemList) {
+        this.subItemList = subItemList;
     }
 
     @NonNull
     @Override
-    public Holder2 onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FoodListHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.food_list_item4, parent, false);
-        return new Holder2(view);
+        return new FoodListHolder(view);
     }
     @Override
-    public void onBindViewHolder(@NonNull Holder2 holder, int position) {
-        for(meal repo: arrayList){
-            if(repo.getTimeflag()==position){
-                holder.tv_search2.setText(repo.getMealname()); //음식 이름으로 화면에 출력
-            }
+    public void onBindViewHolder(@NonNull FoodListHolder holder, int position) {
+        //SubItem subItem = subItemList.get(position); //왜 하나씩 저장되는건가 ㅠ
+        String str="";
+        for(int i=0;i<getItemCount();i++){
+            SubItem subItem=subItemList.get(i);
+            str+=subItem.getSubItemTitle()+"\n";
         }
+        holder.tv_search2.setText(str);
     }
 
     @Override
     public int getItemCount() {
-        return arrayList.size();
+        return subItemList.size();
     }
 }
 
-class Holder2 extends RecyclerView.ViewHolder {
+class FoodListHolder extends RecyclerView.ViewHolder {
     TextView tv_search2;
-    public Holder2(@NonNull View itemView) {
+    public FoodListHolder(@NonNull View itemView) {
         super(itemView);
         tv_search2 = itemView.findViewById(R.id.tv_search2);
     }
