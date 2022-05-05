@@ -52,7 +52,7 @@ public class FoodInfoAdapter extends RecyclerView.Adapter<FoodInfoAdapter.Custom
         /* setting */
         holder.cl_foodInfo.setImageResource(Integer.parseInt(items.get(position).getCl_img()));
         holder.cl_foodName.setText(items.get(position).getFood().getName());
-        holder.cl_caloriesInfo.setText(String.valueOf(items.get(position).getFood().getCalorie()));
+        holder.cl_caloriesInfo.setText(String.valueOf((int) items.get(position).getFood().getCalorie()));
         holder.cl_intake.setText(String.valueOf(items.get(position).getCl_intake()));
         holder.food_list_name.setText(items.get(position).getFood().getName());
 

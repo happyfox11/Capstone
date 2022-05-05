@@ -1,5 +1,6 @@
 package com.android.aifoodapp.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ public class FoodDetailInfoActivity extends AppCompatActivity {
             tv_copper, tv_manganese, tv_vitamin_b1, tv_vitamin_b2, tv_vitamin_c, tv_cholesterol,
             tv_total_saturated_fatty_acids, tv_trans_fatty_acids, tv_caffeine;
     fooddata food;
+    @SuppressLint("DefaultLocale")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +38,7 @@ public class FoodDetailInfoActivity extends AppCompatActivity {
         iv_foodDetail.setImageResource(Integer.parseInt(img));//이미지없을경우..
         tv_foodDetailInfoName.setText(food.getName());
 
-        tv_calorie.setText(String.valueOf(food.getCalorie()));
+       /* tv_calorie.setText(String.valueOf(food.getCalorie()));
         tv_carbohydrate.setText(String.valueOf(food.getCarbohydrate()));
         tv_protein.setText(String.valueOf(food.getProtein()));
         tv_fat.setText(String.valueOf(food.getFat()));
@@ -64,7 +66,38 @@ public class FoodDetailInfoActivity extends AppCompatActivity {
         tv_cholesterol.setText(String.valueOf(food.getCholesterol()));
         tv_total_saturated_fatty_acids.setText(String.valueOf(food.getTotal_saturated_fatty_acids()));
         tv_trans_fatty_acids.setText(String.valueOf(food.getTrans_fatty_acids()));
-        tv_caffeine.setText(String.valueOf(food.getCaffeine()));
+        tv_caffeine.setText(String.valueOf(food.getCaffeine()));*/
+
+        tv_calorie.setText(String.format("%.2f", food.getCalorie()));
+        tv_calorie.setText(String.format("%.2f", food.getCalorie()));
+        tv_carbohydrate.setText(String.format("%.2f",food.getCarbohydrate()));
+        tv_protein.setText(String.format("%.2f",food.getProtein()));
+        tv_fat.setText(String.format("%.2f",food.getFat()));
+
+        tv_moisture.setText(String.format("%.3f",food.getMoisture()));
+        tv_total_sugar.setText(String.format("%.3f",food.getTotal_sugar()));
+        tv_sucrose.setText(String.format("%.3f",food.getSucrose()));
+        tv_glucose.setText(String.format("%.3f",food.getGlucose()));
+        tv_fructose.setText(String.format("%.3f",food.getFructose()));
+        tv_lactose.setText(String.format("%.3f",food.getLactose()));
+        tv_maltose.setText(String.format("%.3f",food.getMaltose()));
+        tv_total_dietary_fiber.setText(String.format("%.3f",food.getTotal_dietary_fiber()));
+        tv_calcium.setText(String.format("%.3f",food.getCalcium()));
+        tv_iron.setText(String.format("%.3f",food.getIron()));
+        tv_magnesium.setText(String.format("%.3f",food.getMagnesium()));
+        tv_in.setText(String.format("%.3f",food.getIn()));
+        tv_potassium.setText(String.format("%.3f",food.getPotassium()));
+        tv_sodium.setText(String.format("%.3f",food.getSodium()));
+        tv_zinc.setText(String.format("%.3f",food.getZinc()));
+        tv_copper.setText(String.format("%.3f",food.getCopper()));
+        tv_manganese.setText(String.format("%.3f",food.getManganese()));
+        tv_vitamin_b1.setText(String.format("%.3f",food.getVitamin_b1()));
+        tv_vitamin_b2.setText(String.format("%.3f",food.getVitamin_b2()));
+        tv_vitamin_c.setText(String.format("%.3f",food.getVitamin_c()));
+        tv_cholesterol.setText(String.format("%.3f",food.getCholesterol()));
+        tv_total_saturated_fatty_acids.setText(String.format("%.3f",food.getTotal_saturated_fatty_acids()));
+        tv_trans_fatty_acids.setText(String.format("%.3f",food.getTrans_fatty_acids()));
+        tv_caffeine.setText(String.format("%.3f",food.getCaffeine()));
 
     }
 
