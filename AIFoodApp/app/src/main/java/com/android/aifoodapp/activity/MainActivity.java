@@ -14,13 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -46,13 +44,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.aifoodapp.R;
-import com.android.aifoodapp.adapter.FoodListAdapter;
 import com.android.aifoodapp.adapter.MealAdapter;
-import com.android.aifoodapp.adapter.itemSearchAdapter;
 import com.android.aifoodapp.domain.dailymeal;
 import com.android.aifoodapp.domain.fooddata;
 import com.android.aifoodapp.domain.meal;
 import com.android.aifoodapp.domain.user;
+import com.android.aifoodapp.fragment.WeeklyReportFragment1;
 import com.android.aifoodapp.interfaceh.OnCameraClick;
 import com.android.aifoodapp.interfaceh.OnEditMealHeight;
 import com.android.aifoodapp.interfaceh.OnGalleryClick;
@@ -85,7 +82,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -677,8 +673,10 @@ public class MainActivity<Unit> extends AppCompatActivity {
         radarDataSet.setLineWidth(2f);
         radarDataSet.setValueTextSize(16f);
         radarDataSet.setDrawFilled(true);
-        //radarDataSet.setFillColor(parseColor("#3A531C"));
 
+        IntegerPercentFormatter integerPercentFormatter = new IntegerPercentFormatter(radarChart);
+        radarDataSet.setValueFormatter(integerPercentFormatter);
+        //radarDataSet.setFillColor(parseColor("#3A531C"));
         //Log.i("check", percent_of_carbohydrate+","+percent_of_fat+","+percent_of_protein);
         // 모든 영양소 섭취량이 권장량을 초과하는 경우, Red Color로 변경 (일반 Dark Green)
         if(percent_of_carbohydrate>100 && percent_of_fat>100 && percent_of_protein > 100){
@@ -1182,6 +1180,53 @@ public class MainActivity<Unit> extends AppCompatActivity {
                 e.printStackTrace();
             }
             return "";
+        }
+    }
+
+    int p = 1;
+    public class IntegerPercentFormatter extends ValueFormatter {
+
+        private final RadarChart chart;
+
+        public IntegerPercentFormatter(RadarChart chart) {
+            this.chart = chart;
+        }
+
+        @Override
+        public String getFormattedValue(float value) {
+            String pr = "";
+            int val = (int) value;
+
+            switch(p){
+                case 1://탄수화물
+                    if(val == 0)
+                        pr = "              c:0";
+                    else if(val <= 5)
+                        pr = "              c:"+ val +"%";
+                    else
+                        pr = "      c:"+ val +"%";
+                    break;
+                case 2://지방
+                    if(val == 0)
+                        pr = "       f:0";
+                    else if(val <= 5)
+                        pr = "       f:"+ val +"%";
+                    else
+                        pr = "      f:"+ val +"%";
+                    break;
+                case 3://단백질
+                    if(val == 0)
+                        pr = "p:0";
+                    else
+                        pr = "p:"+val +"%";
+                    break;
+                default:
+                    break;
+            }
+            p++;
+
+
+            return pr;
         }
     }
 }
