@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -117,6 +118,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         foodInfoAdapter = new FoodInfoAdapter(foodInfoList);
         recyclerView2.setAdapter(foodInfoAdapter);
 
+        setInfoRecyclerViewHeight(recyclerView2);
         foodItemAdapter.setItemClickListener(new FoodItemAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(FoodItem item) {
@@ -127,6 +129,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 foodInfoAdapter.removeById(position);
                 foodList.remove(position);
                 mealList.remove(position);
+                setInfoRecyclerViewHeight(recyclerView2);
             }
         });
 
@@ -146,6 +149,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 intent.putExtra("position",pos);
                 intent.putExtra("mealList",mealList);
                 startActivity(intent);
+                setInfoRecyclerViewHeight(recyclerView2);
             }
         });
 
@@ -318,5 +322,14 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         iv_plusBtn=findViewById(R.id.iv_plusBtn);
         tv_foodName = findViewById(R.id.tv_foodName);
         btn_insert_dailymeal = findViewById(R.id.btn_insert_dailymeal);
+    }
+
+    public void setInfoRecyclerViewHeight(RecyclerView recyclerView) {
+
+        ViewGroup.LayoutParams params = recyclerView.getLayoutParams();
+
+        int k = recyclerView.getAdapter().getItemCount();
+        params.height = (int) getResources().getDimension(R.dimen.food_analysis_sq_item_size) * k;
+        recyclerView.requestLayout();
     }
 }
