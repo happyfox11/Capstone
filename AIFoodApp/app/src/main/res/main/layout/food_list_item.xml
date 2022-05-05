@@ -29,9 +29,12 @@
 
         <TextView
             android:id="@+id/fl_foodName"
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center"
+            android:ellipsize="marquee"
+            android:gravity="center"
+            android:maxLines="1"
             android:text="음식 이름 표시" />
     </FrameLayout>
 
