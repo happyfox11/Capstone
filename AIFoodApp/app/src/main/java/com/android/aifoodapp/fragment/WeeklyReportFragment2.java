@@ -1,7 +1,9 @@
 package com.android.aifoodapp.fragment;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.android.aifoodapp.R;
 import com.android.aifoodapp.activity.MainActivity;
+import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -19,6 +22,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import java.util.ArrayList;
 
@@ -66,18 +70,19 @@ public class WeeklyReportFragment2 extends Fragment {
 
         chartData.addDataSet(averageRatio);  // 해당 LineDataSet 을 적용될 차트에 들어갈 DataSet에 넣음
         chartData.addDataSet(myRatio);
+        chartData.setValueTypeface(Typeface.createFromAsset(getActivity().getAssets(), "cafe24ssurroundair.ttf"));
+        chartData.setValueTextSize(14f);
 
         xLabels.add("탄수화물");
         xLabels.add("단백질");
         xLabels.add("지방");
 
         XAxis xAxis = lineChart.getXAxis(); //x축 설정
-        xAxis.setCenterAxisLabels(true);
+        //xAxis.setCenterAxisLabels(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
-
-        xAxis.setAxisMinimum(0);
-        xAxis.setAxisMaximum(7f);
+        //xAxis.setAxisMinimum(0);
+        //xAxis.setAxisMaximum(7f);
 
        /* xAxis.setValueFormatter(new ValueFormatter() {
 
@@ -93,28 +98,68 @@ public class WeeklyReportFragment2 extends Fragment {
                 return label;
             }
         });*/
-        xAxis.setValueFormatter(new IndexAxisValueFormatter(xLabels));
 
-        xAxis.setGranularity(1f); //간격 설정
+        xAxis.setTextSize(18f);
+        xAxis.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "cafe24ssurroundair.ttf"));
+//        xAxis.setGranularity(1f); //간격 설정
         xAxis.setGranularityEnabled(true);
+        xAxis.setLabelCount(3, true);
+        //xAxis.setValueFormatter(new IndexAxisValueFormatter(xLabels));
+        //Log.i("cadfa", xAxis.getLabelCount()+"");
+        LineAxisValueFormatter lineAxisValueFormatter = new LineAxisValueFormatter(lineChart);
+        xAxis.setValueFormatter(lineAxisValueFormatter);
+        //Log.i("cadfa", xAxis.getLabelCount()+"");
 
         //y축 격자선 없앰
         lineChart.getAxisRight().setEnabled(false);
         lineChart.getAxisLeft().setDrawGridLines(false);
         lineChart.getAxisRight().setDrawGridLines(false);
+        lineChart.getAxisLeft().setTextSize(12f);
+        lineChart.getAxisLeft().setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "cafe24ssurroundair.ttf"));
 
         Legend legend = lineChart.getLegend(); //범례 위치 변경
         legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
         legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        legend.setTextSize(16f);
+        legend.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "cafe24ssurroundair.ttf"));
 
         lineChart.getDescription().setEnabled(false);
         lineChart.setData(chartData);
         lineChart.invalidate(); // 차트 업데이트
         lineChart.setTouchEnabled(false);
+        lineChart.setExtraBottomOffset(15f);
+        lineChart.setExtraLeftOffset(15f);
+        lineChart.setExtraRightOffset(15f);
+
         return rootView;
 
 
 
+    }
+
+    int d = 1;
+    public class LineAxisValueFormatter extends ValueFormatter {
+
+        private final LineChart chart;
+
+        public LineAxisValueFormatter(LineChart chart) {
+            this.chart = chart;
+        }
+
+        @Override
+        public String getFormattedValue(float value) {
+            String res = "";
+
+            if(d == 1) res = "탄수화물";
+            else if(d == 2) res = "단백질";
+            else res = "지방";
+
+            d++;
+            if(d>3)
+                d = 1;
+
+            return res;
+        }
     }
 
 }

@@ -15,14 +15,21 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:text="■ 평균 3대 영양소 비율" />
+        android:text="■ 평균 3대 영양소 비율"
+        android:textSize="20dp"
+        android:textStyle="bold" />
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/lineChart"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="400dp" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="15dp">
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChart"
+            android:layout_width="match_parent"
+            android:layout_height="400dp" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_marginTop="20dp"
