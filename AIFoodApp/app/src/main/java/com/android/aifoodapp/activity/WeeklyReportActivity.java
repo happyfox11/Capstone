@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import com.android.aifoodapp.R;
 import com.android.aifoodapp.adapter.ReportPagerAdapter;
 import com.android.aifoodapp.domain.dailymeal;
@@ -55,12 +57,14 @@ public class WeeklyReportActivity extends AppCompatActivity {
     private ProgressBar pg_bar;
     private int value=100/2;
 
+    TextView tv_week;
     user user;
     private List<dailymeal> dailyMealList = new ArrayList<>();
     private List<dailymeal> lastDailyMealList = new ArrayList<>();
 
     private DottedProgressBar dottedProgressBar;
     private String startDate = null, endDate = null, lastStartDate=null, lastEndDate=null;
+    private String period;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,12 +85,13 @@ public class WeeklyReportActivity extends AppCompatActivity {
     private void initialize(){
 
         activity = this;
+        tv_week = findViewById(R.id.tv_week);
         pager = findViewById(R.id.pager);
         pager.canScrollVertically(1);
         reportPagerAdapter = new ReportPagerAdapter(getSupportFragmentManager());
 
         weekly_report_fragment_1 = new WeeklyReportFragment1(user, dailyMealList, lastDailyMealList);
-        weekly_report_fragment_2 = new WeeklyReportFragment2();
+        weekly_report_fragment_2 = new WeeklyReportFragment2(user, dailyMealList);
         weekly_report_fragment_3 = new WeeklyReportFragment3();
         weekly_report_fragment_4 = new WeeklyReportFragment4();
 
@@ -96,6 +101,8 @@ public class WeeklyReportActivity extends AppCompatActivity {
 
 
     private void setting(){
+        //__월 __일 ~ __월 __일
+        tv_week.setText(period);
 
         pager.setOffscreenPageLimit(3);
 
@@ -183,21 +190,33 @@ public class WeeklyReportActivity extends AppCompatActivity {
         //year : 년  month : 월  date : 일
 
         //이번주 월요일
-        int lastMonth = cal.get(Calendar.MONTH) + 1;//월
+        int startMonth = cal.get(Calendar.MONTH) + 1;//월
         startDate = cal.get(Calendar.YEAR)
                 + "-"
-                + (lastMonth < 10 ? "0" + lastMonth : lastMonth + "")
+                + (startMonth < 10 ? "0" + startMonth : startMonth + "")
                 + "-"
                 + (cal.get(Calendar.DATE) < 10 ? "0" + cal.get(Calendar.DATE) : cal.get(Calendar.DATE) + "");
+        int tmp = cal.get(Calendar.DATE);
 
         //이번주 일요일
         cal.add(Calendar.DATE, 6);//6을 더해 일요일로 만든다.
-        lastMonth = cal.get(Calendar.MONTH) + 1;
+        int lastMonth = cal.get(Calendar.MONTH) + 1;
         endDate = cal.get(Calendar.YEAR)
                 + "-"
                 + (lastMonth < 10 ? "0" + lastMonth : lastMonth + "")
                 + "-"
                 + (cal.get(Calendar.DATE) < 10 ? "0" + cal.get(Calendar.DATE) : cal.get(Calendar.DATE) + "");
+
+
+        //tv_week 출력을 위함(상단바)
+        period = (startMonth < 10 ? "0" + startMonth : startMonth + "")
+                +"월 "
+                +(tmp < 10 ? "0" + tmp : tmp + "")
+                +"일 ~ "
+                +(lastMonth < 10 ? "0" + lastMonth : lastMonth + "")
+                +"월 "
+                +(cal.get(Calendar.DATE) < 10 ? "0" + cal.get(Calendar.DATE) : cal.get(Calendar.DATE) + "")
+                +"일";
 
         //getWeeklyMeal
         Retrofit retrofit = new Retrofit.Builder()
@@ -238,10 +257,10 @@ public class WeeklyReportActivity extends AppCompatActivity {
         cal.add(Calendar.DATE, 2 - lastWeek); //지난주의 월요일이 되도록한다. (일)
 
         //지난주 월요일
-        lastMonth = cal.get(Calendar.MONTH) + 1;//월
+        startMonth = cal.get(Calendar.MONTH) + 1;//월
         lastStartDate = cal.get(Calendar.YEAR)
                 + "-"
-                + (lastMonth < 10 ? "0" + lastMonth : lastMonth + "")
+                + (startMonth < 10 ? "0" + startMonth : startMonth + "")
                 + "-"
                 + (cal.get(Calendar.DATE) < 10 ? "0" + cal.get(Calendar.DATE) : cal.get(Calendar.DATE) + "");
 
@@ -270,7 +289,7 @@ public class WeeklyReportActivity extends AppCompatActivity {
                 Log.e("WeeklyReportPage2",t.getMessage());
             }
         });*/
-        Log.e("ddddd",lastStartDate);
+        Log.e("lastStartDate",lastStartDate);
         new lastDailyMealNetworkCall().execute(retrofitAPI.getWeeklyMeal(user.getId(),lastStartDate,lastEndDate));
         try {
             Thread.sleep(200);

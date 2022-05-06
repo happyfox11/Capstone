@@ -52,8 +52,8 @@ public class WeeklyReportFragment1 extends Fragment {
     int curr_week_avg_calories;
 
     public WeeklyReportFragment1(user user, List<dailymeal> dailyMealList, List<dailymeal> lastDailyMealList ){
-        this.dailyMealList=dailyMealList;
         this.user=user;
+        this.dailyMealList=dailyMealList;
         this.lastDailyMealList=lastDailyMealList;
     }
 
