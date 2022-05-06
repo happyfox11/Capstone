@@ -43,7 +43,7 @@ public class FoodInputActivity extends AppCompatActivity {
     EditText et_search;
     Button btn_search;
     dailymeal dailymeal;
-    int pos;
+    int pos, modify;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +56,7 @@ public class FoodInputActivity extends AppCompatActivity {
         mealList=(ArrayList<Double>) intent.getSerializableExtra("mealList");
         dailymeal=intent.getParcelableExtra("dailymeal");
         pos=intent.getIntExtra("position",0);
+        modify=intent.getIntExtra("modify",-1);//값이 없다면 -1
 
         itemSearchAdapter adapter=new itemSearchAdapter(arrayList,activity);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -102,9 +103,15 @@ public class FoodInputActivity extends AppCompatActivity {
             @Override
             public void addFoodList(fooddata food) {
                 Log.e("%%%%%%%%%",food.getName());
-                if(foodList==null) foodList=new ArrayList<fooddata>();
-                foodList.add(food);//선택한 food
-                mealList.add(1.0);
+                if(foodList.isEmpty()) foodList=new ArrayList<fooddata>();
+                if(modify!=-1) {
+                    foodList.set(modify,food);//food 음식 수정하기
+                    mealList.set(modify,1.0);
+                }
+                else {
+                    foodList.add(food);//선택한 food
+                    mealList.add(1.0);
+                }
                 FoodAnalysisActivity FA = (FoodAnalysisActivity)FoodAnalysisActivity._FoodAnalysis_Activity; // https://itun.tistory.com/357 [Bino]
                 FA.finish();
 

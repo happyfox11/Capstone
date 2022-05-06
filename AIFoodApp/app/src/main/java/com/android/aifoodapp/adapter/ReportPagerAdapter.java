@@ -1,13 +1,20 @@
 package com.android.aifoodapp.adapter;
 
+import static com.android.aifoodapp.interfaceh.baseURL.url;
+
+import android.util.Log;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import com.android.aifoodapp.domain.dailymeal;
+
 import java.util.ArrayList;
+import java.util.List;
+
 
 public class ReportPagerAdapter extends FragmentStatePagerAdapter {
-
     ArrayList<Fragment> items = new ArrayList<Fragment>();
 
     public ReportPagerAdapter(FragmentManager fm) {
@@ -32,5 +39,4 @@ public class ReportPagerAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         return "< " + (position+1) +" >";
     }
-
 }

@@ -1,5 +1,7 @@
 package com.android.aifoodapp.fragment;
 
+import static com.android.aifoodapp.interfaceh.baseURL.url;
+
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -11,7 +13,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+
 import com.android.aifoodapp.R;
+import com.android.aifoodapp.domain.dailymeal;
+import com.android.aifoodapp.domain.user;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.components.XAxis;
@@ -36,6 +41,9 @@ public class WeeklyReportFragment1 extends Fragment {
     private int d = 1;
     private CircleProgressView mCircleView;
     private TextView tv_compare_previous_kcal;
+    private List<dailymeal> dailyMealList = new ArrayList<>();
+    private List<dailymeal> lastDailyMealList = new ArrayList<>();
+    user user;
 
     int target_calories;
     List<Integer> prev_week_calories_list = new ArrayList<>();
@@ -43,6 +51,11 @@ public class WeeklyReportFragment1 extends Fragment {
     int prev_week_avg_calories;
     int curr_week_avg_calories;
 
+    public WeeklyReportFragment1(user user, List<dailymeal> dailyMealList, List<dailymeal> lastDailyMealList ){
+        this.dailyMealList=dailyMealList;
+        this.user=user;
+        this.lastDailyMealList=lastDailyMealList;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -62,16 +75,25 @@ public class WeeklyReportFragment1 extends Fragment {
         tv_compare_previous_kcal = v.findViewById(R.id.tv_compare_previous_kcal);
 
         // TODO : DB 값 받아오기 (target_calories, prev_calories_test_val, curr_calories_test_val)
-        target_calories = 1700; // 사용자의 목표 칼로리
+        target_calories = user.getTarget_calories(); // 사용자의 목표 칼로리
 
+        //Log.e("목표칼로리",Integer.toString(target_calories));
         int sum_of_curr_weekly_calories = 0;// 이번 주의 총 섭취 칼로리 합계
         int sum_of_prev_weekly_calories = 0;// 지난 주의 총 섭취 칼로리 합계
+
+        //Log.e("dailyMealList",dailyMealList.toString());
+        //Log.e("lastDailyMealList",lastDailyMealList.toString());
 
         int cnt_curr = 7; // 평균을 낼 날의 수(칼로리가 0인 날은 제외해야 함)
         int cnt_prev = 7; // 평균을 낼 날의 수(칼로리가 0인 날은 제외해야 함)
 
         int[] prev_calories_test_val = {1344, 599, 1800, 1914, 1044, 1704, 1434};//지난 주 하루 칼로리 테스트 값
         int[] curr_calories_test_val = {3344, 1599, 1400, 1114, 1244, 704, 2434};//이번 주 하루 칼로리 테스트 값
+
+        for(int i=0; i<7; i++){
+            prev_calories_test_val[i]=lastDailyMealList.get(i).getCalorie(); //저번주
+            curr_calories_test_val[i]=dailyMealList.get(i).getCalorie(); //이번주
+        }
 
         for(int i = 0; i< 7; i++){
 

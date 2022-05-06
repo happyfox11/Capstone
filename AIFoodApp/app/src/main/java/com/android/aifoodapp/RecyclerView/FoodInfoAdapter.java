@@ -31,6 +31,7 @@ public class FoodInfoAdapter extends RecyclerView.Adapter<FoodInfoAdapter.Custom
 
     public interface ItemClickListener {
         public void onIntakeChangeClicked(double intake,int position);
+        public void modifyFoodClicked(int position);
     }
 
     public void setItemClickListener(FoodInfoAdapter.ItemClickListener itemClickListener) {
@@ -100,6 +101,18 @@ public class FoodInfoAdapter extends RecyclerView.Adapter<FoodInfoAdapter.Custom
             }
         });
 
+        //원하는 음식이 아닐 때 수정하기
+        holder.modifyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int position=holder.getAdapterPosition();
+                //fooddata food = items.get(holder.getAdapterPosition()).getFood();
+                //Intent intent = new Intent (view.getContext(), FoodInputActivity.class);
+                if (itemClickListener != null) {
+                    itemClickListener.modifyFoodClicked(position);
+                }
+            }
+        });
     }
 
     @Override
