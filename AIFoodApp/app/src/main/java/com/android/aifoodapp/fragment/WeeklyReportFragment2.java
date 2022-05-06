@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment;
 
 import com.android.aifoodapp.R;
 import com.android.aifoodapp.activity.MainActivity;
+import com.android.aifoodapp.domain.dailymeal;
+import com.android.aifoodapp.domain.user;
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -25,16 +27,24 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class WeeklyReportFragment2 extends Fragment {
 
     private LineChart lineChart;
+
+    user user;
+    private List<dailymeal> dailyMealList = new ArrayList<>(); //일주일치 dailyMeal 데이터
 
     ArrayList<Entry> average_chart = new ArrayList<Entry>(); //데이터를 담을 리스트 (평균 3대 비율)
     ArrayList<Entry> my_chart = new ArrayList<Entry>(); // 데이터를 담을 리스트 (나의 비율)
     ArrayList<String> xLabels = new ArrayList<>(); //x축 라벨
     LineData chartData = new LineData(); // 차트에 담길 데이터
 
+    public WeeklyReportFragment2(user user, List<dailymeal> dailyMealList){
+        this.user=user;
+        this.dailyMealList=dailyMealList;
+    }
 
     @Nullable
     @Override

@@ -305,6 +305,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(activity, WeeklyReportActivity.class);
+            intent.putExtra("user",user);
             startActivity(intent);
         }
     };

@@ -138,6 +138,17 @@ public class FoodAnalysisActivity extends AppCompatActivity {
             public void onIntakeChangeClicked(double cl_intake, int position){
                 mealList.set(position,cl_intake);
             }
+
+            @Override
+            public void modifyFoodClicked(int position){//position:현재 food 위치
+                Intent intent = new Intent(activity, FoodInputActivity.class);
+                intent.putExtra("dailymeal",dailymeal);
+                intent.putParcelableArrayListExtra("foodList",foodList);
+                intent.putExtra("position",pos);//timeflag를 의미
+                intent.putExtra("mealList",mealList);
+                intent.putExtra("modify",position);
+                startActivity(intent);
+            }
         });
 
         iv_plusBtn.setOnClickListener(new View.OnClickListener() {

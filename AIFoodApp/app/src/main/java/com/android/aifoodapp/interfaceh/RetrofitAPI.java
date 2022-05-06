@@ -50,7 +50,12 @@ public interface RetrofitAPI {
             @Query("endDate") String endDate
     );
 
-    //weekyl"/checkWeeklyMeal.do")
+    @GET("checkWeeklyMeal.do")
+    Call<List<dailymeal>> getWeeklyMeal(
+            @Query("id") String id,
+            @Query("startDate") String startDate,
+            @Query("endDate") String endDate
+    );
 
     @FormUrlEncoded
     @POST("/dailymealSave.do")
