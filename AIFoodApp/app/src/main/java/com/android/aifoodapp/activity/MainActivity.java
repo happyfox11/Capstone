@@ -873,11 +873,20 @@ public class MainActivity<Unit> extends AppCompatActivity {
     }
 
     private void settingInitialMeal(){
-        for(;;){
-            if(!buildSubItemList(meal_num).isEmpty()){
-                addMeal();
-            }
-            else break;
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create()).build();
+        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+        new timeFlagNetworkCall().execute(retrofitAPI.getTimeFlag(user.getId(),date_string));
+        //addMeal();
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        for(int i=0;i<=time;i++){
+            addMeal();
         }
     }
 
@@ -900,12 +909,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
         new MealNetworkCall().execute(retrofitAPI.getMeal(user.getId(),date_string,meal_num-1));
         try {
-            if(time==0) {
-                Thread.sleep(300);
-                time++;
-            }
-            else
-                Thread.sleep(150);
+            Thread.sleep(200);
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -1140,7 +1144,6 @@ public class MainActivity<Unit> extends AppCompatActivity {
         });
     }*/
 
-
     private class calorieNetworkCall extends AsyncTask<Call, Void, String>{
 
         //동기적 처
@@ -1176,6 +1179,22 @@ public class MainActivity<Unit> extends AppCompatActivity {
                     subItemList.add(subItem);
                     //Log.e("mealname",repo.getMealname());
                 }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return "";
+        }
+    }
+    private class timeFlagNetworkCall extends AsyncTask<Call, Void, String>{
+        //동기적 처리
+        @Override
+        protected String doInBackground(Call[] params) {
+            try {
+                Call<Integer> call = params[0];
+                Response<Integer> response = call.execute();
+                time=response.body();
+
 
             } catch (IOException e) {
                 e.printStackTrace();
