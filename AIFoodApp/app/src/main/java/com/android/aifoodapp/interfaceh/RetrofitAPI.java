@@ -43,6 +43,12 @@ public interface RetrofitAPI {
             @Query("datekey") String datekey
     );
 
+    @GET("updateDailyMeal.do")
+    Call<Void> getUpdateDailyMeal(
+            @Query("id") String id,
+            @Query("datekey") String datekey
+    );
+
     @GET("/checkWeeklyMealCalories.do")
     Call<List<Integer>> getWeeklyCalories(
             @Query("id") String id,
@@ -84,6 +90,11 @@ public interface RetrofitAPI {
     Call<Void> deleteMeal(@Query("userid") String userid,
                           @Query("savetime") String savetime,
                           @Query("timeflag") int timeflag
+    );
+
+    @GET("/maxTimeFlag.do")
+    Call<Integer> getTimeFlag(@Query("userid") String userid,
+                              @Query("savetime") String savetime
     );
 
     @GET("/selectMeal.do")

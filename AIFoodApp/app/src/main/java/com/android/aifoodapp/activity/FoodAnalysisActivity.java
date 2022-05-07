@@ -67,6 +67,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     //HashMap<String, List<meal>> map = new HashMap<>();
     HashMap<String, Object> map = new HashMap<>();
     HashMap<String, Object> dailyMap = new HashMap<>();
+    int cnt=0;
 
     int pos;
     String userid, mealname, mealphoto;
@@ -188,8 +189,8 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                         if(response.isSuccessful()) {
                             Log.e("11111111111111","삭제완료");
 
-                            int cnt=0;
                             Log.e("foodList",foodList.toString());
+                            //이걸 하나씩 저장하는게 아니라 foodList 전체를 retrofit으로 보낼 수 있는 방법이 없을까 ㅠㅠㅠㅠㅠㅠㅠ
                             for(fooddata repo : foodList){
                                 userid = dailymeal.getUserid();
                                 dailymealid = dailymeal.getDailymealid();
@@ -235,6 +236,28 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                                     public void onResponse(Call<Void> call, Response<Void> response) {
                                         if(response.isSuccessful()) {
                                             Log.e("222222222222222222","추가완료");
+                                            Log.e("cnt",Integer.toString(cnt));
+                                            if(foodList.size()==cnt){
+                                                /* dailymeal 업데이트. */
+                                                retrofitAPI.getUpdateDailyMeal(userid,savetime).enqueue(new Callback<Void>() {
+                                                    @Override
+                                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                                        if(response.isSuccessful()) {
+                                                            Log.e("333333333333333","dailymeal 업데이트");
+
+                                                        }
+                                                        else{
+                                                            Log.e("★","!response.isSuccessful()");
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<Void> call, Throwable t) {
+                                                        Log.e("★","call 실패"+t);
+                                                    }
+                                                });
+
+                                            }
                                         }
                                         else{
                                             Log.e("★","!response.isSuccessful()");
@@ -247,6 +270,27 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                                     }
                                 });
                             }
+
+                            if(foodList.isEmpty()){
+                                retrofitAPI.getUpdateDailyMeal(userid,savetime).enqueue(new Callback<Void>() {
+                                    @Override
+                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                        if(response.isSuccessful()) {
+                                            Log.e("333333333333333","dailymeal 업데이트");
+
+                                        }
+                                        else{
+                                            Log.e("★","!response.isSuccessful()");
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Void> call, Throwable t) {
+                                        Log.e("★","call 실패"+t);
+                                    }
+                                });
+                            }
+
                         }
                         else{
                             Log.e("♥","삭제실패");
