@@ -50,7 +50,8 @@
         android:id="@+id/averageActiveTime"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:progressTint="#37C13D"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -86,6 +87,7 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/tv_walk"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -105,7 +107,9 @@
         android:id="@+id/averageWalk"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:max="10000"
+        android:progress="5000"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -118,7 +122,7 @@
             android:layout_gravity="right"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="걸음수 표시" />
+            android:text="10000" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -141,7 +145,7 @@
             android:text="지난주보다 평균 " />
 
         <TextView
-            android:id="@+id/CalculateActiveTime"
+            android:id="@+id/calculateActiveTime"
             android:layout_weight="0.5"
             android:gravity="center"
             android:layout_width="wrap_content"
@@ -149,7 +153,7 @@
             android:text="시간표시" />
 
         <TextView
-            android:id="@+id/comment"
+            android:id="@+id/activeTimeComment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
@@ -179,10 +183,11 @@
                 app:srcCompat="@drawable/jogging_icon" />
 
             <TextView
+                android:id="@+id/activeTimeInfo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="시간 표시" />
         </LinearLayout>
 
@@ -199,7 +204,7 @@
                 app:srcCompat="@drawable/burning_icon" />
 
             <TextView
-                android:id="@+id/buringCalories"
+                android:id="@+id/buringCaloriesInfo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"

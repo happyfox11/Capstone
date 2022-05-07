@@ -39,11 +39,12 @@
 
 
         <FrameLayout
+            android:id="@+id/carbohydrateBorder"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:layout_weight="1"
             android:background="@drawable/circle_round">
 
             <TextView
@@ -61,24 +62,25 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:layout_marginTop="10dp"
-                android:text="표시" />
+                android:text="적정" />
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/proteinBorder"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@drawable/circle_round"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:background="@drawable/circle_round">
 
             <TextView
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="10dp"
                 android:layout_gravity="center_horizontal"
-                android:textAlignment="center"
-                android:text="단백질" />
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:text="단백질"
+                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/protein_state"
@@ -86,25 +88,26 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:layout_marginTop="10dp"
-                android:text="표시" />
+                android:text="적정" />
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/fatBorder"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@drawable/circle_round"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:background="@drawable/circle_round">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="10dp"
                 android:layout_gravity="center_horizontal"
-                android:textAlignment="center"
-                android:text="지방" />
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:text="지방"
+                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/fat_state"
@@ -112,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:layout_marginTop="10dp"
-                android:text="표시" />
+                android:text="적정" />
         </FrameLayout>
     </LinearLayout>
 
