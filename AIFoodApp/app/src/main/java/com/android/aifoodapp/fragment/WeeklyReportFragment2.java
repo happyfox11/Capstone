@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,10 +34,17 @@ import java.util.List;
 public class WeeklyReportFragment2 extends Fragment {
 
     private LineChart lineChart;
+    FrameLayout carbohydrateBorder, proteinBorder, fatBorder;
+    TextView carbohydrate_state, protein_state, fat_state;
+
+    double carbohydrate = 60 ;
+    double protein = 20 ;
+    double fat =  20 ;
 
     user user;
     private List<dailymeal> dailyMealList = new ArrayList<>(); //일주일치 dailyMeal 데이터
 
+    //https://haruvely.tistory.com/14?category=523153 라인차트 db 참고 url
     ArrayList<Entry> average_chart = new ArrayList<Entry>(); //데이터를 담을 리스트 (평균 3대 비율)
     ArrayList<Entry> my_chart = new ArrayList<Entry>(); // 데이터를 담을 리스트 (나의 비율)
     ArrayList<String> xLabels = new ArrayList<>(); //x축 라벨
@@ -52,6 +61,12 @@ public class WeeklyReportFragment2 extends Fragment {
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.weekly_report_fragment_2, container, false);
         lineChart = (LineChart) rootView.findViewById(R.id.lineChart);
+        carbohydrateBorder = rootView.findViewById(R.id.carbohydrateBorder);
+        proteinBorder = rootView.findViewById(R.id.proteinBorder);
+        fatBorder = rootView.findViewById(R.id.fatBorder);
+        carbohydrate_state = rootView.findViewById(R.id.carbohydrate_state);
+        protein_state = rootView.findViewById(R.id.protein_state);
+        fat_state = rootView.findViewById(R.id.fat_state);
 
         //평균 3대 비율 차트
         average_chart.add(new Entry(0,50f)); //탄수화물
@@ -140,6 +155,36 @@ public class WeeklyReportFragment2 extends Fragment {
         lineChart.setExtraBottomOffset(15f);
         lineChart.setExtraLeftOffset(15f);
         lineChart.setExtraRightOffset(15f);
+
+
+        if (carbohydrate> 50){
+            carbohydrateBorder.setBackgroundResource(R.drawable.circle_round_red);
+            carbohydrate_state.setText("과잉");
+        }
+        else if (carbohydrate < 50){
+            carbohydrateBorder.setBackgroundResource(R.drawable.circle_round_yellow);
+            carbohydrate_state.setText("부족");
+        }
+
+        if (protein > 30){
+            proteinBorder.setBackgroundResource(R.drawable.circle_round_red);
+            protein_state.setText("과잉");
+        }
+        else if (protein < 30){
+            proteinBorder.setBackgroundResource(R.drawable.circle_round_yellow);
+            protein_state.setText("부족");
+        }
+
+        if (fat > 20){
+            fatBorder.setBackgroundResource(R.drawable.circle_round_red);
+            fat_state.setText("과잉");
+        }
+        else if (fat < 20){
+            fatBorder.setBackgroundResource(R.drawable.circle_round_yellow);
+            fat_state.setText("부족");
+        }
+
+
 
         return rootView;
 
