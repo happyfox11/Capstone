@@ -969,7 +969,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
                 Log.e("dailymeal-datekey",dailymeal.getDatekey());
                 try {
                     setting();
-                    Thread.sleep(200);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

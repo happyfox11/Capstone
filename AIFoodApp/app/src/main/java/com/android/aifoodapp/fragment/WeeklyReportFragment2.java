@@ -1,5 +1,6 @@
 package com.android.aifoodapp.fragment;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -37,12 +38,13 @@ public class WeeklyReportFragment2 extends Fragment {
     FrameLayout carbohydrateBorder, proteinBorder, fatBorder;
     TextView carbohydrate_state, protein_state, fat_state;
 
-    double carbohydrate = 60 ;
-    double protein = 20 ;
-    double fat =  20 ;
+    double percent_of_carbohydrate;
+    double percent_of_protein;
+    double percent_of_fat ;
 
     user user;
     private List<dailymeal> dailyMealList = new ArrayList<>(); //일주일치 dailyMeal 데이터
+
 
     //https://haruvely.tistory.com/14?category=523153 라인차트 db 참고 url
     ArrayList<Entry> average_chart = new ArrayList<Entry>(); //데이터를 담을 리스트 (평균 3대 비율)
@@ -50,7 +52,8 @@ public class WeeklyReportFragment2 extends Fragment {
     ArrayList<String> xLabels = new ArrayList<>(); //x축 라벨
     LineData chartData = new LineData(); // 차트에 담길 데이터
 
-    public WeeklyReportFragment2(user user, List<dailymeal> dailyMealList){
+
+    public WeeklyReportFragment2(user user, List<dailymeal> dailyMealList ) {
         this.user=user;
         this.dailyMealList=dailyMealList;
     }
@@ -69,15 +72,48 @@ public class WeeklyReportFragment2 extends Fragment {
         fat_state = rootView.findViewById(R.id.fat_state);
 
         //평균 3대 비율 차트
+        //TODO : 평균 비율은 수정 하지 않아도 되는게 맞는거죠!?!
         average_chart.add(new Entry(0,50f)); //탄수화물
         average_chart.add(new Entry(3.5f,30f)); //단백질
         average_chart.add(new Entry(7f,20f)); //지방
 
+        //juhee
+
+        double user_ate_carbonhydrate =0;
+        double user_ate_protein =0;
+        double user_ate_fat =0;
+        int day_count =0;
+
+        //작성 하지 않은 날은 계산 하지 않음
+        for(int i=0;i<dailyMealList.size();i++){
+            dailymeal temp = dailyMealList.get(i);
+            if(temp.getCalorie()==0)
+                break;
+
+            user_ate_fat += temp.getFat();
+            user_ate_carbonhydrate = temp.getCarbohydrate();
+            user_ate_protein = temp.getProtein();
+            day_count++;
+        }
+
+        //일주일 섭취량의 평균
+        user_ate_fat /= day_count;
+        user_ate_carbonhydrate /= day_count;
+        user_ate_protein /= day_count;
+
+        double user_ate = user_ate_fat + user_ate_protein +user_ate_carbonhydrate;
+
+        float percent_of_carbohydrate = (int) ((user_ate_carbonhydrate*100.0)/user_ate);
+        float percent_of_protein = (int) ((user_ate_protein *100.0)/user_ate);
+        float percent_of_fat = (int) ((user_ate_fat*100.0)/user_ate);
+
+        //juhee fin
+
 
         //나의 3대 비율 차트
-        my_chart.add(new Entry(0,70f));
-        my_chart.add(new Entry(3.5f,20f));
-        my_chart.add(new Entry(7f,10f));
+        my_chart.add(new Entry(0,percent_of_carbohydrate));
+        my_chart.add(new Entry(3.5f,percent_of_protein));
+        my_chart.add(new Entry(7f,percent_of_fat ));
 
 
 
@@ -157,42 +193,42 @@ public class WeeklyReportFragment2 extends Fragment {
         lineChart.setExtraRightOffset(15f);
 
 
-        if (carbohydrate> 50){
+        //juhee q -- 정정구간을 추가 해야할지 고민
+        if (percent_of_carbohydrate> 50){
             carbohydrateBorder.setBackgroundResource(R.drawable.circle_round_red);
             carbohydrate_state.setText("과잉");
         }
-        else if (carbohydrate < 50){
+        else if (percent_of_carbohydrate < 50){
             carbohydrateBorder.setBackgroundResource(R.drawable.circle_round_yellow);
             carbohydrate_state.setText("부족");
         }
 
-        if (protein > 30){
+        if (percent_of_protein > 30){
             proteinBorder.setBackgroundResource(R.drawable.circle_round_red);
             protein_state.setText("과잉");
         }
-        else if (protein < 30){
+        else if (percent_of_protein < 30){
             proteinBorder.setBackgroundResource(R.drawable.circle_round_yellow);
             protein_state.setText("부족");
         }
 
-        if (fat > 20){
+        if (percent_of_fat > 20){
             fatBorder.setBackgroundResource(R.drawable.circle_round_red);
             fat_state.setText("과잉");
         }
-        else if (fat < 20){
+        else if (percent_of_fat < 20){
             fatBorder.setBackgroundResource(R.drawable.circle_round_yellow);
             fat_state.setText("부족");
         }
 
-
-
         return rootView;
-
-
 
     }
 
+
+
     int d = 1;
+
     public class LineAxisValueFormatter extends ValueFormatter {
 
         private final LineChart chart;
