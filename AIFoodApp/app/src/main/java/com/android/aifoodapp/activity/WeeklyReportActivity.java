@@ -92,7 +92,7 @@ public class WeeklyReportActivity extends AppCompatActivity {
 
         weekly_report_fragment_1 = new WeeklyReportFragment1(user, dailyMealList, lastDailyMealList);
         weekly_report_fragment_2 = new WeeklyReportFragment2(user, dailyMealList);
-        weekly_report_fragment_3 = new WeeklyReportFragment3();
+        weekly_report_fragment_3 = new WeeklyReportFragment3(user, dailyMealList);
         weekly_report_fragment_4 = new WeeklyReportFragment4();
 
         dottedProgressBar = findViewById(R.id.dotted_progress_bar);
@@ -111,7 +111,7 @@ public class WeeklyReportActivity extends AppCompatActivity {
         reportPagerAdapter.addItem(weekly_report_fragment_2);
         reportPagerAdapter.addItem(weekly_report_fragment_3);
         reportPagerAdapter.addItem(weekly_report_fragment_4);
-        reportPagerAdapter.addItem(new WeeklyReportFragment3());
+        reportPagerAdapter.addItem(new WeeklyReportFragment3(user, dailyMealList));
 
         pager.setAdapter(reportPagerAdapter);
 
