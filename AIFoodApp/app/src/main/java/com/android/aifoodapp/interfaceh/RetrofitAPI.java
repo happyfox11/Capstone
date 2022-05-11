@@ -100,4 +100,12 @@ public interface RetrofitAPI {
     @GET("/selectMeal.do")
     Call<List<meal>> getMeal(@Query("userid") String userid, @Query("savetime") String savetime,
                              @Query("timeflag") int timeflag);
+
+    //해당 날짜의 모든 음식 가져오는
+    @GET("/selectOneDayFood.do")
+    Call<List<meal>> getFoodFromOneDay(@Query("userid") String userid,
+                                     @Query("savetime") String savetime
+    );
+
+
 }
