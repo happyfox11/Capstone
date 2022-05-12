@@ -163,7 +163,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
     private Button btn_weekly_report;
     //주간 통계 버튼(임시로 위치시킴 --> 후에 푸시알림으로 확인가능하도록)
-
+    private Button btn_recommend_meal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -281,6 +281,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         galleryLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), galleryResultCallback);
 
         btn_weekly_report = findViewById(R.id.btn_weekly_report);
+        btn_recommend_meal = findViewById(R.id.btn_recommend_meal);
     }
 
     //설정
@@ -299,7 +300,16 @@ public class MainActivity<Unit> extends AppCompatActivity {
         //btn_meal1_detail.setOnClickListener(listener_meal1_detail);
         fab_add_meal.setOnClickListener(listener_add_meal);
         btn_weekly_report.setOnClickListener(listener_weekly_report);
+        btn_recommend_meal.setOnClickListener(listener_recommend_meal);
     }
+
+    private final View.OnClickListener listener_recommend_meal = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(activity, RecommendFoodActivity.class);
+            startActivity(intent);
+        }
+    };
 
     private final View.OnClickListener listener_weekly_report = new View.OnClickListener() {
         @Override

@@ -34,7 +34,8 @@ android {
                                 'src\\main\\res\\common',
                                 'src\\main\\res\\main',
                                 'src\\main\\res\\login',
-                                'src\\main\\res\\report'
+                                'src\\main\\res\\report',
+                                'src\\main\\res\\recommend'
                         ]
             }
         }
@@ -83,4 +84,7 @@ dependencies {
 
     //주간 통계 1 페이지의 평균 칼로리 표시 원형 프로그레스바
     implementation 'com.github.jakob-grabner:Circle-Progress-View:1.4'
+
+    //speech bubble
+    implementation 'com.github.MasayukiSuda:BubbleLayout:v1.2.2'
 }
