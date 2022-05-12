@@ -7,7 +7,7 @@
     <!-- 외부 저장소 접근 권한 설정 (카메라와 갤러리 이용) -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/> <!--걸음수 감지-->
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
 
     <application
         android:name=".KakaoApplication"
@@ -18,6 +18,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AIFoodApp"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".activity.RecommendFoodActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.RecipeActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.WeeklyReportActivity"
             android:exported="false" />
