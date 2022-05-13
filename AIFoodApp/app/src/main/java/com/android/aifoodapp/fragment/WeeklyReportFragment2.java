@@ -194,29 +194,29 @@ public class WeeklyReportFragment2 extends Fragment {
 
 
         //juhee q -- 정정구간을 추가 해야할지 고민
-        if (percent_of_carbohydrate> 50){
+        if (percent_of_carbohydrate> 55){
             carbohydrateBorder.setBackgroundResource(R.drawable.circle_round_red);
             carbohydrate_state.setText("과잉");
         }
-        else if (percent_of_carbohydrate < 50){
+        else if (percent_of_carbohydrate < 45 ){
             carbohydrateBorder.setBackgroundResource(R.drawable.circle_round_yellow);
             carbohydrate_state.setText("부족");
         }
 
-        if (percent_of_protein > 30){
+        if (percent_of_protein > 35){
             proteinBorder.setBackgroundResource(R.drawable.circle_round_red);
             protein_state.setText("과잉");
         }
-        else if (percent_of_protein < 30){
+        else if (percent_of_protein < 25){
             proteinBorder.setBackgroundResource(R.drawable.circle_round_yellow);
             protein_state.setText("부족");
         }
 
-        if (percent_of_fat > 20){
+        if (percent_of_fat > 25){
             fatBorder.setBackgroundResource(R.drawable.circle_round_red);
             fat_state.setText("과잉");
         }
-        else if (percent_of_fat < 20){
+        else if (percent_of_fat < 15){
             fatBorder.setBackgroundResource(R.drawable.circle_round_yellow);
             fat_state.setText("부족");
         }
