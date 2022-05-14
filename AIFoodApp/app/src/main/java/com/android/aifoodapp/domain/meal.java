@@ -25,7 +25,7 @@ public class meal implements Parcelable {
     @SerializedName("mealname")
     private String mealname;
     @SerializedName("mealphoto")
-    private String mealphoto;
+    private byte[] mealphoto;
     @SerializedName("savetime")
     private String savetime;
     @SerializedName("timeflag")
@@ -39,7 +39,7 @@ public class meal implements Parcelable {
 
     }
 
-    public meal(String userid, long dailymealid, long mealid, int calorie, int protein, int carbohydrate, int fat, String mealname, String mealphoto, String savetime, int timeflag, long fooddataid, double intake) {
+    public meal(String userid, long dailymealid, long mealid, int calorie, int protein, int carbohydrate, int fat, String mealname, byte[] mealphoto, String savetime, int timeflag, long fooddataid, double intake) {
         this.userid = userid;
         this.dailymealid = dailymealid;
         this.mealid = mealid;
@@ -119,11 +119,11 @@ public class meal implements Parcelable {
         this.mealname = mealname;
     }
 
-    public String getMealphoto() {
+    public byte[] getMealphoto() {
         return mealphoto;
     }
 
-    public void setMealphoto(String mealphoto) {
+    public void setMealphoto(byte[] mealphoto) {
         this.mealphoto = mealphoto;
     }
 
@@ -168,7 +168,8 @@ public class meal implements Parcelable {
         carbohydrate = in.readInt();
         fat = in.readInt();
         mealname = in.readString();
-        mealphoto = in.readString();
+        this.mealphoto = new byte[in.readInt()];
+        in.readByteArray(this.mealphoto);
         savetime = in.readString();
         timeflag = in.readInt();
         fooddataid=in.readLong();
@@ -185,7 +186,7 @@ public class meal implements Parcelable {
         dest.writeInt(carbohydrate);
         dest.writeInt(fat);
         dest.writeString(mealname);
-        dest.writeString(mealphoto);
+        dest.writeByteArray(mealphoto);
         dest.writeString(savetime);
         dest.writeInt(timeflag);
         dest.writeLong(fooddataid);

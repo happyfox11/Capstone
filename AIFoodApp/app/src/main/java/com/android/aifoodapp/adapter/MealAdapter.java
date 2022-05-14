@@ -1,6 +1,8 @@
 package com.android.aifoodapp.adapter;
 
 
+import static com.android.aifoodapp.interfaceh.baseURL.url;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -30,6 +32,7 @@ import com.android.aifoodapp.domain.meal;
 import com.android.aifoodapp.interfaceh.OnCameraClick;
 import com.android.aifoodapp.interfaceh.OnEditMealHeight;
 import com.android.aifoodapp.interfaceh.OnGalleryClick;
+import com.android.aifoodapp.interfaceh.RetrofitAPI;
 import com.android.aifoodapp.vo.MealMemberVo;
 
 import java.io.ByteArrayOutputStream;
@@ -39,6 +42,8 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
 
@@ -53,6 +58,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
     public interface ItemClickListener {
         public void onDetailButtonClicked(int position);
         public void removeButtonClicked(int position);
+        public void mealSaveFromPhoto(byte[] byteArray, int position);
     }
 
     public MealAdapter(Activity activity, ArrayList<MealMemberVo> memberList) {
@@ -237,8 +243,15 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
 
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         bitmap.compress(Bitmap.CompressFormat.PNG,80, stream);
-                        byte[] byteArray = stream.toByteArray();
+                        byte[] byteArray = stream.toByteArray(); //byte[] ==BLOB 형식
+
                         Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
+
+                        /* bitmap compressedBitmap 변수 넘겨받아서-> ai 분석 -> 음식 이름 결과값 안드로이드로 넘겨주기 */
+                        // 넘겨받은 음식 이름으로 fooddata값 찾고, foodAnalysisActivity로 넘겨줌
+                        if (itemClickListener != null) {
+                            itemClickListener.mealSaveFromPhoto(byteArray, position);
+                        }
 
                         holder.iv_img.setImageBitmap(compressedBitmap);
                         memberList.get(position).setMealImg(compressedBitmap);
@@ -277,6 +290,10 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
                         bitmap.compress(Bitmap.CompressFormat.PNG,80, stream);
                         byte[] byteArray = stream.toByteArray();
                         Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
+
+                        if (itemClickListener != null) {
+                            itemClickListener.mealSaveFromPhoto(byteArray, position);
+                        }
 
                         holder.iv_img.setImageBitmap(compressedBitmap);
                         memberList.get(position).setMealImg(compressedBitmap);

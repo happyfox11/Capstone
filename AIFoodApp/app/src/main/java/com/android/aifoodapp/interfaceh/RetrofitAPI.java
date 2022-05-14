@@ -107,5 +107,10 @@ public interface RetrofitAPI {
                                      @Query("savetime") String savetime
     );
 
+    @GET("/setStepCount.do")
+    Call<Void> setStepCount(@Query("userid") String userid,
+                            @Query("savetime") String savetime,
+                            @Query("stepCount") int stepCount
+    );
 
 }
