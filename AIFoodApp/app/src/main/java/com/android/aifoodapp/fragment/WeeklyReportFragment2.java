@@ -72,7 +72,6 @@ public class WeeklyReportFragment2 extends Fragment {
         fat_state = rootView.findViewById(R.id.fat_state);
 
         //평균 3대 비율 차트
-        //TODO : 평균 비율은 수정 하지 않아도 되는게 맞는거죠!?!
         average_chart.add(new Entry(0,50f)); //탄수화물
         average_chart.add(new Entry(3.5f,30f)); //단백질
         average_chart.add(new Entry(7f,20f)); //지방
@@ -88,7 +87,7 @@ public class WeeklyReportFragment2 extends Fragment {
         for(int i=0;i<dailyMealList.size();i++){
             dailymeal temp = dailyMealList.get(i);
             if(temp.getCalorie()==0)
-                break;
+                continue;
 
             user_ate_fat += temp.getFat();
             user_ate_carbonhydrate = temp.getCarbohydrate();
