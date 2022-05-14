@@ -32,7 +32,9 @@ import com.android.aifoodapp.interfaceh.NullOnEmptyConverterFactory;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,8 +72,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     int cnt=0;
 
     int pos;
-    String userid, mealname;
-    byte[] mealphoto;
+    String userid, mealname, mealphoto;
     long dailymealid, mealid, fooddataid;
     int calorie, protein, carbohydrate, fat, timeflag;
     String savetime;
@@ -202,7 +203,8 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                                 carbohydrate=(int)repo.getCarbohydrate();
                                 fat=(int)repo.getFat();
                                 mealname=repo.getName();
-                                mealphoto=null;
+                                mealphoto="";
+                                // new byte[] { 0x01, 0x02, 0x03 };
                                 savetime=dailymeal.getDatekey();//해당 달력 날짜(과거날짜에서 데이터 추가하는 경우도 있기 때문)
                                 //savetime = dateFormat.format(now); //날짜가 string으로 저장
                                 //savetime=now;//형식없이 괜찮나?

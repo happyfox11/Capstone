@@ -53,7 +53,7 @@ public class FoodInputActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         foodList=intent.getParcelableArrayListExtra("foodList");
-        intakeList=(ArrayList<Double>) intent.getSerializableExtra("mealList");
+        intakeList=(ArrayList<Double>) intent.getSerializableExtra("intakeList");
         dailymeal=intent.getParcelableExtra("dailymeal");
         pos=intent.getIntExtra("position",0);
         modify=intent.getIntExtra("modify",-1);//값이 없다면 -1

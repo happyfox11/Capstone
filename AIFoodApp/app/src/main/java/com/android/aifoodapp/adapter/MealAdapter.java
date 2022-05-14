@@ -249,6 +249,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
 
                         /* bitmap compressedBitmap 변수 넘겨받아서-> ai 분석 -> 음식 이름 결과값 안드로이드로 넘겨주기 */
                         // 넘겨받은 음식 이름으로 fooddata값 찾고, foodAnalysisActivity로 넘겨줌
+                        // byteArray를 String으로 변경해서 db로 보낸다.(후에 db에서 blob로 처리)
                         if (itemClickListener != null) {
                             itemClickListener.mealSaveFromPhoto(byteArray, position);
                         }

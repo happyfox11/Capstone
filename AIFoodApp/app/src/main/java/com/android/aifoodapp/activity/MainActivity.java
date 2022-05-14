@@ -1382,7 +1382,7 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                     Log.e("오류",t.toString());
                 }
             });*/
-            stepCountView.setText(String.valueOf(currentSteps));
+            //stepCountView.setText(String.valueOf(currentSteps));
         }
 
     }
