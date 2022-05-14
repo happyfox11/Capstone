@@ -58,7 +58,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
     public interface ItemClickListener {
         public void onDetailButtonClicked(int position);
         public void removeButtonClicked(int position);
-        public void mealSaveFromPhoto(byte[] byteArray, int position);
+        public void mealSaveFromPhoto(byte[] byteArray, int position, Bitmap compressedBitmap);
     }
 
     public MealAdapter(Activity activity, ArrayList<MealMemberVo> memberList) {
@@ -247,16 +247,15 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
 
                         Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
 
+                        holder.iv_img.setImageBitmap(compressedBitmap);
+                        memberList.get(position).setMealImg(compressedBitmap);
+
                         /* bitmap compressedBitmap 변수 넘겨받아서-> ai 분석 -> 음식 이름 결과값 안드로이드로 넘겨주기 */
                         // 넘겨받은 음식 이름으로 fooddata값 찾고, foodAnalysisActivity로 넘겨줌
                         // byteArray를 String으로 변경해서 db로 보낸다.(후에 db에서 blob로 처리)
                         if (itemClickListener != null) {
-                            itemClickListener.mealSaveFromPhoto(byteArray, position);
+                            itemClickListener.mealSaveFromPhoto(byteArray, position, compressedBitmap);
                         }
-
-                        holder.iv_img.setImageBitmap(compressedBitmap);
-                        memberList.get(position).setMealImg(compressedBitmap);
-
 
                     }
                 });
@@ -292,13 +291,12 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
                         byte[] byteArray = stream.toByteArray();
                         Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
 
-                        if (itemClickListener != null) {
-                            itemClickListener.mealSaveFromPhoto(byteArray, position);
-                        }
-
                         holder.iv_img.setImageBitmap(compressedBitmap);
                         memberList.get(position).setMealImg(compressedBitmap);
 
+                        if (itemClickListener != null) {
+                            itemClickListener.mealSaveFromPhoto(byteArray, position, compressedBitmap);
+                        }
 
                     }
                 });
