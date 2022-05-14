@@ -234,7 +234,7 @@ public class LoginActivity extends AppCompatActivity {
                     String userId = Long.toString(user.getId());
                     String userNickName = user.getKakaoAccount().getProfile().getNickname();
                     String img=user.getKakaoAccount().getProfile().getProfileImageUrl(); //프로필 사진 uri로 불러온다.
-
+                    String email=user.getKakaoAccount().getEmail();
                     //Log.i(TAG, "id " + user.getId());
                     //Log.i(TAG, "invoke: nickname=" + user.getKakaoAccount().getProfile().getNickname());
                     //Toast.makeText(getApplicationContext(),"카카오 로그인 되었습니다.", Toast.LENGTH_SHORT).show();
@@ -264,6 +264,7 @@ public class LoginActivity extends AppCompatActivity {
                                 intent.putExtra("kakao_userNickName", userNickName);
                                 intent.putExtra("kakao_img",img);
                                 intent.putExtra("flag","kakao");
+                                intent.putExtra("kakao_email",email);
                                 startActivity(intent);
                                 finish();
                             }

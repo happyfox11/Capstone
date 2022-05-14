@@ -98,6 +98,7 @@ public class InitialSurveyActivity extends AppCompatActivity {
             personId=intent.getStringExtra("kakao_userId");
             personName=intent.getStringExtra("kakao_userNickName");
             personPhoto=intent.getStringExtra("kakao_img");
+            personEmail = intent.getStringExtra("kakao_email");
         }
 
         setContentView(R.layout.activity_initial_survey);
@@ -212,7 +213,7 @@ public class InitialSurveyActivity extends AppCompatActivity {
 
                 if(personPhoto==null) personPhoto="";
                 user account = new user(personId,personName,sex,survey_result.get("age"),
-                        survey_result.get("height"),survey_result.get("weight"),survey_result.get("activity_rate"),survey_result.get("target_calorie"),personPhoto);
+                        survey_result.get("height"),survey_result.get("weight"),survey_result.get("activity_rate"),survey_result.get("target_calorie"),personPhoto, personEmail);
 
                 accounts.put("id",account.getId());
                 accounts.put("nickname",account.getNickname());
@@ -223,6 +224,7 @@ public class InitialSurveyActivity extends AppCompatActivity {
                 accounts.put("activity_index",account.getActivity_index());
                 accounts.put("target_calories",account.getTarget_calories());
                 accounts.put("profile",account.getProfile());
+                accounts.put("email",account.getEmail());
 
                 //Toast.makeText(activity, account.pringStirng(), Toast.LENGTH_LONG).show();
 
