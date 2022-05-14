@@ -26,8 +26,10 @@ public class user implements Parcelable {
     private int target_calories;
     @SerializedName("profile")
     private String profile;
+    @SerializedName("email")
+    private String email;
 
-    public user(String id, String nickname, char sex, int age, int height, int weight, int activity_index, int target_calories, String profile) {
+    public user(String id, String nickname, char sex, int age, int height, int weight, int activity_index, int target_calories, String profile, String email) {
         this.id = id;
         this.nickname = nickname;
         this.sex = sex;
@@ -37,6 +39,7 @@ public class user implements Parcelable {
         this.activity_index = activity_index;
         this.target_calories = target_calories;
         this.profile=profile;
+        this.email=email;
     }
 
     public user() {
@@ -123,8 +126,19 @@ public class user implements Parcelable {
         this.target_calories =target_calories;
     }
 
-    public void setProfile(String profile){this.profile = profile;}
-    public String getProfile(){return profile;}
+    public void setProfile(String profile){
+        this.profile = profile;
+    }
+    public String getProfile(){
+        return profile;
+    }
+
+    public void setEmail(String email){
+        this.email = email;
+    }
+    public String getEmail(){
+        return email;
+    }
 
     //테스트용
     public String pringStirng(){
@@ -143,6 +157,7 @@ public class user implements Parcelable {
         target_calories=in.readInt();
         //이미지 저장부분 일단 살려둠..
         profile=in.readString();
+        email=in.readString();
     }
 /*
     public static final Creator<user> USER_CREATOR = new Creator<user>() {
@@ -173,5 +188,6 @@ public class user implements Parcelable {
         parcel.writeInt(activity_index);
         parcel.writeInt(target_calories);
         parcel.writeString(profile);
+        parcel.writeString(email);
     }
 }

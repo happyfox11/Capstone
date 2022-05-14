@@ -32,7 +32,9 @@ import com.android.aifoodapp.interfaceh.NullOnEmptyConverterFactory;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,7 +65,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     fooddata addFoodData;
     ArrayList<fooddata> foodList=new ArrayList<>(); //기존에 담아두었던 식단 목록
     List<fooddata> list;
-    ArrayList<Double> mealList=new ArrayList<>();
+    ArrayList<Double> intakeList=new ArrayList<>();
     //HashMap<String, List<meal>> map = new HashMap<>();
     HashMap<String, Object> map = new HashMap<>();
     HashMap<String, Object> dailyMap = new HashMap<>();
@@ -83,7 +85,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         foodList=intent.getParcelableArrayListExtra("foodList");
-        mealList=(ArrayList<Double>) intent.getSerializableExtra("mealList");
+        intakeList=(ArrayList<Double>) intent.getSerializableExtra("intakeList");
         dailymeal=intent.getParcelableExtra("dailymeal");
         pos=intent.getIntExtra("position",0);
         initialize();
@@ -103,7 +105,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 //String img = String.valueOf(R.drawable.ic_launcher_background); //기본 사진
                 String img=String.valueOf(R.drawable.icon);
                 foodItemList.add(new FoodItem(img,R.drawable.minusbtn,repo.getName()));
-                foodInfoList.add(new FoodInfo(repo, img, mealList.get(cnt))); //음식객체, 이미지, 인분
+                foodInfoList.add(new FoodInfo(repo, img, intakeList.get(cnt))); //음식객체, 이미지, 인분
                 cnt++;
             }
         }
@@ -129,7 +131,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
             public void onRemoveButtonClicked(int position) {
                 foodInfoAdapter.removeById(position);
                 foodList.remove(position);
-                mealList.remove(position);
+                intakeList.remove(position);
                 setInfoRecyclerViewHeight(recyclerView2);
             }
         });
@@ -137,7 +139,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         foodInfoAdapter.setItemClickListener(new FoodInfoAdapter.ItemClickListener() {
             @Override
             public void onIntakeChangeClicked(double cl_intake, int position){
-                mealList.set(position,cl_intake);
+                intakeList.set(position,cl_intake);
             }
 
             @Override
@@ -146,7 +148,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 intent.putExtra("dailymeal",dailymeal);
                 intent.putParcelableArrayListExtra("foodList",foodList);
                 intent.putExtra("position",pos);//timeflag를 의미
-                intent.putExtra("mealList",mealList);
+                intent.putExtra("intakeList",intakeList);
                 intent.putExtra("modify",position);
                 startActivity(intent);
             }
@@ -159,7 +161,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 intent.putExtra("dailymeal",dailymeal);
                 intent.putParcelableArrayListExtra("foodList",foodList);
                 intent.putExtra("position",pos);
-                intent.putExtra("mealList",mealList);
+                intent.putExtra("intakeList",intakeList);
                 startActivity(intent);
                 setInfoRecyclerViewHeight(recyclerView2);
             }
@@ -202,12 +204,13 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                                 fat=(int)repo.getFat();
                                 mealname=repo.getName();
                                 mealphoto="";
+                                // new byte[] { 0x01, 0x02, 0x03 };
                                 savetime=dailymeal.getDatekey();//해당 달력 날짜(과거날짜에서 데이터 추가하는 경우도 있기 때문)
                                 //savetime = dateFormat.format(now); //날짜가 string으로 저장
                                 //savetime=now;//형식없이 괜찮나?
                                 timeflag=pos;//끼니별 식단 구분용으로? //main화면에서 list 식단 위치
                                 fooddataid=repo.getId();
-                                intake=mealList.get(cnt);
+                                intake=intakeList.get(cnt);
 
                                 Log.e("intake",Double.toString(intake));
 

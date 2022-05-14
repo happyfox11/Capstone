@@ -36,7 +36,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class FoodInputActivity extends AppCompatActivity {
     ArrayList<fooddata> arrayList;
     ArrayList<fooddata> foodList;//foodList : 지금까지 식단으로 담아놓은 음식리스트
-    ArrayList<Double> mealList=new ArrayList<>();
+    ArrayList<Double> intakeList=new ArrayList<>();
     List<fooddata> list;//검색 결과로 음식 데이터 전체를 가지고 있는 list
     Activity activity;
     RecyclerView recyclerView;
@@ -53,7 +53,7 @@ public class FoodInputActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         foodList=intent.getParcelableArrayListExtra("foodList");
-        mealList=(ArrayList<Double>) intent.getSerializableExtra("mealList");
+        intakeList=(ArrayList<Double>) intent.getSerializableExtra("intakeList");
         dailymeal=intent.getParcelableExtra("dailymeal");
         pos=intent.getIntExtra("position",0);
         modify=intent.getIntExtra("modify",-1);//값이 없다면 -1
@@ -106,18 +106,18 @@ public class FoodInputActivity extends AppCompatActivity {
                 if(foodList.isEmpty()) foodList=new ArrayList<fooddata>();
                 if(modify!=-1) {
                     foodList.set(modify,food);//food 음식 수정하기
-                    mealList.set(modify,1.0);
+                    intakeList.set(modify,1.0);
                 }
                 else {
                     foodList.add(food);//선택한 food
-                    mealList.add(1.0);
+                    intakeList.add(1.0);
                 }
                 FoodAnalysisActivity FA = (FoodAnalysisActivity)FoodAnalysisActivity._FoodAnalysis_Activity; // https://itun.tistory.com/357 [Bino]
                 FA.finish();
 
                 Intent intent = new Intent(activity, FoodAnalysisActivity.class);
                 intent.putParcelableArrayListExtra("foodList",foodList); //선택한 음식데이터 넘기기
-                intent.putExtra("mealList",mealList);
+                intent.putExtra("intakeList",intakeList);
                 intent.putExtra("dailymeal",dailymeal);
                 intent.putExtra("position",pos);
                 startActivity(intent);

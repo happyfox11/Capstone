@@ -168,7 +168,9 @@ public class meal implements Parcelable {
         carbohydrate = in.readInt();
         fat = in.readInt();
         mealname = in.readString();
-        mealphoto = in.readString();
+        //this.mealphoto = new byte[in.readInt()];
+        //in.readByteArray(this.mealphoto);
+        mealphoto=in.readString();
         savetime = in.readString();
         timeflag = in.readInt();
         fooddataid=in.readLong();
@@ -185,6 +187,7 @@ public class meal implements Parcelable {
         dest.writeInt(carbohydrate);
         dest.writeInt(fat);
         dest.writeString(mealname);
+        //dest.writeByteArray(mealphoto);
         dest.writeString(mealphoto);
         dest.writeString(savetime);
         dest.writeInt(timeflag);

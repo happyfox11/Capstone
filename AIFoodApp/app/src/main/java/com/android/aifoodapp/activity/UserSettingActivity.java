@@ -50,15 +50,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class UserSettingActivity extends AppCompatActivity {
 
     Activity activity;
-    ImageView iv_profile;
+    ImageView iv_profile, loginFlag;
     EditText tv_userName;
     EditText tv_userIdInfo;
     Button btn_modifyInfo, btn_withdrawal, btn_bmi_modify;
-    EditText tv_age;
-    EditText tv_height;
-    EditText tv_kg;
-    EditText tv_bmi;
-    EditText tv_sex;
+    EditText tv_age, tv_height, tv_kg, tv_bmi;
     RadioGroup rg_modify_activity_rate, rg_modify_gender;
     RadioButton rb_modify_lv1, rb_modify_lv2, rb_modify_lv3, rb_modify_lv4, rb_modify_man, rb_modify_woman;
     HashMap<String, Object> accounts = new HashMap<>();
@@ -78,6 +74,7 @@ public class UserSettingActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         user = intent.getParcelableExtra("user");
+        flag = intent.getStringExtra("flag");
         settingText();
 
         rg_modify_gender.setOnCheckedChangeListener(listener_modify_gender);
@@ -121,9 +118,6 @@ public class UserSettingActivity extends AppCompatActivity {
         btn_withdrawal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = getIntent();
-                flag=intent.getStringExtra("flag");
-
                 if(flag.equals("kakao")){
                     new AlertDialog.Builder(UserSettingActivity.this).setMessage("회원 탈퇴 하시겠습니까?")
                             .setPositiveButton("네", new DialogInterface.OnClickListener() {
@@ -140,7 +134,7 @@ public class UserSettingActivity extends AppCompatActivity {
 
                                             RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
-                                            retrofitAPI.getDeleteUser(tv_userIdInfo.getText().toString()).enqueue(new Callback<user>() {
+                                            retrofitAPI.getDeleteUser(user.getId()).enqueue(new Callback<user>() {
                                                 @Override
                                                 public void onResponse(Call<user> call, Response<user> response) {
                                                     if(response.isSuccessful()){
@@ -208,7 +202,7 @@ public class UserSettingActivity extends AppCompatActivity {
 
                                             RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
-                                            retrofitAPI.getDeleteUser(tv_userIdInfo.getText().toString()).enqueue(new Callback<user>() {
+                                            retrofitAPI.getDeleteUser(user.getId()).enqueue(new Callback<user>() {
                                                 @Override
                                                 public void onResponse(Call<user> call, Response<user> response) {
                                                     if(response.isSuccessful()){
@@ -262,7 +256,7 @@ public class UserSettingActivity extends AppCompatActivity {
 
                 alertDialog.setPositiveButton("Ok",new DialogInterface.OnClickListener(){
                     public void onClick(DialogInterface dialog,int which){
-                        String personId=tv_userIdInfo.getText().toString();
+                        String personId=user.getId();
                         String personName=tv_userName.getText().toString();
                         char sex=(modify_gender==1)?'M':'F';
                         int age=Integer.parseInt(tv_age.getText().toString());
@@ -271,10 +265,11 @@ public class UserSettingActivity extends AppCompatActivity {
                         int activity_rate=rb_activity_rate;
                         int target_calorie=Integer.parseInt(tv_bmi.getText().toString());
                         String personPhoto=user.getProfile();
+                        String email=user.getEmail();
 
 
                         user account = new user(personId,personName,sex,age,
-                                height,weight,activity_rate,target_calorie,personPhoto);
+                                height,weight,activity_rate,target_calorie,personPhoto, email);
 
                         accounts.put("id",account.getId());
                         accounts.put("nickname",account.getNickname());
@@ -285,6 +280,7 @@ public class UserSettingActivity extends AppCompatActivity {
                         accounts.put("activity_index",account.getActivity_index());
                         accounts.put("target_calories",account.getTarget_calories());
                         accounts.put("profile",account.getProfile());
+                        accounts.put("email",account.getEmail());
 
 
                         Retrofit retrofit = new Retrofit.Builder()
@@ -343,7 +339,7 @@ public class UserSettingActivity extends AppCompatActivity {
             //iv_profile.setImageURI(Uri.parse(user.getProfile()));
         }
         tv_userName.setText(user.getNickname());
-        tv_userIdInfo.setText(user.getId());
+        tv_userIdInfo.setText(user.getEmail());
         //btn_modifyInfo
         //btn_withdrawal
         tv_age.setText(String.valueOf(user.getAge()));
@@ -351,6 +347,8 @@ public class UserSettingActivity extends AppCompatActivity {
         tv_kg.setText(String.valueOf(user.getWeight()));
         tv_bmi.setText(String.valueOf(user.getTarget_calories()));
 
+        if(flag.equals("kakao")) loginFlag.setImageResource(R.drawable.kakao_login);
+        else loginFlag.setImageResource(R.drawable.google_login);
 
         modify_gender=(user.getSex()=='M')?1:2;
         switch(modify_gender){
@@ -396,6 +394,7 @@ public class UserSettingActivity extends AppCompatActivity {
         tv_height = findViewById(R.id.tv_height);
         tv_kg = findViewById(R.id.tv_kg);
         tv_bmi = findViewById(R.id.tv_bmi);
+        loginFlag=(ImageView) findViewById(R.id.loginFlag);
 
         rg_modify_gender=findViewById(R.id.rg_modify_gender);
         rb_modify_man=findViewById(R.id.rb_modify_man);

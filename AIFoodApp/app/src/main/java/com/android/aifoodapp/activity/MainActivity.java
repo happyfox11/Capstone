@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -26,8 +28,13 @@ import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -49,7 +56,6 @@ import com.android.aifoodapp.domain.dailymeal;
 import com.android.aifoodapp.domain.fooddata;
 import com.android.aifoodapp.domain.meal;
 import com.android.aifoodapp.domain.user;
-import com.android.aifoodapp.fragment.WeeklyReportFragment1;
 import com.android.aifoodapp.interfaceh.OnCameraClick;
 import com.android.aifoodapp.interfaceh.OnEditMealHeight;
 import com.android.aifoodapp.interfaceh.OnGalleryClick;
@@ -82,6 +88,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -90,11 +97,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity<Unit> extends AppCompatActivity {
+public class MainActivity<Unit> extends AppCompatActivity implements SensorEventListener {
 
     Activity activity;
     Button btn_logout;
-    TextView tv_userId;
+    TextView tv_userId, stepCountView;
     //ImageView tv_userPhoto;
 
     GoogleSignInClient mGoogleSignInClient;
@@ -109,6 +116,17 @@ public class MainActivity<Unit> extends AppCompatActivity {
     //Button btn_meal1_detail;
 
     RadarChart radarChart;
+    SensorManager sensorManager;
+    Sensor stepCountSensor;
+
+    /* meal 저장 변수 */
+    String userid, mealname;
+    byte[] mealphoto;
+    long mealid, fooddataid;
+    int calorie, protein, carbohydrate, fat, timeflag;
+    String savetime;
+    double intake=1.0;
+    HashMap<String, Object> map = new HashMap<>();
 
     int percent_of_carbohydrate;
     int percent_of_protein;
@@ -119,6 +137,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
     long dailymealid;
     String date_string="";
     int time=0;
+    int currentSteps = 0 , firstSteps=0, totalSteps=0 ;
 
     private RecyclerView rv_item;
     private MealAdapter mealAdapter;
@@ -128,7 +147,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
     private int meal_num = 1; // 식사 레이아웃 추가 시 증가되는 값
 
     ArrayList<fooddata> foodList=new ArrayList<>();
-    ArrayList<Double> mealList=new ArrayList<>();
+    ArrayList<Double> intakeList=new ArrayList<>();
     List<fooddata> list;
     List<meal> ml;
 
@@ -165,6 +184,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
     //주간 통계 버튼(임시로 위치시킴 --> 후에 푸시알림으로 확인가능하도록)
     private Button btn_recommend_meal;
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,6 +198,15 @@ public class MainActivity<Unit> extends AppCompatActivity {
         //setting(); //retrofit callback 문제로 아래로 내려둠
         addListener();
         //settingFoodListAdapter();
+
+        /* 걸음수 센서 측정 */
+        // TYPE_STEP_COUNTER : 앱 종료와 관계없이 계속 기존의 값을 가지고 있다 +1
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        stepCountSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+
+        if (stepCountSensor == null) {
+            Log.e("sensor","없음");
+        }
 
         flag=intent.getStringExtra("flag"); //현재 계정이 구글인지 카카오인지
 
@@ -282,6 +311,8 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
         btn_weekly_report = findViewById(R.id.btn_weekly_report);
         btn_recommend_meal = findViewById(R.id.btn_recommend_meal);
+
+        //stepCountView=findViewById(R.id.stepCountView);
     }
 
     //설정
@@ -816,12 +847,12 @@ public class MainActivity<Unit> extends AppCompatActivity {
                                     public void onResponse(Call<List<meal>> call, Response<List<meal>> response) {
                                         ml= response.body();
                                         for (meal repo : ml) {
-                                            mealList.add(repo.getIntake());
+                                            intakeList.add(repo.getIntake());
                                         }
                                         Intent intent = new Intent(activity, FoodAnalysisActivity.class);
                                         intent.putExtra("dailymeal",dailymeal);
                                         intent.putExtra("position",position);
-                                        intent.putExtra("mealList",mealList);
+                                        intent.putExtra("intakeList",intakeList);
                                         intent.putParcelableArrayListExtra("foodList",foodList);
                                         startActivity(intent);
                                         finish();
@@ -877,6 +908,55 @@ public class MainActivity<Unit> extends AppCompatActivity {
                     Intent intent = getIntent(); //인텐트
                     startActivity(intent); //액티비티 열기
                     overridePendingTransition(0, 0);//인텐트 효과 없애기
+                }
+                @Override
+                public void mealSaveFromPhoto(byte[] byteArray, int position){
+
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
+
+                    RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+                    // AI에서 넘겨받은 음식이름으로 영양소 정보를 얻기 위한 fooddata 받아오기 (추가예정)
+
+                    retrofitAPI.getFoodFromMeal(dailymeal.getUserid(),dailymeal.getDatekey(),position).enqueue(new Callback<List<fooddata>>() {
+                        @Override
+                        public void onResponse(Call<List<fooddata>> call, Response<List<fooddata>> response) {
+                            if(response.isSuccessful()) {
+                                list=response.body();
+                                //Log.e("@@@@",list.toString());
+                                for(fooddata fd : list){
+                                    foodList.add(fd);
+                                }
+
+                                /*해당 위치에 있는 meal들의 intake 불러오기*/
+                                retrofitAPI.getMeal(dailymeal.getUserid(),dailymeal.getDatekey(),position).enqueue(new Callback<List<meal>>() {
+                                    @Override
+                                    public void onResponse(Call<List<meal>> call, Response<List<meal>> response) {
+                                        ml= response.body();
+                                        for (meal repo : ml) {
+                                            intakeList.add(repo.getIntake());
+                                        }
+                                        Intent intent = new Intent(activity, FoodAnalysisActivity.class);
+                                        intent.putExtra("dailymeal",dailymeal);
+                                        intent.putExtra("position",position);
+                                        intent.putExtra("intakeList",intakeList);
+                                        intent.putParcelableArrayListExtra("foodList",foodList);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                    @Override
+                                    public void onFailure(Call<List<meal>> call, Throwable t) { ;
+                                    }
+                                });
+
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<List<fooddata>> call, Throwable t) {
+                            Log.e("food search","실패"+t);
+                        }
+                    });
                 }
             });
         }
@@ -1258,6 +1338,57 @@ public class MainActivity<Unit> extends AppCompatActivity {
 
             return pr;
         }
+    }
+
+    public void onStart() {
+        super.onStart();
+        if(stepCountSensor !=null) {
+            // 센서 속도 설정
+            // * 옵션
+            // - SENSOR_DELAY_NORMAL: 20,000 초 딜레이
+            // - SENSOR_DELAY_UI: 6,000 초 딜레이
+            // - SENSOR_DELAY_GAME: 20,000 초 딜레이
+            // - SENSOR_DELAY_FASTEST: 딜레이 없음
+            //
+            sensorManager.registerListener(this,stepCountSensor,SensorManager.SENSOR_DELAY_FASTEST);
+        }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        // 걸음 센서 이벤트 발생시
+        if(event.sensor.getType() == Sensor.TYPE_STEP_COUNTER){
+            if(firstSteps<1){
+                firstSteps=(int) event.values[0];
+            }
+
+            // 현재 값 = (리셋 안 된 값 + 현재 값) - 리셋 안 된 값 + db에 저장된 그날의 걸음수 불러와서
+            //currentSteps = (int)event.values[0] - firstSteps + dailymeal.getStepcount();
+            currentSteps = (int)event.values[0] - firstSteps;
+            //stepCount db에 저장
+            /*
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(url)
+                    .addConverterFactory(GsonConverterFactory.create()).build();
+            RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+            retrofitAPI.setStepCount(dailymeal.getUserid(),dailymeal.getDatekey(),currentSteps).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+
+                }
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    Log.e("오류",t.toString());
+                }
+            });*/
+            //stepCountView.setText(String.valueOf(currentSteps));
+        }
+
+    }
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 }
 
