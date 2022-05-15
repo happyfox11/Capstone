@@ -1,5 +1,7 @@
 package com.android.aifoodapp.interfaceh;
 
+import android.graphics.Bitmap;
+
 import com.android.aifoodapp.domain.dailymeal;
 import com.android.aifoodapp.domain.fooddata;
 import com.android.aifoodapp.domain.meal;
@@ -80,6 +82,9 @@ public interface RetrofitAPI {
     @GET("/selectFoodName.do")
     Call<List<fooddata>> getFood(@Query("name") String name);
 
+    @GET("/selectFoodFromFoodName")
+    Call<fooddata> getFoodFromFoodName(@Query("name") String name);
+
     @GET("/InitPositionMeal.do")
     Call<Void> InitPositionMeal(@Query("userid") String userid,
                           @Query("savetime") String savetime,
@@ -112,5 +117,8 @@ public interface RetrofitAPI {
                             @Query("savetime") String savetime,
                             @Query("stepCount") int stepCount
     );
+
+    @GET ("/getFoodNameFromAI.do")
+    Call<String> getFoodNameFromAI(@Query("img") Bitmap compressedBitmap);
 
 }

@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.hardware.Sensor;
@@ -96,6 +97,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Query;
 
 public class MainActivity<Unit> extends AppCompatActivity implements SensorEventListener {
 
@@ -119,14 +121,8 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
     SensorManager sensorManager;
     Sensor stepCountSensor;
 
-    /* meal 저장 변수 */
-    String userid, mealname;
-    byte[] mealphoto;
-    long mealid, fooddataid;
-    int calorie, protein, carbohydrate, fat, timeflag;
-    String savetime;
-    double intake=1.0;
-    HashMap<String, Object> map = new HashMap<>();
+    String foodName="";
+    fooddata foodAI;
 
     int percent_of_carbohydrate;
     int percent_of_protein;
@@ -910,53 +906,91 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                     overridePendingTransition(0, 0);//인텐트 효과 없애기
                 }
                 @Override
-                public void mealSaveFromPhoto(byte[] byteArray, int position){
+                public void mealSaveFromPhoto(byte[] byteArray, int position, Bitmap compressedBitmap){
+
+                    // AI 통신 (음식 이름을 넘겨 받는다)
+                    Retrofit retrofit2 = new Retrofit.Builder()
+                            .baseUrl("http://192.168.50.102:12345").addConverterFactory(GsonConverterFactory.create()).build();
+
+                    RetrofitAPI retrofitAPI2 = retrofit2.create(RetrofitAPI.class);
 
                     Retrofit retrofit = new Retrofit.Builder()
                             .baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
 
                     RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
-                    // AI에서 넘겨받은 음식이름으로 영양소 정보를 얻기 위한 fooddata 받아오기 (추가예정)
-
-                    retrofitAPI.getFoodFromMeal(dailymeal.getUserid(),dailymeal.getDatekey(),position).enqueue(new Callback<List<fooddata>>() {
+                    retrofitAPI2.getFoodNameFromAI(compressedBitmap).enqueue(new Callback<String>() {
                         @Override
-                        public void onResponse(Call<List<fooddata>> call, Response<List<fooddata>> response) {
+                        public void onResponse(Call<String> call, Response<String> response) {
                             if(response.isSuccessful()) {
-                                list=response.body();
-                                //Log.e("@@@@",list.toString());
-                                for(fooddata fd : list){
-                                    foodList.add(fd);
-                                }
+                                foodName=response.body();
 
-                                /*해당 위치에 있는 meal들의 intake 불러오기*/
-                                retrofitAPI.getMeal(dailymeal.getUserid(),dailymeal.getDatekey(),position).enqueue(new Callback<List<meal>>() {
+                                // AI에서 넘겨받은 음식이름으로 영양소 정보를 얻기 위한 fooddata 받아오기
+                                retrofitAPI.getFoodFromFoodName(foodName).enqueue(new Callback<fooddata>() {
                                     @Override
-                                    public void onResponse(Call<List<meal>> call, Response<List<meal>> response) {
-                                        ml= response.body();
-                                        for (meal repo : ml) {
-                                            intakeList.add(repo.getIntake());
-                                        }
-                                        Intent intent = new Intent(activity, FoodAnalysisActivity.class);
-                                        intent.putExtra("dailymeal",dailymeal);
-                                        intent.putExtra("position",position);
-                                        intent.putExtra("intakeList",intakeList);
-                                        intent.putParcelableArrayListExtra("foodList",foodList);
-                                        startActivity(intent);
-                                        finish();
+                                    public void onResponse(Call<fooddata> call, Response<fooddata> response) {
+                                       foodAI=response.body();
+
+                                       //해당 position 위치에 이미 저장되어 있는 foodList 불러오기
+                                        retrofitAPI.getFoodFromMeal(dailymeal.getUserid(),dailymeal.getDatekey(),position).enqueue(new Callback<List<fooddata>>() {
+                                            @Override
+                                            public void onResponse(Call<List<fooddata>> call, Response<List<fooddata>> response) {
+                                                if(response.isSuccessful()) {
+                                                    list=response.body();
+                                                    //Log.e("@@@@",list.toString());
+                                                    for(fooddata fd : list){
+                                                        foodList.add(fd);
+                                                    }
+                                                    foodList.add(foodAI); //기존 저장되어 있는 foodList에 추가
+
+                                                    // 해당 위치에 있는 meal들의 intake 불러오기
+                                                    retrofitAPI.getMeal(dailymeal.getUserid(),dailymeal.getDatekey(),position).enqueue(new Callback<List<meal>>() {
+                                                        @Override
+                                                        public void onResponse(Call<List<meal>> call, Response<List<meal>> response) {
+                                                            ml= response.body();
+                                                            for (meal repo : ml) {
+                                                                intakeList.add(repo.getIntake());
+                                                            }
+                                                            intakeList.add(1.0);
+                                                            Intent intent = new Intent(activity, FoodAnalysisActivity.class);
+                                                            intent.putExtra("dailymeal",dailymeal);
+                                                            intent.putExtra("position",position);
+                                                            intent.putExtra("intakeList",intakeList);
+                                                            intent.putParcelableArrayListExtra("foodList",foodList);
+                                                            startActivity(intent);
+                                                            finish();
+                                                        }
+                                                        @Override
+                                                        public void onFailure(Call<List<meal>> call, Throwable t) { ;
+                                                        }
+                                                    });
+
+                                                }
+                                            }
+                                            @Override
+                                            public void onFailure(Call<List<fooddata>> call, Throwable t) {
+                                                Log.e("food search","실패"+t);
+                                            }
+                                        });
                                     }
                                     @Override
-                                    public void onFailure(Call<List<meal>> call, Throwable t) { ;
+                                    public void onFailure(Call<fooddata> call, Throwable t) {
+                                        Log.e("",t.toString());
                                     }
                                 });
 
                             }
+                            else{
+                                Log.e("","!response.isSuccessful()");
+                            }
                         }
+
                         @Override
-                        public void onFailure(Call<List<fooddata>> call, Throwable t) {
-                            Log.e("food search","실패"+t);
+                        public void onFailure(Call<String> call, Throwable t) {
+                            Log.e("AI 모델 통신",t.toString());
                         }
                     });
+
                 }
             });
         }

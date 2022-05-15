@@ -1,16 +1,82 @@
 
-# Capstone
-AI 기반 음식 인식을 통한 영양소 분석 어플리케이션
+# 📋 Intro
+AI기반 음식 분석 애플리케이션, 플랜밀
 
-## 프로젝트 필요성
-#### 현대인들의 생활이 날로 바쁘고 복잡해짐과 동시에 팬데믹 현상까지 겹쳐 배달 음식 주문율이 높아지고 있다. 
-#### 이는 영양분의 불균형을 초래하기 쉽고 이로 인한 만성질환 등 건강상의 이유로 이슈로 이어져 필요햔 영양소 등을 분석하고     파악하여 식단을 조절하려는 요구가 점점 더 증가하고 있다.
+<p align="center">
+  <img src = "https://user-images.githubusercontent.com/56522878/168431162-774f9eb0-894b-4ac4-a4fc-e7380b43e9fc.png" width="300px">
+</p>
 
+## Our Team
+어니스트(Honest)
 
-## 프로젝트 목표
-#### 1. 영양 불균형으로 인한 건강 이상 발생 가능성이 높아짐으로 인해 발생하는 사회적 문제를 기존 식단 관리 애플리케이션을 개선하여 섭취한 영양분을 바탕으로 필요한 영양소가 있는 음식을 선정해 추천해줌으로써 해결하고자 한다. 
-#### 2. 이와 관련된 음식, 밀키트를 추천해주는 기능을 제공한다.
-#### 3. AI 머신러닝 기술을 활용해 사진을 찍는 것만으로도 식단이 기록되도록 하여 영향 균형을 맞추는데 도움을 준다. 
+* 팀장 박주희([@juhee77](https://github.com/juhee77 "github link"))
+
+* 팀원 변정원([@Byungul](https://github.com/Byungul "github link"))
+
+* 팀원 이지수([@dlwltn0350](https://github.com/dlwltn0350 "github link"))
+
+* 팀원 박한별([@happyfox11](https://github.com/happyfox11 "github link"))
+
+* 팀원 박소영([@kdmsws](https://github.com/kdmsws "github link")) <br><br>
+
+## 🗂 Content
+
+1. [🔈 프로젝트 소개]
+   <br>
+   - [📑 개요 및 목표]
+   - [📑 개발 환경]
+   - [📑 기술 스택]
+   <br><br>
+2. [🔈 구현 결과]
+   <br><br>
+
+---
+
+## 🥜 프로젝트 소개
+
+### 🔔 개요 및 목표
+
+#### 🧿 개요
+
+    생활이 바쁘고 코로나19 사태로 인해 배달 음식 주문이 증가함
+    영양분 불균형 섭취, 만성질환 유발 등으로 균형있는 영양소 섭취가 필요함
+
+#### 🏃‍ 목표
+    ✔ AI 머신러닝 기술을 활용해 사진으로 식단 기록
+    ✔ 사용자 영양 균형에 도움
+    ✔ 섭취 영양소를 바탕으로 음식 추천 기능 제공
+    ✔ 기존 식단 애플리케이션 개선
+
+### 🔨 개발 환경
+
+- OS : Windows 10
+
+- Server : Naver Cloud Platform
+
+  - Ubuntu Server 18.04 (64-bit)
+
+- Backend
+
+  - Java : Java 1.11.0
+  - Framework : SpringBoot 2.6.4
+  - ORM : JPA(Hibernate)
+  - Tomcat : Tomcat 9 (Ubuntu)
+  - IDE : Intellij 2021.3.3
+  - Dependency tool : gradle-7.4.1
+  - Database : MySQL Ver 14.14 Distrib 5.7.37 (Ubuntu)
+
+- Frontend 
+
+    - Java : Java 1.15.0
+    - Dependency tool : gradle-7.0.4
+    - IDE : Android Studio
+
+- Frontend 
+
+    - Python : 
+    - 
+  <br><br>
+
 
 
 ## 주요 기능 설명
