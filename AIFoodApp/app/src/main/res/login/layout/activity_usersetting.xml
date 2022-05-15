@@ -7,11 +7,12 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:background="#80B542"
         android:gravity="right|center_vertical"
         android:orientation="vertical"
         android:padding="10dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,22 +22,20 @@
             <Button
                 android:id="@+id/btn_withdrawal"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/round_rect_button"
                 android:backgroundTint="#3A531C"
-                android:padding="5dp"
                 android:text="회원탈퇴"
                 android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/btn_modifyInfo"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/round_rect_button"
                 android:backgroundTint="#3A531C"
-                android:padding="5dp"
                 android:text="수정"
                 android:textColor="#FFFFFF" />
         </LinearLayout>
@@ -76,96 +75,127 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"></LinearLayout>
+        android:layout_height="30dp">
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="#B3B0B0" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
+        android:orientation="horizontal">
 
         <EditText
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="2"
+            android:background="#C3E49B"
             android:focusableInTouchMode="false"
+            android:fontFamily="@font/cafe24ssurround"
+            android:gravity="center"
             android:text="닉네임"
-            android:layout_weight="1.5"
-            android:textSize="17sp"
+            android:textSize="14dp"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/tv_userName"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_weight="0.5"
-            android:maxLines="1"
+            android:layout_weight="6"
+            android:fontFamily="@font/cafe24ssurroundair"
             android:maxLength="7"
-            android:textSize="17sp"
-            android:text="이름 표시 " />
+            android:maxLines="1"
+            android:text="이름 표시 "
+            android:textSize="17sp" />
 
     </LinearLayout>
 
+    <View
+        android:id="@+id/view11"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#B3B0B0" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="3">
+        android:orientation="horizontal">
 
         <EditText
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_weight="1.125"
+            android:layout_marginRight="10dp"
+            android:layout_weight="2"
+            android:background="#DBE6CE"
             android:focusableInTouchMode="false"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            android:text="아이디" />
+            android:fontFamily="@font/cafe24ssurround"
+            android:gravity="center"
+            android:text="아이디"
+            android:textSize="14dp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/loginFlag"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_weight="1.4"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/google_login"/>
+            android:layout_weight="2"
+            app:srcCompat="@drawable/google_login" />
 
         <EditText
             android:id="@+id/tv_userIdInfo"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_weight="0.5"
+            android:layout_weight="4"
             android:focusableInTouchMode="false"
+            android:fontFamily="@font/cafe24ssurroundair"
             android:maxLines="1"
-            android:textSize="17sp"
-            android:text="아이디 표시 " />
+            android:text="아이디 표시 "
+            android:textSize="17sp" />
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/view12"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#B3B0B0" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
+        android:orientation="horizontal">
 
         <EditText
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_weight="1.5"
+            android:layout_marginRight="10dp"
+            android:layout_weight="2"
+            android:background="#C3E49B"
             android:focusableInTouchMode="false"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            android:text="성별" />
+            android:fontFamily="@font/cafe24ssurround"
+            android:gravity="center"
+            android:text="성별"
+            android:textSize="14dp"
+            android:textStyle="bold" />
 
         <RadioGroup
             android:id="@+id/rg_modify_gender"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
+            android:layout_weight="6"
             android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/rb_modify_man"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:contentDescription="남"
                 android:text="남" />
@@ -173,7 +203,7 @@
             <RadioButton
                 android:id="@+id/rb_modify_woman"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:contentDescription="여"
                 android:text="여" />
@@ -181,143 +211,198 @@
 
     </LinearLayout>
 
+    <View
+        android:id="@+id/view13"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#B3B0B0" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
+        android:orientation="horizontal">
 
         <EditText
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_weight="1.5"
+            android:layout_marginRight="10dp"
+            android:layout_weight="2"
+            android:background="#DBE6CE"
             android:focusableInTouchMode="false"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            android:text="나이" />
+            android:fontFamily="@font/cafe24ssurround"
+            android:gravity="center"
+            android:text="나이"
+            android:textSize="14dp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/tv_age"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_weight="0.5"
-            android:maxLines="1"
+            android:layout_weight="6"
+            android:fontFamily="@font/cafe24ssurroundair"
             android:maxLength="3"
-            android:textSize="17sp"
-            android:text="나이 표시" />
+            android:maxLines="1"
+            android:text="나이 표시"
+            android:textSize="17sp" />
     </LinearLayout>
+
+    <View
+        android:id="@+id/view14"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#B3B0B0" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
+        android:orientation="horizontal">
 
         <EditText
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_weight="1.5"
+            android:layout_marginRight="10dp"
+            android:layout_weight="2"
+            android:background="#C3E49B"
             android:focusableInTouchMode="false"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            android:text="키" />
+            android:fontFamily="@font/cafe24ssurround"
+            android:gravity="center"
+            android:text="키"
+            android:textSize="14dp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/tv_height"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_weight="0.5"
-            android:maxLines="1"
+            android:layout_weight="6"
+            android:fontFamily="@font/cafe24ssurroundair"
             android:maxLength="3"
-            android:textSize="17sp"
-            android:text="키표시" />
+            android:maxLines="1"
+            android:text="키표시"
+            android:textSize="17sp" />
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/view8"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#B3B0B0" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
+        android:orientation="horizontal">
 
         <EditText
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_weight="1.5"
+            android:layout_marginRight="10dp"
+            android:layout_weight="2"
+            android:background="#DBE6CE"
             android:focusableInTouchMode="false"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            android:text="몸무게" />
+            android:fontFamily="@font/cafe24ssurround"
+            android:gravity="center"
+            android:text="몸무게"
+            android:textSize="14dp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/tv_kg"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_weight="0.5"
-            android:maxLines="1"
+            android:layout_weight="6"
+            android:fontFamily="@font/cafe24ssurroundair"
             android:maxLength="3"
-            android:textSize="17sp"
-            android:text="몸무게 표시" />
+            android:maxLines="1"
+            android:text="몸무게 표시"
+            android:textSize="17sp" />
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/view15"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#B3B0B0" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="3">
+        android:orientation="horizontal">
 
         <EditText
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_weight="1.82"
+            android:layout_marginRight="10dp"
+            android:layout_weight="2"
+            android:background="#C3E49B"
             android:focusableInTouchMode="false"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            android:text="목표칼로리" />
+            android:fontFamily="@font/cafe24ssurround"
+            android:gravity="center"
+            android:text="목표칼로리"
+            android:textSize="14dp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/tv_bmi"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_weight="1.3"
-            android:maxLines="1"
+            android:layout_weight="3.5"
+            android:fontFamily="@font/cafe24ssurroundair"
             android:maxLength="6"
-            android:textSize="17sp"
-            android:text="BMI 표시" />
+            android:maxLines="1"
+            android:text="BMI 표시"
+            android:textSize="17sp" />
 
         <Button
             android:id="@+id/btn_bmi_modify"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginRight="10dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
             android:background="@drawable/round_rect_button"
             android:backgroundTint="#3A531C"
-            android:padding="10dp"
             android:text="자동"
             android:textColor="#FFFFFF" />
 
+        <View
+            android:id="@+id/view18"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="0.5" />
+
     </LinearLayout>
+
+    <View
+        android:id="@+id/view16"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#B3B0B0" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
+        android:orientation="horizontal">
 
         <EditText
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.5"
+            android:layout_marginRight="10dp"
+            android:layout_weight="2"
+            android:background="#DBE6CE"
             android:focusableInTouchMode="false"
+            android:fontFamily="@font/cafe24ssurround"
+            android:gravity="center"
             android:text="활동량"
-            android:textSize="17sp"
+            android:textSize="14dp"
             android:textStyle="bold" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
+            android:layout_weight="6"
             android:orientation="vertical">
 
             <RadioGroup
@@ -358,5 +443,11 @@
             </RadioGroup>
         </LinearLayout>
     </LinearLayout>
+
+    <View
+        android:id="@+id/view7"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#B3B0B0" />
 </LinearLayout>
 
