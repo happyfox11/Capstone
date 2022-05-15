@@ -232,7 +232,8 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
             });
         }
         else if(flag.equals("google")){
-            /*juhee modify*/
+            /*
+             modify*/
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestEmail()
                     .build();
@@ -262,7 +263,6 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
 
     }
 
-    //Todo 구글 로그인을 계속 연동해서 사용할지 아니면 토큰만 써서 할지 결정
     private void signOut() {
         mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
             @Override
@@ -334,7 +334,40 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(activity, RecommendFoodActivity.class);
-            startActivity(intent);
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(url)
+                    .addConverterFactory(GsonConverterFactory.create()).build();
+
+            RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+
+            //비동기
+            retrofitAPI.getOneDayMealCount(user.getId(),dailymeal.getDatekey()).enqueue(new Callback<Integer>() {
+                @Override
+                public void onResponse(Call<Integer> call, Response<Integer> response) {
+                    if(response.body()==0){
+                        //경고창 띠우고 넘어가지 않게
+                        //Toast.makeText("음식을 하나 이상 입력하여야 식단 추천이 가능합니다.",)
+                        Toast.makeText(getApplicationContext(),"음식을 하나 이상 입력하여야 식단 추천이 가능합니다.", Toast.LENGTH_SHORT).show();
+                        Log.d("size가 0임 ",Integer.toString(response.body()));
+
+                    }
+                    else{
+                        Log.d("size ",Integer.toString(response.body()));
+                        intent.putExtra("user",user);
+                        intent.putExtra("dailymeal",dailymeal);
+                        startActivity(intent);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Integer> call, Throwable t) {
+
+                }
+            });
+
+
         }
     };
 
