@@ -244,7 +244,7 @@ public class WeeklyReportActivity extends AppCompatActivity {
         new dailyMealNetworkCall().execute(retrofitAPI.getWeeklyMeal(user.getId(),startDate,endDate));
 
         try {
-            Thread.sleep(300);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -292,7 +292,7 @@ public class WeeklyReportActivity extends AppCompatActivity {
         Log.e("lastStartDate",lastStartDate);
         new lastDailyMealNetworkCall().execute(retrofitAPI.getWeeklyMeal(user.getId(),lastStartDate,lastEndDate));
         try {
-            Thread.sleep(200);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
