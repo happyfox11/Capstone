@@ -7,8 +7,8 @@ import com.android.aifoodapp.domain.fooddata;
 import com.android.aifoodapp.domain.meal;
 import com.android.aifoodapp.domain.user;
 
+import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -120,5 +120,13 @@ public interface RetrofitAPI {
 
     @GET ("/getFoodNameFromAI.do")
     Call<String> getFoodNameFromAI(@Query("img") Bitmap compressedBitmap);
+
+    @GET("/recommendMeal.do")
+    Call<List<fooddata>> getRecommendMeal (@Query("userid") String userid, @Query("savetime") String savetime);
+
+    @GET("/oneDayMealCount.do")
+    Call<Integer> getOneDayMealCount (@Query("userid") String userid, @Query("savetime") String savetime);
+
+
 
 }
