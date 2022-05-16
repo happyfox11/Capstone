@@ -19,6 +19,10 @@
         android:theme="@style/Theme.AIFoodApp"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.SelectMarketActivity"
+            android:exported="false"
+            android:theme="@style/Transparent" />
+        <activity
             android:name=".activity.RecommendFoodActivity"
             android:exported="false" />
         <activity

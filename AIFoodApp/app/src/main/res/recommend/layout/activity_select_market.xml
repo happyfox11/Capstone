@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#80B542"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_shop_back"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/back_arrow_icon" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/view9"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.5" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="10"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/bag_tag_icon" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:background="@drawable/round_rect"
+                android:backgroundTint="#D4E6BF"
+                android:orientation="vertical"
+                android:paddingBottom="15dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/round_rect_top"
+                    android:backgroundTint="#8BC34A"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:id="@+id/view4"
+                            android:layout_width="0dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="0.5" />
+
+                        <ImageView
+                            android:id="@+id/imageView18"
+                            android:layout_width="0dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
+                            app:srcCompat="@drawable/bag_button_icon" />
+
+                        <View
+                            android:id="@+id/view6"
+                            android:layout_width="0dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="2" />
+
+                        <ImageView
+                            android:id="@+id/imageView17"
+                            android:layout_width="0dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="1"
+                            app:srcCompat="@drawable/bag_button_icon" />
+
+                        <View
+                            android:id="@+id/view5"
+                            android:layout_width="0dp"
+                            android:layout_height="30dp"
+                            android:layout_weight="0.5" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/imageView8"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:tint="#FFFFFF"
+                            app:srcCompat="@drawable/shopping_icon" />
+
+                        <TextView
+                            android:id="@+id/textView22"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:fontFamily="@font/cafe24ssurroundair"
+                            android:lineSpacingExtra="10dp"
+                            android:text="온라인 쇼핑몰 선택"
+                            android:textColor="#FFFFFF"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/imageView13"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            app:srcCompat="@drawable/naver_icon" />
+
+                        <Button
+                            android:id="@+id/btn_naver_shop"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="#00FF0000"
+                            android:fontFamily="@font/cafe24ssurroundair"
+                            android:text="네이버"
+                            android:textColor="#000000"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/imageView14"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            app:srcCompat="@drawable/coupang_icon" />
+
+                        <Button
+                            android:id="@+id/btn_coupang_shop"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="#00FF0000"
+                            android:fontFamily="@font/cafe24ssurroundair"
+                            android:text="쿠팡"
+                            android:textColor="#000000"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/imageView15"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            app:srcCompat="@drawable/gmarket_icon" />
+
+                        <Button
+                            android:id="@+id/btn_gmarket_shop"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="#00FF0000"
+                            android:fontFamily="@font/cafe24ssurroundair"
+                            android:text="지마켓"
+                            android:textColor="#000000"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/imageView16"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            app:srcCompat="@drawable/auction_icon" />
+
+                        <Button
+                            android:id="@+id/btn_auction_shop"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="#00FF0000"
+                            android:fontFamily="@font/cafe24ssurroundair"
+                            android:text="옥션"
+                            android:textColor="#000000"
+                            android:textSize="20dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view10"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2" />
+
+    </LinearLayout>
+
+</LinearLayout>

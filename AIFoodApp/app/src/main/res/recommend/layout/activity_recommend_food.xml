@@ -57,7 +57,7 @@
                     app:bl_arrowWidth="30dp"
                     app:bl_bubbleColor="#CDE3B4"
                     app:bl_cornersRadius="25dp"
-                    app:bl_strokeColor="#CDE3B4"
+                    app:bl_strokeColor="#90A579"
                     app:bl_strokeWidth="3dp">
 
 
@@ -68,7 +68,9 @@
                         android:gravity="center"
                         android:lineSpacingExtra="8dp"
                         android:text="현재까지의 영양 섭취 정보를\n바탕으로 균형 잡힌 식단을\n추천해드릴게요!"
-                        android:textSize="16dp" />
+                        android:textColor="#3E6017"
+                        android:textSize="16dp"
+                        android:textStyle="bold" />
                 </com.daasuu.bl.BubbleLayout>
 
                 <ImageView
@@ -119,7 +121,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="15dp"
-                                android:text="음식명"
+                                android:text="볶음밥"
                                 android:textSize="18dp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -177,7 +179,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="15dp"
-                                android:text="음식명"
+                                android:text="고기"
                                 android:textSize="18dp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -235,7 +237,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="15dp"
-                                android:text="음식명"
+                                android:text="밀푀유나베"
                                 android:textSize="18dp"
                                 android:textStyle="bold" />
                         </LinearLayout>
