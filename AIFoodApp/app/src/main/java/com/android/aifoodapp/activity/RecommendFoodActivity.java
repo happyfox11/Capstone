@@ -108,8 +108,7 @@ public class RecommendFoodActivity extends AppCompatActivity {
 
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
-        //동기적 처리(일단 비동기 처리로)
-        //new FoodNetworkCall().execute( retrofitAPI.getRecommendMeal(user.getId(),dailymeal.getDatekey()));
+        //동기적 처리(일단 동기 처리로)
         new FoodNetworkCall().execute(retrofitAPI.getRecommendMeal(user.getId(),dailymeal.getDatekey()));
 
         //비동기
@@ -259,8 +258,14 @@ public class RecommendFoodActivity extends AppCompatActivity {
                 Call<List<fooddata>> call = params[0];
                 Response<List<fooddata>> response = call.execute();
 
-                Log.d("Error:size",response.body().toString());
+                //Log.d("Error:size",response.body().toString());
                 recommendeList = response.body();
+                if(CollectionUtils.isEmpty(recommendeList)){
+                    //null 값이 나올확률은 없는데 에러나는것 확인 필요
+                    recommendeList.add(new fooddata());
+                    recommendeList.add(new fooddata());
+                    recommendeList.add(new fooddata());
+                }
                 //null처리
                 //if(CollectionUtils.isEmpty(response.body())) {
                 //    return null;
