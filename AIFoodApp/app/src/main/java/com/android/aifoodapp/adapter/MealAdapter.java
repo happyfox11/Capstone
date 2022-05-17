@@ -58,7 +58,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
     public interface ItemClickListener {
         public void onDetailButtonClicked(int position);
         public void removeButtonClicked(int position);
-        public void mealSaveFromPhoto(byte[] byteArray, int position, Bitmap compressedBitmap);
+        public void mealSaveFromPhoto(byte[] byteArray, int position, Bitmap compressedBitmap, Uri photoUri, String tmp);
     }
 
     public MealAdapter(Activity activity, ArrayList<MealMemberVo> memberList) {
@@ -254,7 +254,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
                         // 넘겨받은 음식 이름으로 fooddata값 찾고, foodAnalysisActivity로 넘겨줌
                         // byteArray를 String으로 변경해서 db로 보낸다.(후에 db에서 blob로 처리)
                         if (itemClickListener != null) {
-                            itemClickListener.mealSaveFromPhoto(byteArray, position, compressedBitmap);
+                            itemClickListener.mealSaveFromPhoto(byteArray, position, compressedBitmap, photoUri, "camera");
                         }
 
                     }
@@ -295,7 +295,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
                         memberList.get(position).setMealImg(compressedBitmap);
 
                         if (itemClickListener != null) {
-                            itemClickListener.mealSaveFromPhoto(byteArray, position, compressedBitmap);
+                            itemClickListener.mealSaveFromPhoto(byteArray, position, compressedBitmap, photoUri, "gallery");
                         }
 
                     }

@@ -51,7 +51,7 @@ public class FoodInfoAdapter extends RecyclerView.Adapter<FoodInfoAdapter.Custom
     public void onBindViewHolder(@NonNull FoodInfoAdapter.CustomViewHolder holder, int position) {
 
         /* setting */
-        holder.cl_foodInfo.setImageResource(Integer.parseInt(items.get(position).getCl_img()));
+        holder.cl_foodInfo.setImageBitmap(items.get(position).getCl_img());
         holder.cl_foodName.setText(items.get(position).getFood().getName());
         holder.cl_caloriesInfo.setText(String.valueOf((int) items.get(position).getFood().getCalorie()));
         holder.cl_intake.setText(String.valueOf(items.get(position).getCl_intake()));

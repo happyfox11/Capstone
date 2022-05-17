@@ -1,15 +1,17 @@
 package com.android.aifoodapp.RecyclerView;
 
 
+import android.graphics.Bitmap;
+
 import com.android.aifoodapp.domain.fooddata;
 
 public class FoodInfo {
 
     fooddata food;
-    String cl_img;
+    Bitmap cl_img;
     double cl_intake;
 
-    public FoodInfo(fooddata food, String cl_img, double cl_intake){
+    public FoodInfo(fooddata food, Bitmap cl_img, double cl_intake){
         this.food=food;
         this.cl_img=cl_img;
         this.cl_intake=cl_intake;
@@ -22,10 +24,10 @@ public class FoodInfo {
         return food;
     }
 
-    public void setCl_img(String cl_img){
+    public void setCl_img(Bitmap cl_img){
         this.cl_img=cl_img;
     }
-    public String getCl_img(){
+    public Bitmap getCl_img(){
         return cl_img;
     }
 

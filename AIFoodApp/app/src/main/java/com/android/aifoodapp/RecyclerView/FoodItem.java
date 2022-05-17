@@ -1,14 +1,16 @@
 package com.android.aifoodapp.RecyclerView;
 
+import android.graphics.Bitmap;
+
 public class FoodItem {
 
     //int id;
-    String fl_image;
+    Bitmap fl_image;
     int minusBtn;
     String fl_foodName;
 
 
-    public FoodItem (String fl_image, int minusBtn, String fl_foodName){
+    public FoodItem (Bitmap fl_image, int minusBtn, String fl_foodName){
         //this.id= id;
         this.fl_image = fl_image;
         this.minusBtn = minusBtn;
@@ -23,11 +25,11 @@ public class FoodItem {
         this.id = id;
     }
 */
-    public String getFl_image() {
+    public Bitmap getFl_image() {
         return fl_image;
     }
 
-    public void setFl_image(String fl_image) {
+    public void setFl_image(Bitmap fl_image) {
         this.fl_image = fl_image;
     }
 

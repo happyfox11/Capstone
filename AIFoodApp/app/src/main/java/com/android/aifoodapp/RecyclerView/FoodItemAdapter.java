@@ -50,7 +50,7 @@ public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.Custom
     @Override //어떤 객체를 바인딩할지 설정
     public void onBindViewHolder(@NonNull FoodItemAdapter.CustomViewHolder holder, int position) {
 
-        holder.fl_foodInfo.setImageResource(Integer.parseInt(arrayList.get(position).getFl_image()));
+        holder.fl_foodInfo.setImageBitmap(arrayList.get(position).getFl_image());
         holder.fl_foodInfo.setBorderColor(Color.WHITE);
         holder.iv_minusBtn.setImageResource(arrayList.get(position).getMinusBtn());
         holder.fl_foodName.setText(arrayList.get(position).getFl_foodName());
