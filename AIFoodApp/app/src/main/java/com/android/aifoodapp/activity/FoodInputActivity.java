@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -124,6 +125,17 @@ public class FoodInputActivity extends AppCompatActivity {
                 finish();
             }
 
+        });
+
+        /*검색할 음식명에 엔터 입력 금지 설정*/
+        et_search.setOnKeyListener(new View.OnKeyListener() {
+
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == event.KEYCODE_ENTER)
+                    return true;
+                return false;
+            }
         });
 
     }

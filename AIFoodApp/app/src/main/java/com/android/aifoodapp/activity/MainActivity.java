@@ -1402,6 +1402,14 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
             }
             p++;
 
+            /*
+                한번씩 삼각그래프 탄단지 값이 출력되지 않는 이슈
+                case 1 ) 메인페이지에서 주간통계 페이지로 이동했다가 다시 돌아온 경우, 값이 사라져있었음
+                        --> 해결
+            */
+            if(p == 4)
+                p =1;
+
 
             return pr;
         }

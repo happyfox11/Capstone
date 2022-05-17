@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:background="#80B542"
         android:gravity="right|center_vertical"
         android:orientation="vertical"
@@ -30,27 +30,33 @@
 
         </LinearLayout>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="80dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/round_rect"
+        android:backgroundTint="#D6EFB8"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp">
 
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="4dp"
             android:src="@drawable/magnifier" />
 
         <EditText
             android:id="@+id/et_search"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
+            android:background="@drawable/round_rect_right"
+            android:fontFamily="@font/cafe24ssurroundair"
             android:gravity="center_vertical"
-            android:text=""
             android:hint="찾을 음식을 입력해주세요!"
+            android:padding="5dp"
+            android:text=""
             android:textSize="20sp" />
     </LinearLayout>
 
@@ -68,15 +74,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/btn_search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_margin="10dp"
+            android:layout_weight="1"
             android:background="@drawable/round_rect_button"
             android:backgroundTint="#3A531C"
-            android:text="검색" />
+            android:text="검색"
+            android:textColor="#FFFFFF"
+            android:textSize="18dp" />
 
     </LinearLayout>
 
