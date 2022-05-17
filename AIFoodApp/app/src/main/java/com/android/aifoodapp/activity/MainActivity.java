@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -38,6 +39,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
@@ -64,6 +66,7 @@ import com.android.aifoodapp.interfaceh.RetrofitAPI;
 import com.android.aifoodapp.vo.MealMemberVo;
 
 import com.android.aifoodapp.vo.SubItem;
+import com.bumptech.glide.Glide;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -79,11 +82,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kakao.sdk.user.UserApiClient;
 
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -92,6 +99,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -104,7 +114,7 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
     Activity activity;
     Button btn_logout;
     TextView tv_userId, stepCountView;
-    //ImageView tv_userPhoto;
+    ImageView tv_userPhoto;
 
     GoogleSignInClient mGoogleSignInClient;
 
@@ -134,6 +144,7 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
     String date_string="";
     int time=0;
     int currentSteps = 0 , firstSteps=0, totalSteps=0 ;
+    HashMap<String, RequestBody> mapAi = new HashMap<>();
 
     private RecyclerView rv_item;
     private MealAdapter mealAdapter;
@@ -144,6 +155,7 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
 
     ArrayList<fooddata> foodList=new ArrayList<>();
     ArrayList<Double> intakeList=new ArrayList<>();
+    ArrayList<String> photoList=new ArrayList<>();
     List<fooddata> list;
     List<meal> ml;
 
@@ -308,6 +320,8 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
         btn_weekly_report = findViewById(R.id.btn_weekly_report);
         btn_recommend_meal = findViewById(R.id.btn_recommend_meal);
 
+        tv_userPhoto=findViewById(R.id.tv_userPhoto);
+        Glide.with(this).load(R.drawable.heart).into(tv_userPhoto);
         //stepCountView=findViewById(R.id.stepCountView);
     }
 
@@ -877,11 +891,13 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                                         ml= response.body();
                                         for (meal repo : ml) {
                                             intakeList.add(repo.getIntake());
+                                            photoList.add(repo.getMealphoto());
                                         }
                                         Intent intent = new Intent(activity, FoodAnalysisActivity.class);
                                         intent.putExtra("dailymeal",dailymeal);
                                         intent.putExtra("position",position);
                                         intent.putExtra("intakeList",intakeList);
+                                        intent.putExtra("photoList",photoList);
                                         intent.putParcelableArrayListExtra("foodList",foodList);
                                         startActivity(intent);
                                         finish();
@@ -939,11 +955,13 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                     overridePendingTransition(0, 0);//인텐트 효과 없애기
                 }
                 @Override
-                public void mealSaveFromPhoto(byte[] byteArray, int position, Bitmap compressedBitmap){
-
+                public void mealSaveFromPhoto(byte[] byteArray, int position, Bitmap compressedBitmap, Uri photoUri, String tmp){
                     // AI 통신 (음식 이름을 넘겨 받는다)
+
+                    Gson gson=new GsonBuilder().setLenient().create();
+
                     Retrofit retrofit2 = new Retrofit.Builder()
-                            .baseUrl("http://192.168.50.102:12345").addConverterFactory(GsonConverterFactory.create()).build();
+                            .baseUrl("http://hjb-desktop.asuscomm.com:12345/").addConverterFactory(GsonConverterFactory.create(gson)).build();
 
                     RetrofitAPI retrofitAPI2 = retrofit2.create(RetrofitAPI.class);
 
@@ -952,7 +970,39 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
 
                     RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
-                    retrofitAPI2.getFoodNameFromAI(compressedBitmap).enqueue(new Callback<String>() {
+                    File postFile;
+
+                    if(tmp.equals("gallery")){
+                        //상대경로에서 절대경로로 변경 https://crazykim2.tistory.com/441
+                        String imgPath=getRealPathFromURI(photoUri);
+                        postFile=new File(imgPath);
+                        //File postFile=new File(photoUri.getPath());
+                        //Log.e("jaja",postFile.getName());
+                    /*
+                    OutputStream out = null;
+                    try{
+                        postFile.createNewFile();
+                        out=new FileOutputStream(postFile);
+                        compressedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }finally{
+                        try{
+                            out.close();
+                        }catch(IOException e){
+                            e.printStackTrace();
+                        }
+                    }*/
+                    }
+                    else{ //camera
+                        postFile=new File(photoUri.getPath());
+                    }
+
+                    RequestBody rb = RequestBody.create(MediaType.parse("multipart/form-data"),postFile);
+                    MultipartBody.Part Bmp = MultipartBody.Part.createFormData("file", postFile.getName(), rb);
+
+                    retrofitAPI2.postFoodNameFromAI(Bmp).enqueue(new Callback<String>() {
                         @Override
                         public void onResponse(Call<String> call, Response<String> response) {
                             if(response.isSuccessful()) {
@@ -983,12 +1033,16 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                                                             ml= response.body();
                                                             for (meal repo : ml) {
                                                                 intakeList.add(repo.getIntake());
+                                                                photoList.add(repo.getMealphoto());
                                                             }
                                                             intakeList.add(1.0);
+                                                            photoList.add(new String(byteArray));
                                                             Intent intent = new Intent(activity, FoodAnalysisActivity.class);
                                                             intent.putExtra("dailymeal",dailymeal);
                                                             intent.putExtra("position",position);
                                                             intent.putExtra("intakeList",intakeList);
+                                                            intent.putExtra("photoList",photoList);
+                                                            //intent.putExtra("image",byteArray); //사진 넘기기
                                                             intent.putParcelableArrayListExtra("foodList",foodList);
                                                             startActivity(intent);
                                                             finish();
@@ -1027,6 +1081,30 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                 }
             });
         }
+    }
+    @NonNull
+    private RequestBody createPartFromString(String descriptionString) {
+        return RequestBody.create(okhttp3.MultipartBody.FORM, descriptionString);
+    }
+
+    //갤러리에서 불러오기
+    private String getRealPathFromURI(Uri contentUri){
+//        if(contentUri.getPath().startsWith("/storage")){
+//            return contentUri.getPath();
+//        }
+        String id= DocumentsContract.getDocumentId(contentUri).split(":")[1];
+        String[] columns={MediaStore.Files.FileColumns.DATA};
+        String selection=MediaStore.Files.FileColumns._ID+" = "+id;
+        Cursor cursor=activity.getContentResolver().query(MediaStore.Files.getContentUri("external"),columns,selection,null,null);
+        try{
+            int columnIndex=cursor.getColumnIndex(columns[0]);
+            if(cursor.moveToFirst()){
+                return cursor.getString(columnIndex);
+            }
+        }finally{
+            cursor.close();
+        }
+        return null;
     }
 
     private void settingInitialMeal(){
@@ -1198,6 +1276,8 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
 
             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
             cameraLauncher.launch(intent);
+
+            Log.i("file_name", Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pictures/"+photoFile.getName());
 
         }catch(Exception ex){
 

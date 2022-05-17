@@ -22,6 +22,7 @@ import com.android.aifoodapp.R;
 import com.android.aifoodapp.domain.user;
 import com.android.aifoodapp.interfaceh.NullOnEmptyConverterFactory;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -54,6 +55,8 @@ public class LoginActivity extends AppCompatActivity {
 
     Activity activity;
     LinearLayout  btn_google, btn_email, btn_kakao;
+    TextView tv_title;
+    ImageView loginImage;
     static Context mContext;
 
     GoogleSignInClient mGoogleSignInClient;
@@ -73,8 +76,11 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         initialize();
         if(getIntent().getBooleanExtra("load",false)){
+            tv_title.setVisibility(View.INVISIBLE);
             btn_kakao.setVisibility(View.INVISIBLE);
             btn_google.setVisibility(View.INVISIBLE);
+            Glide.with(this).load(R.drawable.loading).into(loginImage);
+            //loginImage.setImageResource(R.drawable.loading);
         };
         //getKeyHash();
 
@@ -186,10 +192,10 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     }
-                    else{ // 회원가입
+                    else { // 회원가입
                         //servey 화면으로 넘어가는것 --> intent.putExtra로 구글 정보를 넘길지 아니면 현재 로그인 정보를 확인할지 선택
                         Intent intent = new Intent(activity, InitialSurveyActivity.class);
-                        intent.putExtra("flag","google");
+                        intent.putExtra("flag", "google");
                         startActivity(intent);
                         finish();
                     }
@@ -217,8 +223,10 @@ public class LoginActivity extends AppCompatActivity {
     //변수 초기화
     private void initialize(){
         activity = this;
+        tv_title=findViewById(R.id.tv_title);
         btn_kakao = findViewById(R.id.btn_kakao);
         btn_google = findViewById(R.id.btn_google);
+        loginImage=findViewById(R.id.loginImage);
         //btn_email = findViewById(R.id.btn_email);
 
         //test = findViewById(R.id.textView19);

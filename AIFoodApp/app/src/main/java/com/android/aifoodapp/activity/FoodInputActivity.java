@@ -38,6 +38,7 @@ public class FoodInputActivity extends AppCompatActivity {
     ArrayList<fooddata> arrayList;
     ArrayList<fooddata> foodList;//foodList : 지금까지 식단으로 담아놓은 음식리스트
     ArrayList<Double> intakeList=new ArrayList<>();
+    ArrayList<String> photoList=new ArrayList<>();
     List<fooddata> list;//검색 결과로 음식 데이터 전체를 가지고 있는 list
     Activity activity;
     RecyclerView recyclerView;
@@ -55,6 +56,7 @@ public class FoodInputActivity extends AppCompatActivity {
         Intent intent = getIntent();
         foodList=intent.getParcelableArrayListExtra("foodList");
         intakeList=(ArrayList<Double>) intent.getSerializableExtra("intakeList");
+        photoList=(ArrayList<String>) intent.getSerializableExtra("photoList");
         dailymeal=intent.getParcelableExtra("dailymeal");
         pos=intent.getIntExtra("position",0);
         modify=intent.getIntExtra("modify",-1);//값이 없다면 -1
@@ -112,6 +114,7 @@ public class FoodInputActivity extends AppCompatActivity {
                 else {
                     foodList.add(food);//선택한 food
                     intakeList.add(1.0);
+                    photoList.add("");
                 }
                 FoodAnalysisActivity FA = (FoodAnalysisActivity)FoodAnalysisActivity._FoodAnalysis_Activity; // https://itun.tistory.com/357 [Bino]
                 FA.finish();
@@ -119,6 +122,7 @@ public class FoodInputActivity extends AppCompatActivity {
                 Intent intent = new Intent(activity, FoodAnalysisActivity.class);
                 intent.putParcelableArrayListExtra("foodList",foodList); //선택한 음식데이터 넘기기
                 intent.putExtra("intakeList",intakeList);
+                intent.putExtra("photoList",photoList);
                 intent.putExtra("dailymeal",dailymeal);
                 intent.putExtra("position",pos);
                 startActivity(intent);

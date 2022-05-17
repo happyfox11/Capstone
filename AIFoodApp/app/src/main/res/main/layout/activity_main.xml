@@ -654,9 +654,8 @@ tools:context=".activity.MainActivity">
                 <ImageView
                     android:id="@+id/tv_userPhoto"
                     android:layout_width="0dp"
-                    android:layout_height="200dp"
-                    android:layout_weight="3"
-                    android:background="@drawable/character" />
+                    android:layout_height="220dp"
+                    android:layout_weight="3" />
             </LinearLayout>
 
             <Button

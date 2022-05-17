@@ -6,6 +6,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -66,6 +70,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     ArrayList<fooddata> foodList=new ArrayList<>(); //기존에 담아두었던 식단 목록
     List<fooddata> list;
     ArrayList<Double> intakeList=new ArrayList<>();
+    ArrayList<String> photoList=new ArrayList<>();
     //HashMap<String, List<meal>> map = new HashMap<>();
     HashMap<String, Object> map = new HashMap<>();
     HashMap<String, Object> dailyMap = new HashMap<>();
@@ -88,6 +93,8 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         intakeList=(ArrayList<Double>) intent.getSerializableExtra("intakeList");
         dailymeal=intent.getParcelableExtra("dailymeal");
         pos=intent.getIntExtra("position",0);
+        //byte[] byteArray=intent.getByteArrayExtra("image");
+        photoList=(ArrayList<String>) intent.getSerializableExtra("photoList");
         initialize();
         //setFoodList();
         _FoodAnalysis_Activity = FoodAnalysisActivity.this;
@@ -101,11 +108,21 @@ public class FoodAnalysisActivity extends AppCompatActivity {
 
         if(!foodList.isEmpty()){
             int cnt=0;
+            Bitmap compressedBitmap;
             for(fooddata repo : foodList){
-                //String img = String.valueOf(R.drawable.ic_launcher_background); //기본 사진
-                String img=String.valueOf(R.drawable.icon);
-                foodItemList.add(new FoodItem(img,R.drawable.minusbtn,repo.getName()));
-                foodInfoList.add(new FoodInfo(repo, img, intakeList.get(cnt))); //음식객체, 이미지, 인분
+                //if(byteArray!=null && cnt==foodList.size()-1){
+                if(photoList.get(cnt).equals("")){
+                    //String img = String.valueOf(R.drawable.ic_launcher_background); //기본 사진
+                    //String img=String.valueOf(R.drawable.icon);
+                    Drawable drawable = getResources().getDrawable(R.drawable.icon);
+                    compressedBitmap = ((BitmapDrawable)drawable).getBitmap();
+                }
+                else{
+                    byte[] byteArray = photoList.get(cnt).getBytes();
+                    compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
+                }
+                foodItemList.add(new FoodItem(compressedBitmap,R.drawable.minusbtn,repo.getName()));
+                foodInfoList.add(new FoodInfo(repo, compressedBitmap, intakeList.get(cnt))); //음식객체, 이미지, 인분
                 cnt++;
             }
         }
@@ -132,6 +149,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 foodInfoAdapter.removeById(position);
                 foodList.remove(position);
                 intakeList.remove(position);
+                photoList.remove(position);
                 setInfoRecyclerViewHeight(recyclerView2);
             }
         });
@@ -149,6 +167,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 intent.putParcelableArrayListExtra("foodList",foodList);
                 intent.putExtra("position",pos);//timeflag를 의미
                 intent.putExtra("intakeList",intakeList);
+                intent.putExtra("photoList",photoList);
                 intent.putExtra("modify",position);
                 startActivity(intent);
             }
@@ -162,6 +181,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 intent.putParcelableArrayListExtra("foodList",foodList);
                 intent.putExtra("position",pos);
                 intent.putExtra("intakeList",intakeList);
+                intent.putExtra("photoList",photoList);
                 startActivity(intent);
                 setInfoRecyclerViewHeight(recyclerView2);
             }
@@ -203,7 +223,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                                 carbohydrate=(int)repo.getCarbohydrate();
                                 fat=(int)repo.getFat();
                                 mealname=repo.getName();
-                                mealphoto="";
+                                mealphoto=photoList.get(cnt);
                                 // new byte[] { 0x01, 0x02, 0x03 };
                                 savetime=dailymeal.getDatekey();//해당 달력 날짜(과거날짜에서 데이터 추가하는 경우도 있기 때문)
                                 //savetime = dateFormat.format(now); //날짜가 string으로 저장
@@ -212,7 +232,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                                 fooddataid=repo.getId();
                                 intake=intakeList.get(cnt);
 
-                                Log.e("intake",Double.toString(intake));
+                                //Log.e("intake",Double.toString(intake));
 
                                 meal meal = new meal(userid,dailymealid,mealid,calorie,protein,carbohydrate,fat,mealname,mealphoto,savetime,timeflag,fooddataid,intake);
                                 map.put("userid",meal.getUserid());

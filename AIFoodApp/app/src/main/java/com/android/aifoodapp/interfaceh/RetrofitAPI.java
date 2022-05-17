@@ -7,18 +7,23 @@ import com.android.aifoodapp.domain.fooddata;
 import com.android.aifoodapp.domain.meal;
 import com.android.aifoodapp.domain.user;
 
+import java.io.File;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 import retrofit2.http.QueryName;
@@ -118,8 +123,11 @@ public interface RetrofitAPI {
                             @Query("stepCount") int stepCount
     );
 
-    @GET ("/getFoodNameFromAI.do")
-    Call<String> getFoodNameFromAI(@Query("img") Bitmap compressedBitmap);
+    //@FormUrlEncoded
+    @Multipart
+    @POST("/predict")
+    //Call<String> postFoodNameFromAI(@Field("file") File file);
+    Call<String> postFoodNameFromAI(@Part MultipartBody.Part ImgFile);
 
     @GET("/recommendMeal.do")
     Call<List<fooddata>> getRecommendMeal (@Query("userid") String userid, @Query("savetime") String savetime);
