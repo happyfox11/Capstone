@@ -3,7 +3,8 @@
 AI기반 음식 분석 애플리케이션, 플랜밀
 
 <p align="center">
-  <img src = "https://user-images.githubusercontent.com/56522878/168431162-774f9eb0-894b-4ac4-a4fc-e7380b43e9fc.png" width="300px">
+  <img src = "https://user-images.githubusercontent.com/56522878/168431162-774f9eb0-894b-4ac4-a4fc-e7380b43e9fc.png" width="250px">
+  <img src = "https://user-images.githubusercontent.com/56522878/168869339-5d112e3e-0887-4ef8-ba84-b362d982e0c3.gif" width="250px">
 </p>
 
 ## Our Team
@@ -71,7 +72,7 @@ AI기반 음식 분석 애플리케이션, 플랜밀
     - Dependency tool : gradle-7.0.4
     - IDE : Android Studio
 
-- Frontend 
+- AI
 
     - Python : 
     - 
