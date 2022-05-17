@@ -66,6 +66,7 @@ import com.android.aifoodapp.interfaceh.RetrofitAPI;
 import com.android.aifoodapp.vo.MealMemberVo;
 
 import com.android.aifoodapp.vo.SubItem;
+import com.bumptech.glide.Glide;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -113,7 +114,7 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
     Activity activity;
     Button btn_logout;
     TextView tv_userId, stepCountView;
-    //ImageView tv_userPhoto;
+    ImageView tv_userPhoto;
 
     GoogleSignInClient mGoogleSignInClient;
 
@@ -319,6 +320,8 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
         btn_weekly_report = findViewById(R.id.btn_weekly_report);
         btn_recommend_meal = findViewById(R.id.btn_recommend_meal);
 
+        tv_userPhoto=findViewById(R.id.tv_userPhoto);
+        Glide.with(this).load(R.drawable.heart).into(tv_userPhoto);
         //stepCountView=findViewById(R.id.stepCountView);
     }
 
