@@ -17,6 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_replace_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AIFoodApp"
+        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".activity.SelectMarketActivity"
