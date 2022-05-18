@@ -1,6 +1,13 @@
 package com.android.aifoodapp.RecyclerView;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +19,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.aifoodapp.R;
+import com.android.aifoodapp.activity.FoodAnalysisActivity;
 import com.android.aifoodapp.activity.FoodDetailInfoActivity;
 import com.android.aifoodapp.domain.fooddata;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 
@@ -22,6 +31,7 @@ public class FoodInfoAdapter extends RecyclerView.Adapter<FoodInfoAdapter.Custom
 
     private ArrayList<FoodInfo> items = new ArrayList<FoodInfo>();
     private FoodInfoAdapter.ItemClickListener itemClickListener;
+
 
     public FoodInfoAdapter() {
     }
@@ -61,11 +71,37 @@ public class FoodInfoAdapter extends RecyclerView.Adapter<FoodInfoAdapter.Custom
         holder.iv_arrowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                int position=holder.getAdapterPosition();
+                String foodImg="";
                 fooddata food = items.get(holder.getAdapterPosition()).getFood();
+                Bitmap bitmap=items.get(holder.getAdapterPosition()).getCl_img();
+
+                Drawable drawable = new BitmapDrawable(bitmap); //bitmap을 drawable로
+                Bitmap convertBitmap = ((BitmapDrawable)drawable).getBitmap();
+                Bitmap convertBitmap2 = ((FoodAnalysisActivity) FoodAnalysisActivity.mContext).tmpBitmap;
+//                Drawable drawable2 = view.getContext().getResources().getDrawable(R.drawable.icon);
+//                Bitmap convertBitmap2 = ((BitmapDrawable)drawable2).getBitmap();
                 Intent intent = new Intent (view.getContext(), FoodDetailInfoActivity.class);
 
-                intent.putExtra("foodImg",items.get(holder.getAdapterPosition()).getCl_img());
+                //Log.e("ㅎㅎ2",convertBitmap.toString());
+                //Log.e("ㅎㅎ3",convertBitmap2.toString());
+
+                if(convertBitmap.equals(convertBitmap2)){
+                    foodImg="";//기본이미지
+                }
+                else{
+                    foodImg=((FoodAnalysisActivity) FoodAnalysisActivity.mContext).photoList.get(position);
+                    /*
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 80, stream);
+                    byte[] bytes = stream.toByteArray();
+
+                    foodImg = Base64.encodeToString(bytes, Base64.DEFAULT);
+                    */
+                    //Log.e("foodImg", foodImg);
+                }
+
+                intent.putExtra("foodImg",foodImg);
                 intent.putExtra("foodDetail",food);//선택한 food 상세페이지
                 view.getContext().startActivity(intent);
             }
