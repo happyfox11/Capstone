@@ -87,6 +87,7 @@ import com.google.gson.GsonBuilder;
 import com.kakao.sdk.user.UserApiClient;
 
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -94,6 +95,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -1036,7 +1038,11 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                                                                 photoList.add(repo.getMealphoto());
                                                             }
                                                             intakeList.add(1.0);
-                                                            photoList.add(new String(byteArray));
+
+                                                            photoList.add(photoUri.toString());
+                                                            //Log.e("AI 사진",new String(byteArray));
+                                                            //photoList.add(new String(byteArray));
+                                                            //photoList.add(Base64.getEncoder().encodeToString(byteArray));
                                                             Intent intent = new Intent(activity, FoodAnalysisActivity.class);
                                                             intent.putExtra("dailymeal",dailymeal);
                                                             intent.putExtra("position",position);
@@ -1044,6 +1050,7 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                                                             intent.putExtra("photoList",photoList);
                                                             //intent.putExtra("image",byteArray); //사진 넘기기
                                                             intent.putParcelableArrayListExtra("foodList",foodList);
+                                                            Log.e("mainFoodList",foodList.toString());
                                                             startActivity(intent);
                                                             finish();
                                                         }

@@ -4,13 +4,16 @@ import static com.android.aifoodapp.interfaceh.baseURL.url;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +38,7 @@ import com.android.aifoodapp.domain.dailymeal;
 import com.android.aifoodapp.interfaceh.NullOnEmptyConverterFactory;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -53,11 +57,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class FoodAnalysisActivity extends AppCompatActivity {
 
     public static Activity _FoodAnalysis_Activity;
+    public static Context mContext;
+    public Bitmap compressedBitmap, tmpBitmap;
     Activity activity;
 
     ArrayList<FoodItem> foodItemList = new ArrayList<>();
     ArrayList<FoodInfo> foodInfoList = new ArrayList<>();
 
+    Bitmap bitmap = null;
     FoodItemAdapter foodItemAdapter;
     FoodInfoAdapter foodInfoAdapter;
     RecyclerView recyclerView ,recyclerView2;
@@ -70,7 +77,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     ArrayList<fooddata> foodList=new ArrayList<>(); //기존에 담아두었던 식단 목록
     List<fooddata> list;
     ArrayList<Double> intakeList=new ArrayList<>();
-    ArrayList<String> photoList=new ArrayList<>();
+    public ArrayList<String> photoList=new ArrayList<>();
     //HashMap<String, List<meal>> map = new HashMap<>();
     HashMap<String, Object> map = new HashMap<>();
     HashMap<String, Object> dailyMap = new HashMap<>();
@@ -88,6 +95,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_analysis);
 
+        mContext = this;
         Intent intent = getIntent();
         foodList=intent.getParcelableArrayListExtra("foodList");
         intakeList=(ArrayList<Double>) intent.getSerializableExtra("intakeList");
@@ -99,6 +107,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         //setFoodList();
         _FoodAnalysis_Activity = FoodAnalysisActivity.this;
 
+
         //Log.e("dailymeal- userid",dailymeal.getUserid());
         //addFoodData=intent.getParcelableExtra("addFoodData"); //수기입력에서 넘어온 값 -> 음식 하나
         /*
@@ -108,7 +117,6 @@ public class FoodAnalysisActivity extends AppCompatActivity {
 
         if(!foodList.isEmpty()){
             int cnt=0;
-            Bitmap compressedBitmap;
             for(fooddata repo : foodList){
                 //if(byteArray!=null && cnt==foodList.size()-1){
                 if(photoList.get(cnt).equals("")){
@@ -116,10 +124,18 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                     //String img=String.valueOf(R.drawable.icon);
                     Drawable drawable = getResources().getDrawable(R.drawable.icon);
                     compressedBitmap = ((BitmapDrawable)drawable).getBitmap();
+                    tmpBitmap=((BitmapDrawable)drawable).getBitmap();
+                    //Log.e("ㅎㅎ1",compressedBitmap.toString());
                 }
                 else{
-                    byte[] byteArray = photoList.get(cnt).getBytes();
-                    compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), Uri.parse(photoList.get(cnt)));
+                        //byte[] byteArray = photoList.get(cnt).getBytes();
+                        compressedBitmap = getCompressedBitmap(bitmap);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 foodItemList.add(new FoodItem(compressedBitmap,R.drawable.minusbtn,repo.getName()));
                 foodInfoList.add(new FoodInfo(repo, compressedBitmap, intakeList.get(cnt))); //음식객체, 이미지, 인분
@@ -409,5 +425,13 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         int k = recyclerView.getAdapter().getItemCount();
         params.height = (int) getResources().getDimension(R.dimen.food_analysis_sq_item_size) * k;
         recyclerView.requestLayout();
+    }
+
+    private Bitmap getCompressedBitmap(Bitmap bitmap){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,80, stream);
+        byte[] byteArray = stream.toByteArray();
+        compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
+        return compressedBitmap;
     }
 }

@@ -3,7 +3,13 @@ package com.android.aifoodapp.activity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,11 +18,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android.aifoodapp.R;
 import com.android.aifoodapp.domain.fooddata;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FoodDetailInfoActivity extends AppCompatActivity {
 
     Activity activity;
+    Bitmap bitmap = null, compressedBitmap;
     ImageView iv_foodDetail;
     TextView tv_calorie,tv_foodDetailInfoName, tv_carbohydrate, tv_protein, tv_fat,
             tv_moisture, tv_total_sugar, tv_sucrose, tv_glucose, tv_fructose, tv_lactose, tv_maltose, tv_total_dietary_fiber,
@@ -24,6 +34,7 @@ public class FoodDetailInfoActivity extends AppCompatActivity {
             tv_copper, tv_manganese, tv_vitamin_b1, tv_vitamin_b2, tv_vitamin_c, tv_cholesterol,
             tv_total_saturated_fatty_acids, tv_trans_fatty_acids, tv_caffeine;
     fooddata food;
+
     @SuppressLint("DefaultLocale")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +46,23 @@ public class FoodDetailInfoActivity extends AppCompatActivity {
         food=intent.getParcelableExtra("foodDetail");
         String img=intent.getStringExtra("foodImg");
 
-        iv_foodDetail.setImageResource(Integer.parseInt(img));//이미지없을경우..
+        if(img.equals("")){
+            Drawable drawable = getResources().getDrawable(R.drawable.icon);
+            compressedBitmap = ((BitmapDrawable)drawable).getBitmap();
+        }
+        else{
+            //byte[] byteArray = img.getBytes();
+            //compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), Uri.parse(img));
+                compressedBitmap = getCompressedBitmap(bitmap);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        iv_foodDetail.setImageBitmap(compressedBitmap);
         tv_foodDetailInfoName.setText(food.getName());
 
        /* tv_calorie.setText(String.valueOf(food.getCalorie()));
@@ -138,5 +165,12 @@ public class FoodDetailInfoActivity extends AppCompatActivity {
         tv_trans_fatty_acids = findViewById(R.id.tv_trans_fatty_acids);
         tv_caffeine = findViewById(R.id.tv_caffeine);
 
+    }
+    private Bitmap getCompressedBitmap(Bitmap bitmap){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,80, stream);
+        byte[] byteArray = stream.toByteArray();
+        compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
+        return compressedBitmap;
     }
 }

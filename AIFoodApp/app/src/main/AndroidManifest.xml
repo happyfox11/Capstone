@@ -74,7 +74,7 @@
             android:exported="false" />
         <activity
             android:name=".activity.FoodDetailInfoActivity"
-            android:exported="false" />
+            android:exported="true" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
