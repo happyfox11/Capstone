@@ -1489,6 +1489,8 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
             // 현재 값 = (리셋 안 된 값 + 현재 값) - 리셋 안 된 값 + db에 저장된 그날의 걸음수 불러와서
             //currentSteps = (int)event.values[0] - firstSteps + dailymeal.getStepcount();
             currentSteps = (int)event.values[0] - firstSteps;
+            startSensorService();
+
             //stepCount db에 저장
             /*
             Retrofit retrofit = new Retrofit.Builder()
@@ -1509,6 +1511,11 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
             //stepCountView.setText(String.valueOf(currentSteps));
         }
 
+    }
+
+    public void startSensorService(){
+        Intent serviceIntent = new Intent(this, stepService.class);
+        startService(serviceIntent);
     }
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
