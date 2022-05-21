@@ -38,10 +38,17 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListHolder> {
     public void onBindViewHolder(@NonNull FoodListHolder holder, int position) {
         //SubItem subItem = subItemList.get(position); //왜 하나씩 저장되는건가 ㅠ
         String str="";
-        for(int i=0;i<getItemCount();i++){
+/*        for(int i=0;i<getItemCount();i++){
             SubItem subItem=subItemList.get(i);
             str+=subItem.getSubItemTitle()+"\n";
-        }
+        }*/
+        
+        // 음식의 번호를 출력
+        holder.tv_food_order.setText(Integer.toString(position+1));
+        Log.i("check", String.valueOf(getItemCount()));
+        
+        //음식의 이름을 출력
+        str = subItemList.get(position).getSubItemTitle();
         holder.tv_search2.setText(str);
     }
 
@@ -53,8 +60,11 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListHolder> {
 
 class FoodListHolder extends RecyclerView.ViewHolder {
     TextView tv_search2;
+    TextView tv_food_order;
+
     public FoodListHolder(@NonNull View itemView) {
         super(itemView);
         tv_search2 = itemView.findViewById(R.id.tv_search2);
+        tv_food_order = itemView.findViewById(R.id.tv_food_order);
     }
 }

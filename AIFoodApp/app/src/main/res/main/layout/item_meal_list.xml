@@ -30,10 +30,11 @@
                     android:id="@+id/tv_custom_item_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/meal_icon"
+                    android:drawableLeft="@drawable/new_meal_icon"
                     android:gravity="center"
-                    android:text=" 식사"
-                    android:textSize="20sp" />
+                    android:text="식사"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="wrap_content"
@@ -67,28 +68,140 @@
                 android:id="@+id/layout_use_img_qa"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:visibility="visible">
 
-                <Button
-                    android:id="@+id/btn_use_img_qa"
+                <TextView
+                    android:id="@+id/textView33"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:background="@drawable/round_rect"
-                    android:backgroundTint="#C5DDAA"
-                    android:lineSpacingExtra="8sp"
-                    android:text="이미지를 이용하여\n식단을 기록하시겠습니까?" />
+                    android:layout_height="45dp"
+                    android:background="#43651D"
+                    android:gravity="center"
+                    android:text="저장된 음식 리스트"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycleFood"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="7"
-                    android:fillViewport="true"
-                    android:orientation="vertical"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/food_list_item4" />
+                    android:layout_height="205dp"
+                    android:layout_weight="3"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_food_not_exist"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#CCCBCB"
+                        android:gravity="center"
+                        android:lineSpacingExtra="10dp"
+                        android:text="@string/text_food_not_exist"
+                        android:textSize="14dp"
+                        android:visibility="gone" />
+
+                    <FrameLayout
+                        android:id="@+id/fl_food_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycleFood"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="#CCCBCB"
+                            android:fillViewport="true"
+                            android:orientation="vertical"
+                            android:visibility="visible"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            tools:listitem="@layout/food_list_item4">
+
+                        </androidx.recyclerview.widget.RecyclerView>
+
+                        <Button
+                            android:id="@+id/btn_rv_scroll_end_item"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="right|center_vertical"
+                            android:layout_marginRight="10dp"
+                            android:background="@drawable/round_rect_button"
+                            android:backgroundTint="#88AE5D"
+                            android:elevation="5dp"
+                            android:text=">>"
+                            android:textColor="#FFFFFF"
+                            android:textSize="10dp" />
+
+                    </FrameLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_use_img_qa"
+                        android:layout_width="170dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/round_rect"
+                        android:backgroundTint="#C5DDAA"
+                        android:elevation="10dp"
+                        android:lineSpacingExtra="8sp"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:text="사진으로 식단 기록"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/btn_use_direct_qa"
+                        android:layout_width="170dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="25dp"
+                        android:background="@drawable/round_rect"
+                        android:backgroundTint="#C5DDAA"
+                        android:elevation="10dp"
+                        android:lineSpacingExtra="8sp"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:text="수기로 식단 기록"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/btn_from_camera"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/round_rect"
+                        android:backgroundTint="#729E3E"
+                        android:text="카메라"
+                        android:textColor="#FFFFFF" />
+
+                    <Button
+                        android:id="@+id/btn_from_gallery"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/round_rect"
+                        android:backgroundTint="#4B771A"
+                        android:text="갤러리"
+                        android:textColor="#FFFFFF" />
+
+                    <Button
+                        android:id="@+id/btn_from_direct"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/round_rect"
+                        android:backgroundTint="#365314"
+                        android:text="수기입력"
+                        android:textColor="#FFFFFF" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -102,24 +215,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/btn_from_camera"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="4"
-                        android:background="#78AE3A"
-                        android:text="Camera"
-                        android:textColor="#FFFFFF" />
-
-                    <Button
-                        android:id="@+id/btn_from_gallery"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="4"
-                        android:background="#538C14"
-                        android:text="Gallery"
-                        android:textColor="#FFFFFF" />
 
                     <Button
                         android:id="@+id/btn_use_img_exit"
