@@ -78,7 +78,7 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_gravity="center_vertical"
-                    app:srcCompat="@drawable/icon" />
+                    app:srcCompat="@drawable/heart" />
 
             </LinearLayout>
 

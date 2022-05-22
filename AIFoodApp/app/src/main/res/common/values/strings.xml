@@ -13,4 +13,7 @@
         5. 재래식 된장, 고추장을 넣어 볶아요.\n
         6. 불을 끄고 참기름을 넣어 섞어 완성해요.
     </string>
+    <string name = "text_food_not_exist">
+        ⓘ 현재 저장된 음식이 없습니다.\n아래 버튼을 눌러 새로운 음식을 추가해보세요!
+    </string>
 </resources>

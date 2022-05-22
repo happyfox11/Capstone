@@ -1134,7 +1134,7 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
 
     private void addMeal(){
         //mealAdapter.addItem(new MealMemberVo());
-        mealAdapter.addItem(new MealMemberVo("식사 " + meal_num,buildSubItemList(meal_num)));
+        mealAdapter.addItem(new MealMemberVo("  식사 " + meal_num,buildSubItemList(meal_num)));
         meal_num++;
         setListViewHeightBasedOnChildren(rv_item);
     }

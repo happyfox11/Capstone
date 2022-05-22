@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -16,16 +17,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.aifoodapp.R;
+import com.android.aifoodapp.activity.FoodInputActivity;
 import com.android.aifoodapp.activity.MainActivity;
 import com.android.aifoodapp.domain.fooddata;
 import com.android.aifoodapp.domain.meal;
@@ -34,6 +38,7 @@ import com.android.aifoodapp.interfaceh.OnEditMealHeight;
 import com.android.aifoodapp.interfaceh.OnGalleryClick;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
 import com.android.aifoodapp.vo.MealMemberVo;
+import com.android.aifoodapp.vo.SubItem;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -74,6 +79,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
         private Button btn_meal_delete;
         private Button btn_from_camera;
         private Button btn_from_gallery;
+        private Button btn_from_direct;
         private ImageView iv_img;
 
         private LinearLayout layout_use_img_qa;
@@ -81,6 +87,9 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
         private Button btn_use_img_qa;
         private Button btn_use_img_exit;
         private RecyclerView rvSubItem;
+        private TextView tv_food_not_exist;
+        private Button btn_rv_scroll_end_item;
+        private FrameLayout fl_food_list;
 
         public MealHolder(@NonNull View itemView){
             super(itemView);
@@ -90,12 +99,16 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
             btn_meal_delete = itemView.findViewById(R.id.btn_meal_delete);
             btn_from_camera = itemView.findViewById(R.id.btn_from_camera);
             btn_from_gallery = itemView.findViewById(R.id.btn_from_gallery);
+            btn_from_direct = itemView.findViewById(R.id.btn_from_direct);
             iv_img = itemView.findViewById(R.id.iv_img);
             layout_use_img_qa = itemView.findViewById(R.id.layout_use_img_qa);
             layout_use_img = itemView.findViewById(R.id.layout_use_img);
             btn_use_img_qa = itemView.findViewById(R.id.btn_use_img_qa);
             btn_use_img_exit = itemView.findViewById(R.id.btn_use_img_exit);
             rvSubItem = (RecyclerView) itemView.findViewById(R.id.recycleFood);
+            tv_food_not_exist = itemView.findViewById(R.id.tv_food_not_exist);
+            btn_rv_scroll_end_item = itemView.findViewById(R.id.btn_rv_scroll_end_item);
+            fl_food_list = itemView.findViewById(R.id.fl_food_list);
         }
     }
 
@@ -219,6 +232,22 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
             }
         });
 
+        // 수기입력 사용 버튼
+        //TODO: 상세보기 버튼과 동일하게 설정해놓은 상태라, 후에 가능하다면, 곧바로 FoodInputActivity로 이동하는 것도 생각해보면 좋을 것 같습니다.
+        holder.btn_from_direct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int position=holder.getAdapterPosition();
+
+                if (itemClickListener != null) {
+                    itemClickListener.onDetailButtonClicked(position);
+                }
+            }
+        });
+
+
+
         //5. 카메라를 통해 이미지 촬영하기 버튼
         holder.btn_from_camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -312,12 +341,36 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealHolder> {
         layoutManager.setInitialPrefetchItemCount(item.getSubItemList().size());
 
         //Log.e("size",Integer.toString(item.getSubItemList().size()));
+/*        for(SubItem i  :item.getSubItemList()){
+            Log.i("check",i.getSubItemTitle());
+        }*/
+
         // 자식 어답터 설정
         FoodListAdapter subItemAdapter = new FoodListAdapter(item.getSubItemList());
 
         holder.rvSubItem.setLayoutManager(layoutManager);
         holder.rvSubItem.setAdapter(subItemAdapter);
         holder.rvSubItem.setRecycledViewPool(viewPool);
+
+        //아이템이 존재하는 경우
+        if(layoutManager.getItemCount() > 0){
+            holder.tv_food_not_exist.setVisibility(View.GONE);
+            holder.fl_food_list.setVisibility(View.VISIBLE);
+        }
+        else{//아이템이 존재하지 않는 경우, 아이템이 존재하지 않는다는 텍스트 표시
+            holder.tv_food_not_exist.setVisibility(View.VISIBLE);
+            holder.fl_food_list.setVisibility(View.GONE);
+        }
+
+        // (>>) 버튼 클릭시, 리사이클러뷰 마지막 아이템으로 이동하도록 설정
+        holder.btn_rv_scroll_end_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int position=holder.getAdapterPosition();
+                holder.rvSubItem.scrollToPosition(item.getSubItemList().size()-1);
+            }
+        });
     }
 
     @Override
