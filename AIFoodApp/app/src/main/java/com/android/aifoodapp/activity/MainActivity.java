@@ -211,6 +211,8 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
 
         /* 걸음수 센서 측정 */
         // TYPE_STEP_COUNTER : 앱 종료와 관계없이 계속 기존의 값을 가지고 있다 +1
+        //startSensorService();
+
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         stepCountSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
 
@@ -274,6 +276,8 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
 
         //로그인 닉네임
         tv_userId.setText(user.getNickname());
+
+
 
     }
 
@@ -452,7 +456,6 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                     intent.putExtra("selected_day",dateFormat.format(selectDate));
                     intent.putExtra("user",user);
                     intent.putExtra("flag",flag);
-                    //TODO: flag는 무슨 의민인가여여ㅛ.. ㅠㅜ 카카오?구글? flase..?! 일단 flag 이름 하나 바꿈
                     /*
                         hanbyul comment:
                         flag는 초기값이 false이고 이 값은 캘린더에서 날짜를 선택한 경우에 true가 됩니다.
