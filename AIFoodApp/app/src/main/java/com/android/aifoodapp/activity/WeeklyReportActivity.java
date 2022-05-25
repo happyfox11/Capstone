@@ -65,6 +65,7 @@ public class WeeklyReportActivity extends AppCompatActivity {
     private DottedProgressBar dottedProgressBar;
     private String startDate = null, endDate = null, lastStartDate=null, lastEndDate=null;
     private String period;
+    private List<dailymeal> LastWeekList, WeekBeforeLastList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -225,32 +226,14 @@ public class WeeklyReportActivity extends AppCompatActivity {
 
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
-        //이번주 weeklyDailyMeal 불러오기
-        /*
-        retrofitAPI.getWeeklyMeal(user.getId(),startDate,endDate).enqueue(new Callback<List<dailymeal>>() {
-            @Override
-            public void onResponse(Call<List<dailymeal>> call, Response<List<dailymeal>> response) {
-                List<dailymeal> list = response.body();
-                for(dailymeal repo:list){
-                    dailyMealList.add(repo);
-                }
+        try{
+            LastWeekList = new dailyMealNetworkCall().execute(retrofitAPI.getWeeklyMeal(user.getId(),startDate,endDate)).get();
+            for (dailymeal repo : LastWeekList) {
+                dailyMealList.add(repo);
             }
-
-            @Override
-            public void onFailure(Call<List<dailymeal>> call, Throwable t) {
-                Log.e("WeeklyReportPage1",t.getMessage());
-            }
-        });*/
-        new dailyMealNetworkCall().execute(retrofitAPI.getWeeklyMeal(user.getId(),startDate,endDate));
-
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
+        } catch(Exception e){
             e.printStackTrace();
         }
-        //Log.e("!zzzzzzzzzz!",dailyMealList.toString());
-
-
         /* 지난주 */
         cal.add(Calendar.DATE, -14); //-14
         lastWeek = cal.get(Calendar.DAY_OF_WEEK); //지난주 요일
@@ -273,47 +256,28 @@ public class WeeklyReportActivity extends AppCompatActivity {
                 + "-"
                 + (cal.get(Calendar.DATE) < 10 ? "0" + cal.get(Calendar.DATE) : cal.get(Calendar.DATE) + "");
 
-        /*
-        //저번주 weeklyDailyMeal 불러오기
-        retrofitAPI.getWeeklyMeal(user.getId(),LastStartDate,LastEndDate).enqueue(new Callback<List<dailymeal>>() {
-            @Override
-            public void onResponse(Call<List<dailymeal>> call, Response<List<dailymeal>> response) {
-                List<dailymeal> list = response.body();
-                for(dailymeal repo:list){
-                    lastDailyMealList.add(repo);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<dailymeal>> call, Throwable t) {
-                Log.e("WeeklyReportPage2",t.getMessage());
-            }
-        });*/
         Log.e("lastStartDate",lastStartDate);
-        new lastDailyMealNetworkCall().execute(retrofitAPI.getWeeklyMeal(user.getId(),lastStartDate,lastEndDate));
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
+
+        try{
+            WeekBeforeLastList = new lastDailyMealNetworkCall().execute(retrofitAPI.getWeeklyMeal(user.getId(),lastStartDate,lastEndDate)).get();
+            for (dailymeal repo : WeekBeforeLastList) {
+                lastDailyMealList.add(repo);
+            }
+        } catch(Exception e){
             e.printStackTrace();
         }
+
     }
 
-    private class dailyMealNetworkCall extends AsyncTask<Call, Void, String> {
+    private class dailyMealNetworkCall extends AsyncTask<Call, Void, List<dailymeal>> {
 
         @Override
-        protected String doInBackground(Call[] params) {
+        protected List<dailymeal> doInBackground(Call[] params) {
 
             try {
                 Call<List<dailymeal>> call = params[0];
                 Response<List<dailymeal>> response = call.execute();
-                List<dailymeal> list=response.body();
-                if(list.isEmpty()){
-                }
-                else{
-                    for (dailymeal repo : list) {
-                        dailyMealList.add(repo);
-                    }
-                }
+                return response.body();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -322,22 +286,15 @@ public class WeeklyReportActivity extends AppCompatActivity {
         }
     }
 
-    private class lastDailyMealNetworkCall extends AsyncTask<Call, Void, String> {
+    private class lastDailyMealNetworkCall extends AsyncTask<Call, Void, List<dailymeal>> {
 
         @Override
-        protected String doInBackground(Call[] params) {
+        protected List<dailymeal> doInBackground(Call[] params) {
 
             try {
                 Call<List<dailymeal>> call = params[0];
                 Response<List<dailymeal>> response = call.execute();
-                List<dailymeal> list=response.body();
-                if(list.isEmpty()){
-                }
-                else{
-                    for (dailymeal repo : list) {
-                        lastDailyMealList.add(repo);
-                    }
-                }
+                return response.body();
 
             } catch (IOException e) {
                 e.printStackTrace();
