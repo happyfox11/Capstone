@@ -30,6 +30,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -53,6 +54,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.aifoodapp.ProgressDialog;
 import com.android.aifoodapp.R;
 import com.android.aifoodapp.adapter.MealAdapter;
 import com.android.aifoodapp.domain.dailymeal;
@@ -84,6 +86,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.SerializedName;
 import com.kakao.sdk.user.UserApiClient;
 
 
@@ -133,6 +136,7 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
     SensorManager sensorManager;
     Sensor stepCountSensor;
 
+    @SerializedName("prediction")
     String foodName="";
     fooddata foodAI;
 
@@ -988,6 +992,12 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                         postFile=new File(photoUri.getPath());
                     }
 
+                    ProgressDialog dialog = new ProgressDialog(MainActivity.this);//loading
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));//배경투명하게
+                    dialog.setCanceledOnTouchOutside(false); //주변 터치 방지
+                    dialog.setCancelable(false);
+                    dialog.show();
+
                     RequestBody rb = RequestBody.create(MediaType.parse("multipart/form-data"),postFile);
                     MultipartBody.Part Bmp = MultipartBody.Part.createFormData("file", postFile.getName(), rb);
 
@@ -1014,6 +1024,7 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                                                         foodList.add(fd);
                                                     }
                                                     foodList.add(foodAI); //기존 저장되어 있는 foodList에 추가
+                                                    dialog.dismiss();
 
                                                     //Log.e("AI 사진",new String(byteArray));
                                                     //photoList.add(new String(byteArray));
@@ -1051,6 +1062,10 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                         @Override
                         public void onFailure(Call<String> call, Throwable t) {
                             Log.e("AI 모델 통신",t.toString());
+                            dialog.dismiss();
+                            Toast toast;
+                            toast = Toast.makeText(activity, t.toString(), Toast.LENGTH_LONG);
+                            toast.show();
                         }
                     });
 
