@@ -43,6 +43,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -95,10 +96,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -207,9 +208,7 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
         _MainActivity = MainActivity.this;
         Intent intent = getIntent();
         user = intent.getParcelableExtra("user");
-        //서버에서 dailymeal을 받아오는데 비 동기적으로 작동해서 뒤에코드가 먼저 실행되는 에러 발
-        setDailymeal();
-        //setting(); //retrofit callback 문제로 아래로 내려둠
+        setting();
         addListener();
         //settingFoodListAdapter();
 
@@ -333,11 +332,20 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
 
     //설정
     private void setting(){
+        ProgressDialog dialog = new ProgressDialog(MainActivity.this);//loading
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));//배경투명하게
+        dialog.setCanceledOnTouchOutside(false); //주변 터치 방지
+        dialog.setCancelable(false);
+        dialog.show();
+
+        setDailymeal();
         settingWeeklyCalendar();
         settingNutriProgress();
         settingBalanceGraph();
         settingMealAdapter();
         settingInitialMeal();
+
+        dialog.dismiss();
     }
 
     //리스너 추가
@@ -504,7 +512,6 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
         row_date.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         row_date.setOrientation(LinearLayout.HORIZONTAL);
 
-
         /*
             12월 마지막 주의 날짜 선택 시, Year 값은 12월의 연도, WEEK_OF_YEAR 값은 1이 되어,
             주간 캘린더가 올바르게 출력되지 않는 문제 발생 (전년도의 날짜가 출력됨)
@@ -526,7 +533,6 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
 
             day_of_this_week.set(Calendar.DAY_OF_WEEK, i+2);
             //Log.i("check3",day_of_this_week.get(Calendar.YEAR)+"/"+(day_of_this_week.get(Calendar.MONTH)+1)+"/"+day_of_this_week.get(Calendar.DATE)+"/"+day_of_this_week.get(Calendar.DAY_OF_WEEK));
-
 
             Date dat = day_of_this_week.getTime();
             if(i==0) {
@@ -573,7 +579,6 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
             row_date.addView(col);
         }
 
-
         //https://www.daleseo.com/js-async-callback/
 
         /*juhee */
@@ -588,22 +593,12 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
 
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
-        //juhee
-        //Call<List<Integer>> call = retrofitAPI.getWeeklyCalories(user.getId(),startDate,endDate);
-        //new calorieNetworkCall().execute();
-
-        //동기적 처리
-        new calorieNetworkCall().execute(retrofitAPI.getWeeklyCalories(user.getId(),startDate,endDate));
-        //main thread error 남
-        //calories= retrofitAPI.getWeeklyCalories(user.getId(),startDate,endDate).execute().body().toArray(new Integer[7]);
-
-        try {
-            Thread.sleep(200);
-            Log.e("week22", Arrays.toString(calories)); //이것이 왜 먼저 나오는가.. .ㅠㅜㅜㅠ
-        } catch (InterruptedException e) {
+        try{
+            calories=new calorieNetworkCall().execute(retrofitAPI.getWeeklyCalories(user.getId(),startDate,endDate)).get().toArray(new Integer[7]);
+            Log.e("weekly--test", String.valueOf(calories));
+        }catch(Exception e){
             e.printStackTrace();
         }
-        /* juhee --fin */
 
         layout_date.addView(row_date);
 
@@ -616,7 +611,6 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
             else
                 tv_month.setText(year+"년 " +month1 + "월 - " + month2+"월");
         }
-
 
         //DB에서 하루 총 섭취칼로리 받아오기
         //int[] calories = new int[]{2100, 3800, 1200, 2200, 1000, 0, 0};
@@ -872,12 +866,12 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                     RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
                     /*
-                    try {//retrofit 동기식 처리
-                        list = retrofitAPI.getFoodFromMeal(dailymeal.getUserid(),dailymeal.getDatekey(),position).execute().body();
-                        for(fooddata fd : list) {
+                    try{
+                        list=new NetworkCall().execute(retrofitAPI.getFoodFromMeal(dailymeal.getUserid(),dailymeal.getDatekey(),position)).get();
+                        for(fooddata fd : list){
                             foodList.add(fd);
                         }
-                    } catch (IOException e) {
+                    } catch(Exception e){
                         e.printStackTrace();
                     }*/
 
@@ -899,9 +893,6 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                                 intent.putParcelableArrayListExtra("foodList",foodList);
                                 startActivity(intent);
                                 finish();
-
-                            }
-                            else{
                             }
                         }
                         @Override
@@ -1103,11 +1094,11 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                 .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create()).build();
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
-        new timeFlagNetworkCall().execute(retrofitAPI.getTimeFlag(user.getId(),date_string));
+
         //addMeal();
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
+        try{
+            time=new timeFlagNetworkCall().execute(retrofitAPI.getTimeFlag(user.getId(),date_string)).get();
+        }catch(Exception e){
             e.printStackTrace();
         }
 
@@ -1133,13 +1124,18 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                 .addConverterFactory(GsonConverterFactory.create()).build();
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
-        new MealNetworkCall().execute(retrofitAPI.getMeal(user.getId(),date_string,meal_num-1));
-        try {
-            Thread.sleep(200);
+        try{
+            ml=new MealNetworkCall().execute(retrofitAPI.getMeal(user.getId(),date_string,meal_num-1)).get();
+            for (meal repo : ml) {
+                SubItem subItem=new SubItem(repo.getMealname());
+                subItemList.add(subItem);
+                //Log.e("mealname",repo.getMealname());
+            }
 
-        } catch (InterruptedException e) {
+        }catch(Exception e){
             e.printStackTrace();
         }
+
         mealAdapter.notifyDataSetChanged();
 
         return subItemList;
@@ -1185,28 +1181,11 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
             date_string = dateFormat.format(now); //날짜가 string으로 저장
         }
 
-
-        retrofitAPI.getDailyMeal(user.getId(),date_string).enqueue(new Callback<dailymeal>() {
-            @Override
-            public void onResponse(Call<dailymeal> call, Response<dailymeal> response) {
-                dailymeal = response.body();
-                //dailymealid = dailymeal.getDailymealid();//해당 유저의 오늘 날짜 dailyId
-
-                Log.e("dailymeal-datekey",dailymeal.getDatekey());
-                try {
-                    setting();
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<dailymeal> call, Throwable t) {
-                Log.e("Error! call msg",call.toString());
-                Log.e("Error! t messge",t.getMessage());
-            }
-        });
+        try{
+            dailymeal=new getDailyMealNetworkCall().execute(retrofitAPI.getDailyMeal(user.getId(),date_string)).get();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     private ActivityResultCallback<ActivityResult> cameraResultCallback = new ActivityResultCallback<ActivityResult>() {
@@ -1372,15 +1351,15 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
         });
     }*/
 
-    private class calorieNetworkCall extends AsyncTask<Call, Void, String>{
+    /* AsyncTask 처리 부분*/
+    private class calorieNetworkCall extends AsyncTask<Call, Void, List<Integer>>{
         @Override
-        protected String doInBackground(Call[] params) {
+        protected List<Integer> doInBackground(Call[] params) {
 
             try {
                 Call<List<Integer>> call = params[0];
                 Response<List<Integer>> response = call.execute();
-                calories = response.body().toArray(new Integer[7]);
-                Log.e("weekly--test", String.valueOf(calories));
+                return response.body();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -1389,41 +1368,48 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
         }
     }
 
-    private class MealNetworkCall extends AsyncTask<Call, Void, String>{
+    private class MealNetworkCall extends AsyncTask<Call, Void, List<meal>>{
         @Override
-        protected String doInBackground(Call[] params) {
+        protected List<meal> doInBackground(Call[] params) {
             try {
                 Call<List<meal>> call = params[0];
                 Response<List<meal>> response = call.execute();
-                ml=response.body();
-                if(ml.isEmpty()) {
-                    return null;
-                }
-                for (meal repo : ml) {
-                    SubItem subItem=new SubItem(repo.getMealname());
-                    subItemList.add(subItem);
-                    //Log.e("mealname",repo.getMealname());
-                }
+                return response.body();
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return "";
+            return null;
         }
     }
-    private class timeFlagNetworkCall extends AsyncTask<Call, Void, String>{
+    private class timeFlagNetworkCall extends AsyncTask<Call, Void, Integer>{
         @Override
-        protected String doInBackground(Call[] params) {
+        protected Integer doInBackground(Call[] params) {
             try {
                 Call<Integer> call = params[0];
                 Response<Integer> response = call.execute();
-                time=response.body();
+                return response.body();
 
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return "";
+            return null;
+        }
+    }
+
+    private class getDailyMealNetworkCall extends AsyncTask<Call, Void, dailymeal > {
+        @Override
+        protected dailymeal doInBackground(Call[] params) {
+            try {
+                Call<dailymeal> call = params[0];
+                Response<dailymeal> response = call.execute();
+                return response.body();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
     }
 
