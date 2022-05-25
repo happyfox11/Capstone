@@ -60,7 +60,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|center"
                     android:textSize="30sp"
-                    android:text="음식을 선택" />
+                    android:textStyle="bold"
+                    android:text="음식을 추가해주세요" />
 
             </FrameLayout>
 

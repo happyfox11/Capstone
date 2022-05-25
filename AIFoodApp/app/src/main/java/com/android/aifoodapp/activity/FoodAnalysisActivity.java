@@ -11,6 +11,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -236,6 +237,10 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 foodInfoList.add(new FoodInfo(repo, compressedBitmap, intakeList.get(cnt))); //음식객체, 이미지, 인분
                 cnt++;
             }
+
+            /* 첫 번째 항목이 선택되도록 */
+            tv_foodName.setText(foodItemList.get(0).getFl_foodName());
+            iv_foodAnalysis.setImageBitmap(foodItemList.get(0).getFl_image());
         }
         else{
             foodList=new ArrayList<>();
@@ -250,6 +255,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         recyclerView2.setAdapter(foodInfoAdapter);
 
         setInfoRecyclerViewHeight(recyclerView2);
+
         foodItemAdapter.setItemClickListener(new FoodItemAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(FoodItem item) {
@@ -262,6 +268,10 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 foodList.remove(position);
                 intakeList.remove(position);
                 photoList.remove(position);
+
+                tv_foodName.setText("음식을 추가해주세요");
+                iv_foodAnalysis.setImageBitmap(null);
+
                 setInfoRecyclerViewHeight(recyclerView2);
             }
         });
