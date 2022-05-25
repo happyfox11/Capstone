@@ -52,7 +52,7 @@
                     android:id="@+id/iv_foodAnalysis"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/ic_launcher_background" />
+                    android:background="#a5e35b" />
 
                 <TextView
                     android:id="@+id/tv_foodName"
@@ -60,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|center"
                     android:textSize="30sp"
-                    android:text="음식 이름 표시" />
+                    android:text="음식을 선택" />
 
             </FrameLayout>
 

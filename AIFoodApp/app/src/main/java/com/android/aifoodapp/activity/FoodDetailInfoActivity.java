@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,6 +21,8 @@ import com.android.aifoodapp.domain.fooddata;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -51,15 +54,15 @@ public class FoodDetailInfoActivity extends AppCompatActivity {
             compressedBitmap = ((BitmapDrawable)drawable).getBitmap();
         }
         else{
-            //byte[] byteArray = img.getBytes();
-            //compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), Uri.parse(img));
-                compressedBitmap = getCompressedBitmap(bitmap);
-
-            } catch (IOException e) {
+            String temp="";
+            try{
+                temp= URLDecoder.decode(img,"UTF-8");
+            }catch(UnsupportedEncodingException e){
                 e.printStackTrace();
             }
+
+            byte[] decodeByte = Base64.decode(temp, Base64.DEFAULT);
+            compressedBitmap = BitmapFactory.decodeByteArray(decodeByte, 0, decodeByte.length);
         }
 
         iv_foodDetail.setImageBitmap(compressedBitmap);
