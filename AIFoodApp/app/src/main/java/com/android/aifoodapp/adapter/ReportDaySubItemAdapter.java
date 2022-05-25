@@ -39,6 +39,7 @@ public class ReportDaySubItemAdapter extends RecyclerView.Adapter<ReportDaySubIt
     public void onBindViewHolder(@NonNull SubItemViewHolder subItemViewHolder, int i) {
         ReportDaySubItemVo subItem = subItemList.get(i);
         subItemViewHolder.tvSubItemTitle.setText(subItem.getSubItemTitle());
+        subItemViewHolder.tv_sub_item_kcal.setText(subItem.getSubItemDesc() + " kcal");
 
         //음식의 사진을 출력
         if(subItem.getSubItemImage().equals("")){
@@ -66,12 +67,14 @@ public class ReportDaySubItemAdapter extends RecyclerView.Adapter<ReportDaySubIt
 
     class SubItemViewHolder extends RecyclerView.ViewHolder {
         TextView tvSubItemTitle;
+        TextView tv_sub_item_kcal;
         ImageView img_sub_item;
 
         SubItemViewHolder(View itemView) {
             super(itemView);
             tvSubItemTitle = itemView.findViewById(R.id.tv_sub_item_title);
             img_sub_item=itemView.findViewById(R.id.img_sub_item);
+            tv_sub_item_kcal=itemView.findViewById(R.id.tv_sub_item_kcal);
         }
     }
 }

@@ -8,14 +8,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
@@ -79,7 +84,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     FoodInfoAdapter foodInfoAdapter;
     RecyclerView recyclerView ,recyclerView2;
     TextView tv_foodName;
-    ImageView iv_plusBtn;
+    ImageView iv_plusBtn, iv_foodAnalysis;
     Button btn_insert_dailymeal;
     user user;
     dailymeal dailymeal;
@@ -95,10 +100,9 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     byte[] byteArray;
 
     int pos;
-    String userid, mealname, mealphoto, handActivity;
+    String userid, mealname, mealphoto, savetime, handActivity, imgPath;
     long dailymealid, mealid, fooddataid;
     int calorie, protein, carbohydrate, fat, timeflag;
-    String savetime;
     double intake=1.0;
     Uri photoAI;
 
@@ -117,6 +121,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         photoAI=intent.getParcelableExtra("photoAI");//photo의 uri 받아오기
         handActivity=intent.getStringExtra("activity");
         int modifyPosition=intent.getIntExtra("modify",-1);
+        imgPath=intent.getStringExtra("imgPath");
 
         initialize();
         //setFoodList();
@@ -148,11 +153,24 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 Log.e("fffff","AI값이 넘어옴");
                 intakeList.add(1.0);
 
+                /* 사진 회전 현상 해결 */
+                ExifInterface exif = null;
                 try {
-                    bitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), photoAI);
+                    exif = new ExifInterface(imgPath);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                        ExifInterface.ORIENTATION_UNDEFINED);
+
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), photoAI);
+                    bitmap = rotateBitmap(bitmap, orientation);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 Bitmap bi = getCompressedBitmap(bitmap);
                 //bitmap을 string으로
                 String bitmapAI = Base64.encodeToString(byteArray, Base64.DEFAULT);
@@ -219,6 +237,10 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 foodInfoList.add(new FoodInfo(repo, compressedBitmap, intakeList.get(cnt))); //음식객체, 이미지, 인분
                 cnt++;
             }
+
+            /* 첫 번째 항목이 선택되도록 */
+            tv_foodName.setText(foodItemList.get(0).getFl_foodName());
+            iv_foodAnalysis.setImageBitmap(foodItemList.get(0).getFl_image());
         }
         else{
             foodList=new ArrayList<>();
@@ -233,10 +255,12 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         recyclerView2.setAdapter(foodInfoAdapter);
 
         setInfoRecyclerViewHeight(recyclerView2);
+
         foodItemAdapter.setItemClickListener(new FoodItemAdapter.ItemClickListener() {
             @Override
             public void onItemClicked(FoodItem item) {
                 tv_foodName.setText(item.getFl_foodName());
+                iv_foodAnalysis.setImageBitmap(item.getFl_image());
             }
             @Override
             public void onRemoveButtonClicked(int position) {
@@ -244,6 +268,10 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 foodList.remove(position);
                 intakeList.remove(position);
                 photoList.remove(position);
+
+                tv_foodName.setText("음식을 추가해주세요");
+                iv_foodAnalysis.setImageBitmap(null);
+
                 setInfoRecyclerViewHeight(recyclerView2);
             }
         });
@@ -262,7 +290,10 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 intent.putExtra("position",pos);//timeflag를 의미
                 intent.putExtra("intakeNew",intakeNew);
                 //intent.putExtra("photoList",photoList);
-                if(photoAI!=null) intent.putExtra("photoAI",photoAI);
+                if(photoAI!=null) {
+                    intent.putExtra("photoAI",photoAI);
+                    intent.putExtra("imgPath",imgPath);
+                }
                 intent.putExtra("modify",position);
                 startActivity(intent);
             }
@@ -276,7 +307,10 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 intent.putParcelableArrayListExtra("foodList",foodList);
                 intent.putExtra("position",pos);
                 intent.putExtra("intakeNew",intakeNew);
-                if(photoAI!=null) intent.putExtra("photoAI",photoAI);
+                if(photoAI!=null) {
+                    intent.putExtra("photoAI",photoAI);
+                    intent.putExtra("imgPath",imgPath);
+                }
                 //intent.putExtra("photoList",photoList);
                 startActivity(intent);
                 setInfoRecyclerViewHeight(recyclerView2);
@@ -455,6 +489,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         recyclerView2 = (RecyclerView) findViewById(R.id.recyclerView2);
         iv_plusBtn=findViewById(R.id.iv_plusBtn);
         tv_foodName = findViewById(R.id.tv_foodName);
+        iv_foodAnalysis = findViewById(R.id.iv_foodAnalysis);
         btn_insert_dailymeal = findViewById(R.id.btn_insert_dailymeal);
     }
 
@@ -475,6 +510,51 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
 
         return compressedBitmap;
+    }
+
+    //https://stackoverflow.com/questions/20478765/how-to-get-the-correct-orientation-of-the-image-selected-from-the-default-image
+    public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
+
+        Matrix matrix = new Matrix();
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_NORMAL:
+                return bitmap;
+            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+                matrix.setScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                matrix.setRotate(180);
+                break;
+            case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+                matrix.setRotate(180);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_TRANSPOSE:
+                matrix.setRotate(90);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                matrix.setRotate(90);
+                break;
+            case ExifInterface.ORIENTATION_TRANSVERSE:
+                matrix.setRotate(-90);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                matrix.setRotate(-90);
+                break;
+            default:
+                return bitmap;
+        }
+        try {
+            Bitmap bmRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            bitmap.recycle();
+            return bmRotated;
+        }
+        catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     //AsyncTask 처리

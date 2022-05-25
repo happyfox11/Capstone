@@ -152,6 +152,8 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
     int time=0;
     int currentSteps = 0 , firstSteps=0, totalSteps=0 ;
     HashMap<String, RequestBody> mapAi = new HashMap<>();
+    String imgPath = "";
+    ProgressDialog dialog;
 
     private RecyclerView rv_item;
     private MealAdapter mealAdapter;
@@ -208,6 +210,14 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
         _MainActivity = MainActivity.this;
         Intent intent = getIntent();
         user = intent.getParcelableExtra("user");
+
+        /* dialog */
+        dialog = new ProgressDialog(MainActivity.this);//loading
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));//배경투명하게
+        dialog.setCanceledOnTouchOutside(false); //주변 터치 방지
+        dialog.setCancelable(false);
+        dialog.show();
+
         setting();
         addListener();
         //settingFoodListAdapter();
@@ -332,11 +342,6 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
 
     //설정
     private void setting(){
-        ProgressDialog dialog = new ProgressDialog(MainActivity.this);//loading
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));//배경투명하게
-        dialog.setCanceledOnTouchOutside(false); //주변 터치 방지
-        dialog.setCancelable(false);
-        dialog.show();
 
         setDailymeal();
         settingWeeklyCalendar();
@@ -345,7 +350,6 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
         settingMealAdapter();
         settingInitialMeal();
 
-        dialog.dismiss();
     }
 
     //리스너 추가
@@ -394,8 +398,6 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
 
                 }
             });
-
-
         }
     };
 
@@ -957,7 +959,7 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
 
                     if(tmp.equals("gallery")){
                         //상대경로에서 절대경로로 변경 https://crazykim2.tistory.com/441
-                        String imgPath=getRealPathFromURI(photoUri);
+                        imgPath=getRealPathFromURI(photoUri);
                         postFile=new File(imgPath);
                         //File postFile=new File(photoUri.getPath());
                         //Log.e("jaja",postFile.getName());
@@ -982,10 +984,6 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                         postFile=new File(photoUri.getPath());
                     }
 
-                    ProgressDialog dialog = new ProgressDialog(MainActivity.this);//loading
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));//배경투명하게
-                    dialog.setCanceledOnTouchOutside(false); //주변 터치 방지
-                    dialog.setCancelable(false);
                     dialog.show();
 
                     RequestBody rb = RequestBody.create(MediaType.parse("multipart/form-data"),postFile);
@@ -1021,6 +1019,7 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                                                     intent.putExtra("position",position);
                                                     //intent.putExtra("intakeList",intakeList);
                                                     intent.putExtra("photoAI",photoUri);//uri로 옮기기
+                                                    intent.putExtra("imgPath",imgPath);
                                                     //intent.putExtra("image",byteArray); //사진 넘기기
                                                     intent.putParcelableArrayListExtra("foodList",foodList);
                                                     intent.putExtra("activity","MainActivity");//어느 액티비티에서 넘어왔는지
@@ -1065,21 +1064,24 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
         return RequestBody.create(okhttp3.MultipartBody.FORM, descriptionString);
     }
 
-    //갤러리에서 불러오기
+    //갤러리에서 불러온 이미지 절대주소
+    //content://com.android.providers.media.documents/document/ 에서 불러오는 이미지만 가능하다.
     private String getRealPathFromURI(Uri contentUri){
-//        if(contentUri.getPath().startsWith("/storage")){
-//            return contentUri.getPath();
-//        }
-        String id= DocumentsContract.getDocumentId(contentUri).split(":")[1];
-        String[] columns={MediaStore.Files.FileColumns.DATA};
-        String selection=MediaStore.Files.FileColumns._ID+" = "+id;
-        Cursor cursor=activity.getContentResolver().query(MediaStore.Files.getContentUri("external"),columns,selection,null,null);
-        try{
-            int columnIndex=cursor.getColumnIndex(columns[0]);
-            if(cursor.moveToFirst()){
+
+        if (contentUri.getPath().startsWith("/storage")) {
+            return contentUri.getPath();
+        }
+        Log.e("contentUri",contentUri.toString());
+        String id = DocumentsContract.getDocumentId(contentUri).split(":")[1];
+        String[] columns = { MediaStore.Files.FileColumns.DATA };
+        String selection = MediaStore.Files.FileColumns._ID + " = " + id;
+        Cursor cursor = getContentResolver().query(MediaStore.Files.getContentUri("external"), columns, selection, null, null);
+        try {
+            int columnIndex = cursor.getColumnIndex(columns[0]);
+            if (cursor.moveToFirst()) {
                 return cursor.getString(columnIndex);
             }
-        }finally{
+        } finally {
             cursor.close();
         }
         return null;
@@ -1094,12 +1096,13 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
         //addMeal();
         try{
             time=new timeFlagNetworkCall().execute(retrofitAPI.getTimeFlag(user.getId(),date_string)).get();
+            for(int i=0;i<=time;i++){
+                addMeal();
+            }
+            dialog.dismiss();
+
         }catch(Exception e){
             e.printStackTrace();
-        }
-
-        for(int i=0;i<=time;i++){
-            addMeal();
         }
     }
 
@@ -1385,7 +1388,6 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                 Call<Integer> call = params[0];
                 Response<Integer> response = call.execute();
                 return response.body();
-
 
             } catch (IOException e) {
                 e.printStackTrace();
