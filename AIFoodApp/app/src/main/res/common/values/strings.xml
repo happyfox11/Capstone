@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">플랜밀</string>
-    <string name ="recipe_food_example">
+    <string name="recipe_food_example">
         ● 쌈 다시마 140g\n● 애호박 1/4개
         \n● 양파 1/2개\n● 대파 1/2대\n● 청양고추 1개\n● 홍고추 1개\n● 고춧가루 1/2숟가락
         \n● 설탕 1/2숟가락\n● 다진 마늘 1숟가락\n● 재래식 된장 4숟가락\n● 고추장 1숟가락\n● 참기름 1숟가락
     </string>
-    <string name ="recipe_order_example">
+    <string name="recipe_order_example">
         1. 쌈 다시마는 찬물에 약 10분 이상 담가 소금기를 빼요.\n
         2. 다시마, 양파, 애호박, 청양고추는 다지고 대파는 송송 썰어 준비해요.	\n
         3. 예열된 팬에 기름을 두르고 다시마와 다진 채소를 넣어 볶아요.\n
@@ -13,7 +13,7 @@
         5. 재래식 된장, 고추장을 넣어 볶아요.\n
         6. 불을 끄고 참기름을 넣어 섞어 완성해요.
     </string>
-    <string name = "text_food_not_exist">
+    <string name="text_food_not_exist">
         ⓘ 현재 저장된 음식이 없습니다.\n아래 버튼을 눌러 새로운 음식을 추가해보세요!
     </string>
 </resources>

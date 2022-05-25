@@ -7,13 +7,17 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +29,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.aifoodapp.ProgressDialog;
 import com.android.aifoodapp.R;
 import com.android.aifoodapp.RecyclerView.FoodInfo;
 import com.android.aifoodapp.RecyclerView.FoodItem;
@@ -37,9 +42,13 @@ import com.android.aifoodapp.domain.user;
 import com.android.aifoodapp.domain.dailymeal;
 import com.android.aifoodapp.interfaceh.NullOnEmptyConverterFactory;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
+import com.android.aifoodapp.vo.ReportDaySubItemVo;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -53,6 +62,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Query;
 
 public class FoodAnalysisActivity extends AppCompatActivity {
 
@@ -73,18 +83,19 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     Button btn_insert_dailymeal;
     user user;
     dailymeal dailymeal;
-    fooddata addFoodData;
     ArrayList<fooddata> foodList=new ArrayList<>(); //기존에 담아두었던 식단 목록
-    List<fooddata> list;
-    ArrayList<Double> intakeList=new ArrayList<>();
+    List<meal> ml;
+    ArrayList<Double> intakeList=new ArrayList<>(); //meal에서 불러온값
+    ArrayList<Double> intakeNew=new ArrayList<>(); //새롭게 저장되어야 하는 intake값
     public ArrayList<String> photoList=new ArrayList<>();
     //HashMap<String, List<meal>> map = new HashMap<>();
     HashMap<String, Object> map = new HashMap<>();
     HashMap<String, Object> dailyMap = new HashMap<>();
     int cnt=0;
+    byte[] byteArray;
 
     int pos;
-    String userid, mealname, mealphoto;
+    String userid, mealname, mealphoto, photoAI, handActivity;
     long dailymealid, mealid, fooddataid;
     int calorie, protein, carbohydrate, fat, timeflag;
     String savetime;
@@ -98,23 +109,87 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         mContext = this;
         Intent intent = getIntent();
         foodList=intent.getParcelableArrayListExtra("foodList");
-        intakeList=(ArrayList<Double>) intent.getSerializableExtra("intakeList");
         dailymeal=intent.getParcelableExtra("dailymeal");
         pos=intent.getIntExtra("position",0);
         //byte[] byteArray=intent.getByteArrayExtra("image");
-        photoList=(ArrayList<String>) intent.getSerializableExtra("photoList");
+        //photoList=(ArrayList<String>) intent.getSerializableExtra("photoList");
+        photoAI=intent.getStringExtra("photoAI");//photo의 uri 받아오기
+        handActivity=intent.getStringExtra("activity");
+        int modifyPosition=intent.getIntExtra("modify",-1);
+
         initialize();
         //setFoodList();
         _FoodAnalysis_Activity = FoodAnalysisActivity.this;
 
+        //https://andro-jinu.tistory.com/entry/androidstudio2
+        ProgressDialog dialog = new ProgressDialog(this);//loading
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));//배경투명하게
+        dialog.setCanceledOnTouchOutside(false); //주변 터치 방지
+        dialog.setCancelable(false);
+        dialog.show();
 
-        //Log.e("dailymeal- userid",dailymeal.getUserid());
-        //addFoodData=intent.getParcelableExtra("addFoodData"); //수기입력에서 넘어온 값 -> 음식 하나
-        /*
-        if(addFoodData!=null) {
-            foodList.add(addFoodData);
-        }*/
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
 
+        RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
+
+        //기존에 이미 저장된 meal 불러오기 : intake와 사진 불러오기 위함
+        try{
+            ml=new getMealNetworkCall().execute(retrofitAPI.getMeal(dailymeal.getUserid(),dailymeal.getDatekey(),pos)).get();
+            for (meal repo : ml) {
+                intakeList.add(repo.getIntake());
+                photoList.add(repo.getMealphoto());
+            }
+            Log.e("mealCall","완료");
+            Log.e("photoList",photoList.toString());
+
+            if(photoAI!=null){
+                Log.e("fffff","AI값이 넘어옴");
+                intakeList.add(1.0);
+
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), Uri.parse(photoAI));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Bitmap bi = getCompressedBitmap(bitmap);
+                //bitmap을 string으로
+                String bitmapAI = Base64.encodeToString(byteArray, Base64.DEFAULT);
+                String temp="";
+                try{//인코딩 된 데이터를 한번더 utf-8로 인코딩
+                    //temp="&imagedevice="+ URLEncoder.encode(bitmapAI,"UTF-8");
+                    temp=URLEncoder.encode(bitmapAI,"utf-8");
+                }catch(Exception e){
+
+                }
+                photoList.add(temp);
+            }
+            dialog.dismiss();//데이터 다 불러오면 dialog 화면 해제
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        int k=0;
+        intakeNew=(ArrayList<Double>) intent.getSerializableExtra("intakeNew");
+
+        Log.e("photo",Integer.toString(photoList.size()));
+        Log.e("food",Integer.toString(foodList.size()));
+        Log.e("intake",Integer.toString(intakeList.size()));
+
+
+        //새롭게 수기 입력을 했을 경우 반복문 실행해서 list 추가됨
+        for(int i=photoList.size();i<foodList.size();i++){
+            photoList.add("");
+            intakeList.add(intakeNew.get(k));
+            k++;
+        }
+
+        if(modifyPosition!=-1){
+            intakeList.set(modifyPosition,1.0);
+        }
+
+        /* 사진 Bitmap으로 변경 */
         if(!foodList.isEmpty()){
             int cnt=0;
             for(fooddata repo : foodList){
@@ -128,14 +203,16 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                     //Log.e("ㅎㅎ1",compressedBitmap.toString());
                 }
                 else{
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), Uri.parse(photoList.get(cnt)));
-                        //byte[] byteArray = photoList.get(cnt).getBytes();
-                        compressedBitmap = getCompressedBitmap(bitmap);
-
-                    } catch (IOException e) {
+                    //String을 Bitmap으로
+                    String temp="";
+                    try{
+                        temp= URLDecoder.decode(photoList.get(cnt),"UTF-8");
+                    }catch(UnsupportedEncodingException e){
                         e.printStackTrace();
                     }
+
+                    byte[] decodeByte = Base64.decode(temp, Base64.DEFAULT);
+                    compressedBitmap = BitmapFactory.decodeByteArray(decodeByte, 0, decodeByte.length);
                 }
                 foodItemList.add(new FoodItem(compressedBitmap,R.drawable.minusbtn,repo.getName()));
                 foodInfoList.add(new FoodInfo(repo, compressedBitmap, intakeList.get(cnt))); //음식객체, 이미지, 인분
@@ -182,8 +259,9 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 intent.putExtra("dailymeal",dailymeal);
                 intent.putParcelableArrayListExtra("foodList",foodList);
                 intent.putExtra("position",pos);//timeflag를 의미
-                intent.putExtra("intakeList",intakeList);
-                intent.putExtra("photoList",photoList);
+                intent.putExtra("intakeNew",intakeNew);
+                //intent.putExtra("photoList",photoList);
+                if(photoAI!=null) intent.putExtra("photoAI",photoAI);
                 intent.putExtra("modify",position);
                 startActivity(intent);
             }
@@ -196,8 +274,9 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 intent.putExtra("dailymeal",dailymeal);
                 intent.putParcelableArrayListExtra("foodList",foodList);
                 intent.putExtra("position",pos);
-                intent.putExtra("intakeList",intakeList);
-                intent.putExtra("photoList",photoList);
+                intent.putExtra("intakeNew",intakeNew);
+                if(photoAI!=null) intent.putExtra("photoAI",photoAI);
+                //intent.putExtra("photoList",photoList);
                 startActivity(intent);
                 setInfoRecyclerViewHeight(recyclerView2);
             }
@@ -216,9 +295,8 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
                 userid = dailymeal.getUserid();
-                savetime=dailymeal.getDatekey();
-                timeflag=pos;
-                Log.e("@@@@@@@@@222postion",Integer.toString(timeflag));
+                savetime = dailymeal.getDatekey();
+                timeflag = pos;
 
                 /* 먼저 현재 postion에 이미 저장되어 있던 meal 데이터 전체 삭제 (업데이트를 위함) */
                 retrofitAPI.deleteMeal(userid,savetime,timeflag).enqueue(new Callback<Void>() {
@@ -228,6 +306,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                             Log.e("11111111111111","삭제완료");
 
                             Log.e("foodList",foodList.toString());
+                            Log.e("photoList",photoList.toString());
                             //이걸 하나씩 저장하는게 아니라 foodList 전체를 retrofit으로 보낼 수 있는 방법이 없을까 ㅠㅠㅠㅠㅠㅠㅠ
                             for(fooddata repo : foodList){
                                 userid = dailymeal.getUserid();
@@ -240,6 +319,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                                 fat=(int)repo.getFat();
                                 mealname=repo.getName();
                                 mealphoto=photoList.get(cnt);
+                                //mealphoto="";
                                 // new byte[] { 0x01, 0x02, 0x03 };
                                 savetime=dailymeal.getDatekey();//해당 달력 날짜(과거날짜에서 데이터 추가하는 경우도 있기 때문)
                                 //savetime = dateFormat.format(now); //날짜가 string으로 저장
@@ -248,7 +328,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                                 fooddataid=repo.getId();
                                 intake=intakeList.get(cnt);
 
-                                //Log.e("intake",Double.toString(intake));
+                                Log.e("userid",userid);
 
                                 meal meal = new meal(userid,dailymealid,mealid,calorie,protein,carbohydrate,fat,mealname,mealphoto,savetime,timeflag,fooddataid,intake);
                                 map.put("userid",meal.getUserid());
@@ -285,27 +365,21 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                                                             Log.e("333333333333333","dailymeal 업데이트");
 
                                                         }
-                                                        else{
-                                                            Log.e("★","!response.isSuccessful()");
-                                                        }
                                                     }
 
                                                     @Override
                                                     public void onFailure(Call<Void> call, Throwable t) {
-                                                        Log.e("★","call 실패"+t);
+                                                        Log.e("1","call 실패"+t);
                                                     }
                                                 });
 
                                             }
                                         }
-                                        else{
-                                            Log.e("★","!response.isSuccessful()");
-                                        }
                                     }
 
                                     @Override
                                     public void onFailure(Call<Void> call, Throwable t) {
-                                        Log.e("★","call 실패"+t);
+                                        Log.e("2","call 실패"+t);
                                     }
                                 });
                             }
@@ -318,14 +392,11 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                                             Log.e("333333333333333","dailymeal 업데이트");
 
                                         }
-                                        else{
-                                            Log.e("★","!response.isSuccessful()");
-                                        }
                                     }
 
                                     @Override
                                     public void onFailure(Call<Void> call, Throwable t) {
-                                        Log.e("★","call 실패"+t);
+                                        Log.e("3","call 실패"+t);
                                     }
                                 });
                             }
@@ -338,48 +409,16 @@ public class FoodAnalysisActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        Log.e("♥","call 실패"+t);
+                        Log.e("4","call 실패"+t);
                     }
                 });
 
-                //map.put("mealList",mealList);//서버 측에서 받는 key값 : mealList
-
-                /*dailymeal update*/
-//                dailymeal updatedailymeal = new dailymeal(userid,savetime,timeflag,sumCalorie, sumProtein,sumCarbohydrate, sumFat,dailymealid);
-//                dailyMap.put("userid",updatedailymeal.getUserid());
-//                dailyMap.put("datekey",updatedailymeal.getDatekey());
-//                dailyMap.put("stepcount",updatedailymeal.getStepcount());
-//                dailyMap.put("calorie",updatedailymeal.getCalorie());
-//                dailyMap.put("protein",updatedailymeal.getProtein());
-//                dailyMap.put("carbohydrate",updatedailymeal.getCarbohydrate());
-//                dailyMap.put("fat",updatedailymeal.getFat());
-//                dailyMap.put("dailymealid",updatedailymeal.getDailymealid());
-//
-//                retrofitAPI.postUpdateDailyMeal(dailyMap).enqueue(new Callback<Void>() {
-//                    @Override
-//                    public void onResponse(Call<Void> call, Response<Void> response) {
-//                        if(response.isSuccessful()) {
-//                            Log.e("★","dailymealUpdate");
-//                        }
-//                        else{
-//                            Log.e("★","!response.isSuccessful()");
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<Void> call, Throwable t) {
-//                        Log.e("★","call 실패"+t);
-//                    }
-//                });
-
                 Intent intent = new Intent(activity, LoginActivity.class);
-                intent.putExtra("load",true);//로딩화면(call받기위해?)
+                intent.putExtra("load",true);
                 startActivity(intent);
                 finish();
             }
         });
-
-
     }
 
     //https://whereisusb.tistory.com/30
@@ -429,9 +468,27 @@ public class FoodAnalysisActivity extends AppCompatActivity {
 
     private Bitmap getCompressedBitmap(Bitmap bitmap){
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG,80, stream);
-        byte[] byteArray = stream.toByteArray();
+        bitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);//사진 사이즈 200*200로 줄임
+        bitmap.compress(Bitmap.CompressFormat.PNG,60, stream);//60% 압축
+        byteArray = stream.toByteArray();
         compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
+
         return compressedBitmap;
+    }
+
+    //AsyncTask 처리
+    private class getMealNetworkCall extends AsyncTask<Call, Void, List<meal> > {
+        @Override
+        protected List<meal> doInBackground(Call[] params) {
+            try {
+                Call<List<meal>> call = params[0];
+                Response<List<meal>> response = call.execute();
+                return response.body();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 }

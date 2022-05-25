@@ -37,7 +37,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class FoodInputActivity extends AppCompatActivity {
     ArrayList<fooddata> arrayList;
     ArrayList<fooddata> foodList;//foodList : 지금까지 식단으로 담아놓은 음식리스트
-    ArrayList<Double> intakeList=new ArrayList<>();
+    ArrayList<Double> intakeNew;
     ArrayList<String> photoList=new ArrayList<>();
     List<fooddata> list;//검색 결과로 음식 데이터 전체를 가지고 있는 list
     Activity activity;
@@ -46,6 +46,7 @@ public class FoodInputActivity extends AppCompatActivity {
     Button btn_search;
     dailymeal dailymeal;
     int pos, modify;
+    String photoAI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +56,12 @@ public class FoodInputActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         foodList=intent.getParcelableArrayListExtra("foodList");
-        intakeList=(ArrayList<Double>) intent.getSerializableExtra("intakeList");
-        photoList=(ArrayList<String>) intent.getSerializableExtra("photoList");
+        intakeNew=(ArrayList<Double>) intent.getSerializableExtra("intakeNew");
+        //photoList=(ArrayList<String>) intent.getSerializableExtra("photoList");
         dailymeal=intent.getParcelableExtra("dailymeal");
         pos=intent.getIntExtra("position",0);
         modify=intent.getIntExtra("modify",-1);//값이 없다면 -1
+        photoAI=intent.getStringExtra("photoAI");//photo의 uri 받아오기
 
         itemSearchAdapter adapter=new itemSearchAdapter(arrayList,activity);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -106,25 +108,30 @@ public class FoodInputActivity extends AppCompatActivity {
             @Override
             public void addFoodList(fooddata food) {
                 Log.e("%%%%%%%%%",food.getName());
+                Intent intent = new Intent(activity, FoodAnalysisActivity.class);
+
                 if(foodList.isEmpty()) foodList=new ArrayList<fooddata>();
+                if(intakeNew==null) intakeNew=new ArrayList<>();
                 if(modify!=-1) {
                     foodList.set(modify,food);//food 음식 수정하기
-                    intakeList.set(modify,1.0);
+                    //intakeList.set(modify,1.0);
+                    intent.putExtra("modify",modify);
                 }
                 else {
                     foodList.add(food);//선택한 food
-                    intakeList.add(1.0);
-                    photoList.add("");
+                    intakeNew.add(1.0);
+                    //photoList.add("");
+                    intent.putExtra("activity","FoodInputActivity");
                 }
                 FoodAnalysisActivity FA = (FoodAnalysisActivity)FoodAnalysisActivity._FoodAnalysis_Activity; // https://itun.tistory.com/357 [Bino]
                 FA.finish();
 
-                Intent intent = new Intent(activity, FoodAnalysisActivity.class);
                 intent.putParcelableArrayListExtra("foodList",foodList); //선택한 음식데이터 넘기기
-                intent.putExtra("intakeList",intakeList);
-                intent.putExtra("photoList",photoList);
+                intent.putExtra("intakeNew",intakeNew);
+                //intent.putExtra("photoList",photoList);
                 intent.putExtra("dailymeal",dailymeal);
                 intent.putExtra("position",pos);
+                if(photoAI!=null) intent.putExtra("photoAI",photoAI);
                 startActivity(intent);
                 finish();
             }

@@ -887,27 +887,14 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                                     foodList.add(fd);
                                 }
 
-                                retrofitAPI.getMeal(dailymeal.getUserid(),dailymeal.getDatekey(),position).enqueue(new Callback<List<meal>>() {
-                                    @Override
-                                    public void onResponse(Call<List<meal>> call, Response<List<meal>> response) {
-                                        ml= response.body();
-                                        for (meal repo : ml) {
-                                            intakeList.add(repo.getIntake());
-                                            photoList.add(repo.getMealphoto());
-                                        }
-                                        Intent intent = new Intent(activity, FoodAnalysisActivity.class);
-                                        intent.putExtra("dailymeal",dailymeal);
-                                        intent.putExtra("position",position);
-                                        intent.putExtra("intakeList",intakeList);
-                                        intent.putExtra("photoList",photoList);
-                                        intent.putParcelableArrayListExtra("foodList",foodList);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                    @Override
-                                    public void onFailure(Call<List<meal>> call, Throwable t) { ;
-                                    }
-                                });
+                                Intent intent = new Intent(activity, FoodAnalysisActivity.class);
+                                intent.putExtra("dailymeal",dailymeal);
+                                intent.putExtra("position",position);
+                                //intent.putExtra("intakeList",intakeList);
+                                //intent.putExtra("photoList",photoList);
+                                intent.putParcelableArrayListExtra("foodList",foodList);
+                                startActivity(intent);
+                                finish();
 
                             }
                             else{
@@ -1014,9 +1001,9 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                                 retrofitAPI.getFoodFromFoodName(foodName).enqueue(new Callback<fooddata>() {
                                     @Override
                                     public void onResponse(Call<fooddata> call, Response<fooddata> response) {
-                                       foodAI=response.body();
+                                        foodAI=response.body();
 
-                                       //해당 position 위치에 이미 저장되어 있는 foodList 불러오기
+                                        //해당 position 위치에 이미 저장되어 있는 foodList 불러오기
                                         retrofitAPI.getFoodFromMeal(dailymeal.getUserid(),dailymeal.getDatekey(),position).enqueue(new Callback<List<fooddata>>() {
                                             @Override
                                             public void onResponse(Call<List<fooddata>> call, Response<List<fooddata>> response) {
@@ -1028,37 +1015,19 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                                                     }
                                                     foodList.add(foodAI); //기존 저장되어 있는 foodList에 추가
 
-                                                    // 해당 위치에 있는 meal들의 intake 불러오기
-                                                    retrofitAPI.getMeal(dailymeal.getUserid(),dailymeal.getDatekey(),position).enqueue(new Callback<List<meal>>() {
-                                                        @Override
-                                                        public void onResponse(Call<List<meal>> call, Response<List<meal>> response) {
-                                                            ml= response.body();
-                                                            for (meal repo : ml) {
-                                                                intakeList.add(repo.getIntake());
-                                                                photoList.add(repo.getMealphoto());
-                                                            }
-                                                            intakeList.add(1.0);
-
-                                                            photoList.add(photoUri.toString());
-                                                            //Log.e("AI 사진",new String(byteArray));
-                                                            //photoList.add(new String(byteArray));
-                                                            //photoList.add(Base64.getEncoder().encodeToString(byteArray));
-                                                            Intent intent = new Intent(activity, FoodAnalysisActivity.class);
-                                                            intent.putExtra("dailymeal",dailymeal);
-                                                            intent.putExtra("position",position);
-                                                            intent.putExtra("intakeList",intakeList);
-                                                            intent.putExtra("photoList",photoList);
-                                                            //intent.putExtra("image",byteArray); //사진 넘기기
-                                                            intent.putParcelableArrayListExtra("foodList",foodList);
-                                                            Log.e("mainFoodList",foodList.toString());
-                                                            startActivity(intent);
-                                                            finish();
-                                                        }
-                                                        @Override
-                                                        public void onFailure(Call<List<meal>> call, Throwable t) { ;
-                                                        }
-                                                    });
-
+                                                    //Log.e("AI 사진",new String(byteArray));
+                                                    //photoList.add(new String(byteArray));
+                                                    //photoList.add(Base64.getEncoder().encodeToString(byteArray));
+                                                    Intent intent = new Intent(activity, FoodAnalysisActivity.class);
+                                                    intent.putExtra("dailymeal",dailymeal);
+                                                    intent.putExtra("position",position);
+                                                    //intent.putExtra("intakeList",intakeList);
+                                                    intent.putExtra("photoAI",photoUri.toString());//uri로 옮기기
+                                                    //intent.putExtra("image",byteArray); //사진 넘기기
+                                                    intent.putParcelableArrayListExtra("foodList",foodList);
+                                                    intent.putExtra("activity","MainActivity");//어느 액티비티에서 넘어왔는지
+                                                    startActivity(intent);
+                                                    finish();
                                                 }
                                             }
                                             @Override
@@ -1140,8 +1109,8 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
     }
 
     /* 중첩 리사이클러뷰 : https://stickode.tistory.com/271
-    * 현재 식사 위치에 저장된 음식 목록을 출력하기 위함.
-    * */
+     * 현재 식사 위치에 저장된 음식 목록을 출력하기 위함.
+     * */
     private List<SubItem> buildSubItemList(int meal_num) {
         subItemList=new ArrayList<>();
         Retrofit retrofit = new Retrofit.Builder()
@@ -1389,8 +1358,6 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
     }*/
 
     private class calorieNetworkCall extends AsyncTask<Call, Void, String>{
-
-        //동기적 처
         @Override
         protected String doInBackground(Call[] params) {
 
@@ -1408,7 +1375,6 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
     }
 
     private class MealNetworkCall extends AsyncTask<Call, Void, String>{
-        //동기적 처리
         @Override
         protected String doInBackground(Call[] params) {
             try {
@@ -1431,7 +1397,6 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
         }
     }
     private class timeFlagNetworkCall extends AsyncTask<Call, Void, String>{
-        //동기적 처리
         @Override
         protected String doInBackground(Call[] params) {
             try {
