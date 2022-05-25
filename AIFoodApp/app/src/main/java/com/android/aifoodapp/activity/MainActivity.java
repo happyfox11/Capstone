@@ -941,7 +941,6 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                 @Override
                 public void mealSaveFromPhoto(byte[] byteArray, int position, Bitmap compressedBitmap, Uri photoUri, String tmp){
                     // AI 통신 (음식 이름을 넘겨 받는다)
-
                     Gson gson=new GsonBuilder().setLenient().create();
 
                     Retrofit retrofit2 = new Retrofit.Builder()
@@ -1017,14 +1016,11 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                                                     foodList.add(foodAI); //기존 저장되어 있는 foodList에 추가
                                                     dialog.dismiss();
 
-                                                    //Log.e("AI 사진",new String(byteArray));
-                                                    //photoList.add(new String(byteArray));
-                                                    //photoList.add(Base64.getEncoder().encodeToString(byteArray));
                                                     Intent intent = new Intent(activity, FoodAnalysisActivity.class);
                                                     intent.putExtra("dailymeal",dailymeal);
                                                     intent.putExtra("position",position);
                                                     //intent.putExtra("intakeList",intakeList);
-                                                    intent.putExtra("photoAI",photoUri.toString());//uri로 옮기기
+                                                    intent.putExtra("photoAI",photoUri);//uri로 옮기기
                                                     //intent.putExtra("image",byteArray); //사진 넘기기
                                                     intent.putParcelableArrayListExtra("foodList",foodList);
                                                     intent.putExtra("activity","MainActivity");//어느 액티비티에서 넘어왔는지
@@ -1109,7 +1105,7 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
 
     private void addMeal(){
         //mealAdapter.addItem(new MealMemberVo());
-        mealAdapter.addItem(new MealMemberVo("  식사 " + meal_num,buildSubItemList(meal_num)));
+        mealAdapter.addItem(new MealMemberVo("  식사 " + meal_num, buildSubItemList(meal_num)));
         meal_num++;
         setListViewHeightBasedOnChildren(rv_item);
     }
@@ -1127,7 +1123,7 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
         try{
             ml=new MealNetworkCall().execute(retrofitAPI.getMeal(user.getId(),date_string,meal_num-1)).get();
             for (meal repo : ml) {
-                SubItem subItem=new SubItem(repo.getMealname());
+                SubItem subItem=new SubItem(repo.getMealname(), repo.getMealphoto());
                 subItemList.add(subItem);
                 //Log.e("mealname",repo.getMealname());
             }

@@ -95,11 +95,12 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     byte[] byteArray;
 
     int pos;
-    String userid, mealname, mealphoto, photoAI, handActivity;
+    String userid, mealname, mealphoto, handActivity;
     long dailymealid, mealid, fooddataid;
     int calorie, protein, carbohydrate, fat, timeflag;
     String savetime;
     double intake=1.0;
+    Uri photoAI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +114,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         pos=intent.getIntExtra("position",0);
         //byte[] byteArray=intent.getByteArrayExtra("image");
         //photoList=(ArrayList<String>) intent.getSerializableExtra("photoList");
-        photoAI=intent.getStringExtra("photoAI");//photo의 uri 받아오기
+        photoAI=intent.getParcelableExtra("photoAI");//photo의 uri 받아오기
         handActivity=intent.getStringExtra("activity");
         int modifyPosition=intent.getIntExtra("modify",-1);
 
@@ -148,7 +149,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 intakeList.add(1.0);
 
                 try {
-                    bitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), Uri.parse(photoAI));
+                    bitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), photoAI);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
