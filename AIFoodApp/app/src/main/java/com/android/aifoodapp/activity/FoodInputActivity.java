@@ -46,7 +46,7 @@ public class FoodInputActivity extends AppCompatActivity {
     Button btn_search;
     dailymeal dailymeal;
     int pos, modify;
-    String photoAI;
+    String photoAI, imgPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +62,7 @@ public class FoodInputActivity extends AppCompatActivity {
         pos=intent.getIntExtra("position",0);
         modify=intent.getIntExtra("modify",-1);//값이 없다면 -1
         photoAI=intent.getStringExtra("photoAI");//photo의 uri 받아오기
+        imgPath=intent.getStringExtra("imgPath");
 
         itemSearchAdapter adapter=new itemSearchAdapter(arrayList,activity);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -131,7 +132,10 @@ public class FoodInputActivity extends AppCompatActivity {
                 //intent.putExtra("photoList",photoList);
                 intent.putExtra("dailymeal",dailymeal);
                 intent.putExtra("position",pos);
-                if(photoAI!=null) intent.putExtra("photoAI",photoAI);
+                if(photoAI!=null) {
+                    intent.putExtra("photoAI",photoAI);
+                    intent.putExtra("imgPath",imgPath);
+                }
                 startActivity(intent);
                 finish();
             }

@@ -144,7 +144,7 @@ public class WeeklyReportFragment3 extends Fragment {
                     String subItemTitle = repo.getMealname();
                     String subItemDesc = Integer.toString(repo.getCalorie()); //칼로리만 출력 (추가 가능)
                     String subItemImage = repo.getMealphoto();
-                    subItemList.add(new ReportDaySubItemVo(subItemDesc,subItemTitle, subItemImage));
+                    subItemList.add(new ReportDaySubItemVo(subItemTitle, subItemDesc, subItemImage));
                     Log.e("mealname",repo.getMealname());
                 }
 
