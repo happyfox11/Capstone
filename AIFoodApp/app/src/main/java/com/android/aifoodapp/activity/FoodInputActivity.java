@@ -5,6 +5,7 @@ import static com.android.aifoodapp.interfaceh.baseURL.url;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -46,7 +47,8 @@ public class FoodInputActivity extends AppCompatActivity {
     Button btn_search;
     dailymeal dailymeal;
     int pos, modify;
-    String photoAI, imgPath;
+    String imgPath;
+    Uri photoAI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,7 @@ public class FoodInputActivity extends AppCompatActivity {
         dailymeal=intent.getParcelableExtra("dailymeal");
         pos=intent.getIntExtra("position",0);
         modify=intent.getIntExtra("modify",-1);//값이 없다면 -1
-        photoAI=intent.getStringExtra("photoAI");//photo의 uri 받아오기
+        photoAI=intent.getParcelableExtra("photoAI");//photo의 uri 받아오기
         imgPath=intent.getStringExtra("imgPath");
 
         itemSearchAdapter adapter=new itemSearchAdapter(arrayList,activity);
@@ -117,6 +119,7 @@ public class FoodInputActivity extends AppCompatActivity {
                     foodList.set(modify,food);//food 음식 수정하기
                     //intakeList.set(modify,1.0);
                     intent.putExtra("modify",modify);
+                    Log.e("수정하기",Integer.toString(modify));
                 }
                 else {
                     foodList.add(food);//선택한 food
@@ -133,6 +136,7 @@ public class FoodInputActivity extends AppCompatActivity {
                 intent.putExtra("dailymeal",dailymeal);
                 intent.putExtra("position",pos);
                 if(photoAI!=null) {
+                    Log.e("photoAI넘김","완");
                     intent.putExtra("photoAI",photoAI);
                     intent.putExtra("imgPath",imgPath);
                 }

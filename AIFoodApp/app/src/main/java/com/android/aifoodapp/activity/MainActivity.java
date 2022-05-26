@@ -981,7 +981,12 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                     }*/
                     }
                     else{ //camera
-                        postFile=new File(photoUri.getPath());
+                        //postFile=new File(photoUri.getPath());
+                        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                        postFile=new File(storageDir.toString()+"/"+photoUri.getLastPathSegment());
+                        imgPath=storageDir.toString()+"/"+photoUri.getLastPathSegment();
+                        //Log.e("postFile",storageDir.toString());
+                        //postFile=photoFile;
                     }
 
                     dialog.show();
@@ -994,6 +999,7 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                         public void onResponse(Call<String> call, Response<String> response) {
                             if(response.isSuccessful()) {
                                 foodName=response.body();
+                                Log.e("AI - prediction", foodName);
 
                                 // AI에서 넘겨받은 음식이름으로 영양소 정보를 얻기 위한 fooddata 받아오기
                                 retrofitAPI.getFoodFromFoodName(foodName).enqueue(new Callback<fooddata>() {
@@ -1221,6 +1227,7 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                 toast.show();
 
                 Uri uri = result.getData().getData();
+                //getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 //img_photo.setImageURI(uri);
                 onSetImage.onSetImage(uri);
                 toast.cancel();
@@ -1238,8 +1245,10 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
             String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             String tmpFileName = timestamp;
 
+            //외부저장소
             File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-            File photoFile = File.createTempFile(tmpFileName, ".jpg", storageDir);
+            File photoFile = File.createTempFile(tmpFileName, ".jpg", storageDir);//파일생성
+            Log.e("photoFile",photoFile.toString());
 
             photoUri = FileProvider.getUriForFile(activity, getPackageName(),photoFile);
 
@@ -1257,7 +1266,8 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
         try{
             Intent intent = new Intent();
             intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
+            //intent.setAction(Intent.ACTION_GET_CONTENT);
+            intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
 
             galleryLauncher.launch(intent);
 

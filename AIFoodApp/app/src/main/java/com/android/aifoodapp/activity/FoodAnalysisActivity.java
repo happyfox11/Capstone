@@ -145,12 +145,15 @@ public class FoodAnalysisActivity extends AppCompatActivity {
             for (meal repo : ml) {
                 intakeList.add(repo.getIntake());
                 photoList.add(repo.getMealphoto());
+                Log.e("1","!!");
             }
             Log.e("mealCall","완료");
             Log.e("photoList",photoList.toString());
 
             if(photoAI!=null){
-                Log.e("fffff","AI값이 넘어옴");
+                int orientation=0;
+
+                Log.e("FoodAnalysisActivity","AI값이 넘어옴");
                 intakeList.add(1.0);
 
                 /* 사진 회전 현상 해결 */
@@ -160,7 +163,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                         ExifInterface.ORIENTATION_UNDEFINED);
 
                 try {
@@ -182,6 +185,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
 
                 }
                 photoList.add(temp);
+                Log.e("2","!!");
             }
             dialog.dismiss();//데이터 다 불러오면 dialog 화면 해제
 
@@ -191,11 +195,11 @@ public class FoodAnalysisActivity extends AppCompatActivity {
 
         int k=0;
         intakeNew=(ArrayList<Double>) intent.getSerializableExtra("intakeNew");
+        if(intakeNew==null) intakeNew=new ArrayList<>();
 
         Log.e("photo",Integer.toString(photoList.size()));
         Log.e("food",Integer.toString(foodList.size()));
         Log.e("intake",Integer.toString(intakeList.size()));
-
 
         //새롭게 수기 입력을 했을 경우 반복문 실행해서 list 추가됨
         for(int i=photoList.size();i<foodList.size();i++){
