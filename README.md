@@ -82,7 +82,7 @@ AI기반 음식 분석 애플리케이션, 플랜밀
 
 ## 주요 기능 설명
 <p align="center">
-  <img src = "https://user-images.githubusercontent.com/89199587/170630038-cb7b41eb-49b4-4df4-b5be-ce4623255c59.png" width="500px">
+  <img src = "https://user-images.githubusercontent.com/89199587/170630038-cb7b41eb-49b4-4df4-b5be-ce4623255c59.png" width="800px">
 </p>
 
 #### 1. 로그인 후 개인정보(나이, 신장, 체중, 활동량) 및 목표 칼로리를 입력하면 그 바탕으로 기초대사량에 알맞은     탄수화물, 단백질, 지방 비율이 표시된다.
