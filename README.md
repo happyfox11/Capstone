@@ -3,7 +3,8 @@
 AI기반 음식 분석 애플리케이션, 플랜밀
 
 <p align="center">
-  <img src = "https://user-images.githubusercontent.com/56522878/170629000-4a237356-9c32-414a-bf45-af9f039a36d7.jpg" width="250px">
+  <img src = "https://user-images.githubusercontent.com/56522878/170629000-4a237356-9c32-414a-bf45-af9f039a36d7.jpg" width="500px">
+  <img src = "https://user-images.githubusercontent.com/56522878/168869339-5d112e3e-0887-4ef8-ba84-b362d982e0c3.gif" width="250px">
 
 </p>
 
