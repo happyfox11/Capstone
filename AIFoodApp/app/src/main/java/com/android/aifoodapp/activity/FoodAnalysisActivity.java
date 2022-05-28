@@ -7,11 +7,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -20,16 +17,15 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,19 +40,14 @@ import com.android.aifoodapp.domain.dailymeal;
 import com.android.aifoodapp.domain.fooddata;
 import com.android.aifoodapp.domain.meal;
 import com.android.aifoodapp.domain.user;
-import com.android.aifoodapp.domain.dailymeal;
-import com.android.aifoodapp.interfaceh.NullOnEmptyConverterFactory;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
-import com.android.aifoodapp.vo.ReportDaySubItemVo;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,7 +58,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Query;
 
 public class FoodAnalysisActivity extends AppCompatActivity {
 
@@ -106,6 +96,8 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     double intake=1.0;
     Uri photoAI;
 
+    private ImageButton btn_back_analysis;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,6 +116,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         imgPath=intent.getStringExtra("imgPath");
 
         initialize();
+        addListener();
         //setFoodList();
         _FoodAnalysis_Activity = FoodAnalysisActivity.this;
 
@@ -465,6 +458,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     public void onBackPressed() {
         AlertDialog.Builder alert_ex = new AlertDialog.Builder(this);
         alert_ex.setMessage("작성을 그만두시겠습니까?");
+        alert_ex.setIcon(R.drawable.alert_icon);
 
         alert_ex.setPositiveButton("네", new DialogInterface.OnClickListener() {
             @Override
@@ -495,7 +489,19 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         tv_foodName = findViewById(R.id.tv_foodName);
         iv_foodAnalysis = findViewById(R.id.iv_foodAnalysis);
         btn_insert_dailymeal = findViewById(R.id.btn_insert_dailymeal);
+        btn_back_analysis = findViewById(R.id.btn_back_detail);
     }
+
+    private void addListener(){
+        btn_back_analysis.setOnClickListener(listener_back);
+    }
+
+    public View.OnClickListener listener_back = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            onBackPressed();
+        }
+    };
 
     public void setInfoRecyclerViewHeight(RecyclerView recyclerView) {
 

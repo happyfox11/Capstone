@@ -4,16 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="#80B542"
-        android:gravity="right|center_vertical"
-        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:padding="10dp">
 
+        <ImageButton
+            android:id="@+id/btn_back_detail"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/back_arrow_icon" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,7 +40,6 @@
                 android:padding="5dp"
                 android:text="기록하기"
                 android:textColor="#FFFFFF" />
-
         </LinearLayout>
     </LinearLayout>
 
@@ -59,9 +67,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|center"
+                    android:gravity="center"
+                    android:text="음식을 추가해주세요"
                     android:textSize="30sp"
-                    android:textStyle="bold"
-                    android:text="음식을 추가해주세요" />
+                    android:textStyle="bold" />
 
             </FrameLayout>
 
@@ -73,10 +82,10 @@
                 android:orientation="horizontal">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:layout_weight="8"
                     android:id="@+id/recyclerView"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_weight="8"
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
