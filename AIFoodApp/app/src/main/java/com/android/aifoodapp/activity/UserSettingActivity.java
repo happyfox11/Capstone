@@ -7,7 +7,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -15,18 +14,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.aifoodapp.R;
 import com.android.aifoodapp.domain.user;
-import com.android.aifoodapp.interfaceh.NullOnEmptyConverterFactory;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -61,6 +58,8 @@ public class UserSettingActivity extends AppCompatActivity {
     private int rb_activity_rate,modify_gender;
     private String flag;
 
+    private ImageButton btn_back_setting;
+
 
     GoogleSignInClient mGoogleSignInClient;
 
@@ -77,6 +76,7 @@ public class UserSettingActivity extends AppCompatActivity {
         flag = intent.getStringExtra("flag");
         settingText();
 
+        btn_back_setting.setOnClickListener(listener_back);
         rg_modify_gender.setOnCheckedChangeListener(listener_modify_gender);
         rg_modify_activity_rate.setOnCheckedChangeListener(listener_select_activity_rate);
 
@@ -407,6 +407,7 @@ public class UserSettingActivity extends AppCompatActivity {
         rb_modify_lv4 = findViewById(R.id.rb_modify_lv4);
 
         btn_bmi_modify=findViewById(R.id.btn_bmi_modify);
+        btn_back_setting = findViewById(R.id.btn_back_detail);
 
     }
 
@@ -445,6 +446,13 @@ public class UserSettingActivity extends AppCompatActivity {
                 default:
                     break;
             }
+        }
+    };
+
+    private View.OnClickListener listener_back = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            finish();
         }
     };
 }
