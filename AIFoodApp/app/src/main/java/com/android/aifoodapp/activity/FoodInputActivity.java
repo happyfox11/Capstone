@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,9 +23,7 @@ import com.android.aifoodapp.R;
 import com.android.aifoodapp.adapter.itemSearchAdapter;
 import com.android.aifoodapp.domain.dailymeal;
 import com.android.aifoodapp.domain.fooddata;
-import com.android.aifoodapp.domain.meal;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
-import com.android.aifoodapp.domain.dailymeal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +48,7 @@ public class FoodInputActivity extends AppCompatActivity {
     int pos, modify;
     String imgPath;
     Uri photoAI;
+    ImageButton btn_back_input;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +157,13 @@ public class FoodInputActivity extends AppCompatActivity {
             }
         });
 
+        btn_back_input.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
     }
 
     private void initialize(){
@@ -167,5 +174,6 @@ public class FoodInputActivity extends AppCompatActivity {
         //et_search.setText("");
         btn_search=findViewById(R.id.btn_search);
         arrayList=new ArrayList<fooddata>();
+        btn_back_input = findViewById(R.id.btn_back_detail);
     }
 }

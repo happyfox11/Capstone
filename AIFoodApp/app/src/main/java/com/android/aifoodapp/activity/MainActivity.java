@@ -763,6 +763,8 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
 
         IntegerPercentFormatter integerPercentFormatter = new IntegerPercentFormatter(radarChart);
         radarDataSet.setValueFormatter(integerPercentFormatter);
+        radarDataSet.setValueTextSize(12f);
+        radarDataSet.setValueTypeface(Typeface.createFromAsset(getAssets(), "cafe24ssurroundair.ttf"));
         //radarDataSet.setFillColor(parseColor("#3A531C"));
         //Log.i("check", percent_of_carbohydrate+","+percent_of_fat+","+percent_of_protein);
         // 모든 영양소 섭취량이 권장량을 초과하는 경우, Red Color로 변경 (일반 Dark Green)
@@ -1438,7 +1440,7 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
             switch(p){
                 case 1://탄수화물
                     if(val == 0)
-                        pr = "              c:0";
+                        pr = "                            c:0";
                     else if(val <= 5)
                         pr = "              c:"+ val +"%";
                     else
@@ -1446,7 +1448,7 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
                     break;
                 case 2://지방
                     if(val == 0)
-                        pr = "       f:0";
+                        pr = "              f:0";
                     else if(val <= 5)
                         pr = "       f:"+ val +"%";
                     else

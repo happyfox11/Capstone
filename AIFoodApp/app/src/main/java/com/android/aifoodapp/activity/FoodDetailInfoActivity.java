@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,6 +39,7 @@ public class FoodDetailInfoActivity extends AppCompatActivity {
             tv_copper, tv_manganese, tv_vitamin_b1, tv_vitamin_b2, tv_vitamin_c, tv_cholesterol,
             tv_total_saturated_fatty_acids, tv_trans_fatty_acids, tv_caffeine;
     fooddata food;
+    ImageButton btn_back_detail;
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -48,6 +51,13 @@ public class FoodDetailInfoActivity extends AppCompatActivity {
         Intent intent = getIntent();
         food=intent.getParcelableExtra("foodDetail");
         String img=intent.getStringExtra("foodImg");
+
+        btn_back_detail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         if(img.equals("")){
             Drawable drawable = getResources().getDrawable(R.drawable.icon);
@@ -167,6 +177,7 @@ public class FoodDetailInfoActivity extends AppCompatActivity {
         tv_total_saturated_fatty_acids = findViewById(R.id.tv_total_saturated_fatty_acids);
         tv_trans_fatty_acids = findViewById(R.id.tv_trans_fatty_acids);
         tv_caffeine = findViewById(R.id.tv_caffeine);
+        btn_back_detail = findViewById(R.id.btn_back_detail);
 
     }
     private Bitmap getCompressedBitmap(Bitmap bitmap){
