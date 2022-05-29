@@ -38,7 +38,6 @@ public class WeeklyReportFragment4 extends Fragment {
 
         initialize();
 
-
         tv_activeTime .setText(String.valueOf(activeTime));
         tv_walk.setText(String.valueOf(walkCount));
         activeTimeInfo.setText(String.valueOf(activeTime)+"분");
@@ -66,11 +65,6 @@ public class WeeklyReportFragment4 extends Fragment {
         if(walkCount > 5000){
             averageWalk.setProgressTintList(ColorStateList.valueOf(Color.RED));
         }
-
-
-
-
-
 
         return view;
     }

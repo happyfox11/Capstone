@@ -118,11 +118,10 @@ public interface RetrofitAPI {
     );
 
     @GET("/setStepCount.do")
-    Call<Void> setStepCount(@Query("userid") String userid,
-                            @Query("savetime") String savetime,
+    Call<Void> setStepCount(@Query("id") String id,
+                            @Query("datekey") String datekey,
                             @Query("stepCount") int stepCount
     );
-
     //@FormUrlEncoded
     @Multipart
     @POST("/predict")
