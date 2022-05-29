@@ -55,6 +55,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.aifoodapp.BackService;
 import com.android.aifoodapp.ProgressDialog;
 import com.android.aifoodapp.R;
 import com.android.aifoodapp.adapter.MealAdapter;
@@ -115,7 +116,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Query;
 
-public class MainActivity<Unit> extends AppCompatActivity implements SensorEventListener {
+public class MainActivity<Unit> extends AppCompatActivity {
 
     Activity activity;
     Button btn_logout;
@@ -170,6 +171,7 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
 
     private String flag;
     public static Activity _MainActivity;
+    public static MainActivity mainActivity;
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //데이트 포맷(sql)
     //Camera & Gallery
@@ -208,6 +210,7 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
         setContentView(R.layout.activity_main);
         initialize();
         _MainActivity = MainActivity.this;
+        mainActivity = this;
         Intent intent = getIntent();
         user = intent.getParcelableExtra("user");
 
@@ -222,13 +225,14 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
         addListener();
         //settingFoodListAdapter();
 
-        /* 걸음수 센서 측정 */
-        // TYPE_STEP_COUNTER : 앱 종료와 관계없이 계속 기존의 값을 가지고 있다 +1
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        stepCountSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-
-        if (stepCountSensor == null) {
-            Log.e("sensor","없음");
+        // 서비스 인텐트 생성 후 서비스 실행.
+        Intent serviceIntent = new Intent(MainActivity.this, BackService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            serviceIntent.putExtra("user", user);
+            startForegroundService(serviceIntent);
+        }
+        else {
+            startService(serviceIntent);
         }
 
         flag=intent.getStringExtra("flag"); //현재 계정이 구글인지 카카오인지
@@ -1476,57 +1480,6 @@ public class MainActivity<Unit> extends AppCompatActivity implements SensorEvent
 
             return pr;
         }
-    }
-
-    public void onStart() {
-        super.onStart();
-        if(stepCountSensor !=null) {
-            // 센서 속도 설정
-            // * 옵션
-            // - SENSOR_DELAY_NORMAL: 20,000 초 딜레이
-            // - SENSOR_DELAY_UI: 6,000 초 딜레이
-            // - SENSOR_DELAY_GAME: 20,000 초 딜레이
-            // - SENSOR_DELAY_FASTEST: 딜레이 없음
-            //
-            sensorManager.registerListener(this,stepCountSensor,SensorManager.SENSOR_DELAY_FASTEST);
-        }
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        // 걸음 센서 이벤트 발생시
-        if(event.sensor.getType() == Sensor.TYPE_STEP_COUNTER){
-            if(firstSteps<1){
-                firstSteps=(int) event.values[0];
-            }
-
-            // 현재 값 = (리셋 안 된 값 + 현재 값) - 리셋 안 된 값 + db에 저장된 그날의 걸음수 불러와서
-            //currentSteps = (int)event.values[0] - firstSteps + dailymeal.getStepcount();
-            currentSteps = (int)event.values[0] - firstSteps;
-            //stepCount db에 저장
-            /*
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(url)
-                    .addConverterFactory(GsonConverterFactory.create()).build();
-            RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
-
-            retrofitAPI.setStepCount(dailymeal.getUserid(),dailymeal.getDatekey(),currentSteps).enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-
-                }
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    Log.e("오류",t.toString());
-                }
-            });*/
-            //stepCountView.setText(String.valueOf(currentSteps));
-        }
-
-    }
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
     }
 }
 

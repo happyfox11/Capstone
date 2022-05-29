@@ -87,4 +87,8 @@ dependencies {
 
     //speech bubble
     implementation 'com.github.MasayukiSuda:BubbleLayout:v1.2.2'
+
+    //https://developer.android.com/guide/health-and-fitness/health-connect/get-started
+    //health-connect (아직 알파버전)
+    implementation 'androidx.health:health-connect-client:1.0.0-alpha01'
 }

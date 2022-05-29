@@ -254,17 +254,6 @@
             android:layout_height="0dp"
             android:layout_weight="1"/>
 
-        <Button
-            android:id="@+id/recommedBtn"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/round_rect_button"
-            android:backgroundTint="#3A531C"
-            android:text="추천 식단 보러가기"
-            android:textAlignment="center"
-            android:textColor="#ffffff" />
     </LinearLayout>
 
     <LinearLayout
