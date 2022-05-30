@@ -229,6 +229,7 @@ public class MainActivity<Unit> extends AppCompatActivity {
         Intent serviceIntent = new Intent(MainActivity.this, BackService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             serviceIntent.putExtra("user", user);
+            serviceIntent.putExtra("dailymeal", dailymeal);
             startForegroundService(serviceIntent);
         }
         else {

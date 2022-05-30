@@ -94,7 +94,7 @@ public class WeeklyReportActivity extends AppCompatActivity {
         weekly_report_fragment_1 = new WeeklyReportFragment1(user, dailyMealList, lastDailyMealList);
         weekly_report_fragment_2 = new WeeklyReportFragment2(user, dailyMealList);
         weekly_report_fragment_3 = new WeeklyReportFragment3(user, dailyMealList);
-        weekly_report_fragment_4 = new WeeklyReportFragment4();
+        weekly_report_fragment_4 = new WeeklyReportFragment4(user, dailyMealList, lastDailyMealList);
 
         dottedProgressBar = findViewById(R.id.dotted_progress_bar);
         btn_back_weekly_report = findViewById(R.id.btn_back_weekly_report);
