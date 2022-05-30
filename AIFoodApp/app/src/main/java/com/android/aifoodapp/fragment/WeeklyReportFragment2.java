@@ -191,8 +191,6 @@ public class WeeklyReportFragment2 extends Fragment {
         lineChart.setExtraLeftOffset(15f);
         lineChart.setExtraRightOffset(15f);
 
-
-        //juhee q -- 정정구간을 추가 해야할지 고민
         if (percent_of_carbohydrate> 55){
             carbohydrateBorder.setBackgroundResource(R.drawable.circle_round_red);
             carbohydrate_state.setText("과잉");

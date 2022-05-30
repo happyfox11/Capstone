@@ -1,6 +1,7 @@
 package com.android.aifoodapp;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -14,6 +15,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
@@ -25,7 +27,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.android.aifoodapp.activity.LoginActivity;
-import com.android.aifoodapp.activity.MainActivity;
+import com.android.aifoodapp.domain.dailymeal;
 import com.android.aifoodapp.domain.user;
 import com.android.aifoodapp.interfaceh.RetrofitAPI;
 
@@ -37,8 +39,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.android.aifoodapp.interfaceh.baseURL.url;
 
+import static java.lang.Thread.sleep;
+
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class BackService extends Service implements SensorEventListener {
 
@@ -46,10 +54,11 @@ public class BackService extends Service implements SensorEventListener {
     SensorManager sensorManager;
     Sensor stepCountSensor;
     user user;
+    dailymeal dailymeal;
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
 
-    int currentSteps = 0;
+    int currentSteps=0;
 
     NotificationCompat.Builder NCBuilder;
 
@@ -61,8 +70,27 @@ public class BackService extends Service implements SensorEventListener {
 
     @Override
     public void onCreate() {
+
         super.onCreate();
+
+        Calendar resetCal = Calendar.getInstance();
+        resetCal.setTimeInMillis(System.currentTimeMillis());
+        resetCal.set(Calendar.HOUR_OF_DAY,0);
+        resetCal.set(Calendar.MINUTE,0);
+        resetCal.set(Calendar.SECOND,0);
+        Timer time = new Timer();
+        TimerTask timerTask = new TimerTask(){
+            @Override
+            public void run() {
+                Date now = new Date();
+                currentSteps=0;
+                Log.d("reset성공"+now.toString(),Integer.toString(currentSteps));
+            }
+        };
+
+        time.schedule(timerTask, new Date(resetCal.getTimeInMillis()+1000*60*60*24),1000*60*60*24);
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
@@ -128,7 +156,7 @@ public class BackService extends Service implements SensorEventListener {
                 // - SENSOR_DELAY_GAME: 20,000 초 딜레이
                 // - SENSOR_DELAY_FASTEST: 딜레이 없음
                 //
-                sensorManager.registerListener(this, stepCountSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                sensorManager.registerListener(this, stepCountSensor, SensorManager.SENSOR_DELAY_FASTEST);
             }
         }
 
@@ -160,7 +188,12 @@ public class BackService extends Service implements SensorEventListener {
     private void processCommand(Intent intent){
         //MainActivity에서 user정보를 받아옴!
         user = intent.getParcelableExtra("user");
+        dailymeal = intent.getParcelableExtra("dailymeal");
+        currentSteps = dailymeal.getStepcount();
         //Log.e("user",user.getNickname());
+        //자정 동작 ( 아래걸로 하면 메인 에서 동작해서 앞에서 보임)
+        //resetAlarm(getApplicationContext());
+        //resetAlarm(getBaseContext());
     }
 
     @Override
@@ -212,4 +245,33 @@ public class BackService extends Service implements SensorEventListener {
     public void onAccuracyChanged(Sensor sensor, int i) {
 
     }
+
+
+    public void resetAlarm(Context context){
+
+        AlarmManager manager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Intent resetIntent = new Intent(context, BroadcastReceive.class);
+        //sendBroadcast(resetIntent);
+        // midnight
+        Calendar resetCal = Calendar.getInstance();
+        resetCal.setTimeInMillis(System.currentTimeMillis());
+        resetCal.set(Calendar.HOUR_OF_DAY,0);
+        resetCal.set(Calendar.MINUTE,0);
+        resetCal.set(Calendar.SECOND,0);
+
+        //dailymeal을 새로만들고 거기에 저장하도록 해야함 (이거 서버에서 해야하나.. 일단 그냥 안드로이드에서 처리)
+        //그냥 메인에서 다시 작동 하도록 설정 dailymeal이 새로 생성 될것
+        PendingIntent resetSender = PendingIntent.getBroadcast(context,0,resetIntent,0);
+
+
+        //0시에 작동 24시를 뜻하는 AlarmManager.INTERVAL_DAY를 더한다ㅇ
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP,resetCal.getTimeInMillis()+AlarmManager.INTERVAL_DAY,AlarmManager.INTERVAL_DAY,resetSender);
+        //manager.setInexactRepeating(AlarmManager.RTC_WAKEUP,resetCal.getTimeInMillis(),60*1000,resetSender);//1분 마다 반복 이거 이용해서 한시간 단위 저장 가능
+
+        SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Log.d("resetAlarm","ResetHour: "+datetimeFormat.format(new Date(resetCal.getTimeInMillis()+AlarmManager.INTERVAL_DAY)));
+
+    }
+
+
 }
