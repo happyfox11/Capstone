@@ -91,4 +91,5 @@ dependencies {
     //https://developer.android.com/guide/health-and-fitness/health-connect/get-started
     //health-connect (아직 알파버전)
     implementation 'androidx.health:health-connect-client:1.0.0-alpha01'
+    implementation 'androidx.work:work-runtime-ktx:2.7.0'
 }

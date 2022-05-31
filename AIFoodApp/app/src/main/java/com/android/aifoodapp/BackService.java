@@ -109,11 +109,11 @@ public class BackService extends Service implements SensorEventListener {
                     getApplicationContext(),
                     0, // 보통 default값 0을 삽입
                     new Intent(getApplicationContext(), LoginActivity.class),
-                    PendingIntent.FLAG_UPDATE_CURRENT
+                    PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE
             );
 
             NotificationManager NoManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            NotificationChannel channel = new NotificationChannel("test1", "Service", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel channel = new NotificationChannel("test1", "Service", NotificationManager.IMPORTANCE_LOW);// 알림음 발생 --> 알림음 발생하지 않도록 변경
             channel.enableLights(true);     //채널에 게시 된 알림에 알림 표시 등을 표시
             channel.setLightColor(Color.RED);
 
