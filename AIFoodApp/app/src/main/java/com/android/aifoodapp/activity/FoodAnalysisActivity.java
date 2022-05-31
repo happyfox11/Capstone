@@ -213,7 +213,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
                 if(photoList.get(cnt).equals("")){
                     //String img = String.valueOf(R.drawable.ic_launcher_background); //기본 사진
                     //String img=String.valueOf(R.drawable.icon);
-                    Drawable drawable = getResources().getDrawable(R.drawable.icon);
+                    Drawable drawable = getResources().getDrawable(R.drawable.meal_img);
                     compressedBitmap = ((BitmapDrawable)drawable).getBitmap();
                     tmpBitmap=((BitmapDrawable)drawable).getBitmap();
                     //Log.e("ㅎㅎ1",compressedBitmap.toString());
