@@ -49,8 +49,8 @@ public class FoodDetailInfoActivity extends AppCompatActivity {
         initialize();
 
         Intent intent = getIntent();
-        food=intent.getParcelableExtra("foodDetail");
-        String img=intent.getStringExtra("foodImg");
+        food = intent.getParcelableExtra("foodDetail");
+        String img = intent.getStringExtra("foodImg");
 
         btn_back_detail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +60,7 @@ public class FoodDetailInfoActivity extends AppCompatActivity {
         });
 
         if(img.equals("")){
-            Drawable drawable = getResources().getDrawable(R.drawable.icon);
+            Drawable drawable = getResources().getDrawable(R.drawable.meal_img);
             compressedBitmap = ((BitmapDrawable)drawable).getBitmap();
         }
         else{
@@ -169,7 +169,7 @@ public class FoodDetailInfoActivity extends AppCompatActivity {
         tv_sodium = findViewById(R.id.tv_sodium);
         tv_zinc = findViewById(R.id.tv_zinc);
         tv_copper = findViewById(R.id.tv_copper);
-        tv_manganese = findViewById(R.id.tv_magnesium);
+        tv_manganese = findViewById(R.id.tv_manganese);
         tv_vitamin_b1 = findViewById(R.id.tv_vitamin_b1);
         tv_vitamin_b2 = findViewById(R.id.tv_vitamin_b2);
         tv_vitamin_c = findViewById(R.id.tv_vitamin_c);

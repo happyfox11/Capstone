@@ -55,8 +55,7 @@ public class LoginActivity extends AppCompatActivity {
 
     Activity activity;
     LinearLayout  btn_google, btn_email, btn_kakao;
-    TextView tv_title;
-    ImageView loginImage;
+    ImageView loginImage, tv_title;
     static Context mContext;
 
     GoogleSignInClient mGoogleSignInClient;
@@ -217,10 +216,10 @@ public class LoginActivity extends AppCompatActivity {
     //변수 초기화
     private void initialize(){
         activity = this;
-        tv_title=findViewById(R.id.tv_title);
+        tv_title = findViewById(R.id.tv_title);
         btn_kakao = findViewById(R.id.btn_kakao);
         btn_google = findViewById(R.id.btn_google);
-        loginImage=findViewById(R.id.loginImage);
+        loginImage = findViewById(R.id.loginImage);
         //btn_email = findViewById(R.id.btn_email);
 
         //test = findViewById(R.id.textView19);

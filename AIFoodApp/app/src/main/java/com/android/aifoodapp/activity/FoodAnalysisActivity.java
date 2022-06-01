@@ -73,7 +73,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
     FoodItemAdapter foodItemAdapter;
     FoodInfoAdapter foodInfoAdapter;
     RecyclerView recyclerView ,recyclerView2;
-    TextView tv_foodName;
+    TextView tv_foodName, tv_meal_position;
     ImageView iv_plusBtn, iv_foodAnalysis;
     Button btn_insert_dailymeal;
     user user;
@@ -119,6 +119,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         addListener();
         //setFoodList();
         _FoodAnalysis_Activity = FoodAnalysisActivity.this;
+        tv_meal_position.setText("식단 "+pos);
 
         //https://andro-jinu.tistory.com/entry/androidstudio2
         ProgressDialog dialog = new ProgressDialog(this);//loading
@@ -210,7 +211,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
             int cnt=0;
             for(fooddata repo : foodList){
                 //if(byteArray!=null && cnt==foodList.size()-1){
-                if(photoList.get(cnt).equals("")){
+                if(photoList.get(cnt).equals("")){ //사진이 없을 경우 기본 이미지
                     //String img = String.valueOf(R.drawable.ic_launcher_background); //기본 사진
                     //String img=String.valueOf(R.drawable.icon);
                     Drawable drawable = getResources().getDrawable(R.drawable.meal_img);
@@ -490,6 +491,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         iv_foodAnalysis = findViewById(R.id.iv_foodAnalysis);
         btn_insert_dailymeal = findViewById(R.id.btn_insert_dailymeal);
         btn_back_analysis = findViewById(R.id.btn_back_detail);
+        tv_meal_position = findViewById(R.id.tv_meal_position);
     }
 
     private void addListener(){
