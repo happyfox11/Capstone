@@ -108,43 +108,24 @@ public class RecommendFoodActivity extends AppCompatActivity {
 
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
-        //동기적 처리(일단 동기 처리로)
-        new FoodNetworkCall().execute(retrofitAPI.getRecommendMeal(user.getId(),dailymeal.getDatekey()));
 
-        //비동기
-        /*
-        retrofitAPI.getrecommendMeal(user.getId(),dailymeal.getDatekey()).enqueue(new Callback<List<fooddata>>() {
-            @Override
-            public void onResponse(Call<List<fooddata>> call, Response<List<fooddata>> response) {
-
-                for (fooddata repo : response.body()) {
-                    recommendeList.add(repo);
-                }
+        try{
+            recommendeList = new FoodNetworkCall().execute(retrofitAPI.getRecommendMeal(user.getId(),dailymeal.getDatekey())).get();
+            if(CollectionUtils.isEmpty(recommendeList)){
+                //null 값이 나올확률은 없는데 에러나는것 확인 필요
+                recommendeList.add(new fooddata());
+                recommendeList.add(new fooddata());
+                recommendeList.add(new fooddata());
             }
 
-            @Override
-            public void onFailure(Call<List<fooddata>> call, Throwable t) {
-
-            }
-        });
-        */
-        /* juhee --fin */
-
-        while(true) {
-            if(CollectionUtils.isEmpty(recommendeList)) {
-                try {
-                    sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            else {
-                tv_top_1_name.setText(recommendeList.get(0).getName());
-                tv_top_2_name.setText(recommendeList.get(1).getName());
-                tv_top_3_name.setText(recommendeList.get(2).getName());
-                break;
-            }
+        }catch(Exception e){
+            e.printStackTrace();
         }
+
+        tv_top_1_name.setText(recommendeList.get(0).getName());
+        tv_top_2_name.setText(recommendeList.get(1).getName());
+        tv_top_3_name.setText(recommendeList.get(2).getName());
+
     }
 
     private void addListener(){
@@ -248,24 +229,17 @@ public class RecommendFoodActivity extends AppCompatActivity {
         }
     };
 
-    private class FoodNetworkCall extends AsyncTask<Call, Void, String> {
+    private class FoodNetworkCall extends AsyncTask<Call, Void, List<fooddata>> {
 
-        //동기적 처리
         @Override
-        protected String doInBackground(Call[] params) {
+        protected List<fooddata> doInBackground(Call[] params) {
 
             try {
                 Call<List<fooddata>> call = params[0];
                 Response<List<fooddata>> response = call.execute();
-
                 //Log.d("Error:size",response.body().toString());
-                recommendeList = response.body();
-                if(CollectionUtils.isEmpty(recommendeList)){
-                    //null 값이 나올확률은 없는데 에러나는것 확인 필요
-                    recommendeList.add(new fooddata());
-                    recommendeList.add(new fooddata());
-                    recommendeList.add(new fooddata());
-                }
+                return response.body();
+
                 //null처리
                 //if(CollectionUtils.isEmpty(response.body())) {
                 //    return null;
