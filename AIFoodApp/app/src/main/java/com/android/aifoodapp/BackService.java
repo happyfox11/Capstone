@@ -121,7 +121,8 @@ public class BackService extends Service implements SensorEventListener {
 
             NoManager.createNotificationChannel(channel);
             NCBuilder = new NotificationCompat.Builder(this, "walk");
-            NCBuilder.setSmallIcon(R.drawable.burning_icon);
+            //NCBuilder.setSmallIcon(R.drawable.burning_icon);
+            NCBuilder.setSmallIcon(android.R.drawable.ic_menu_edit);
             NCBuilder.setContentTitle("걸음수 측정");
             NCBuilder.setContentText("현재 걸음수 : " + currentSteps);
             NCBuilder.setOngoing(true);
