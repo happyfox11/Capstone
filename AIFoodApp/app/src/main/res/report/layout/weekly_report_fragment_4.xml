@@ -4,46 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
         android:text="■ 주간 활동"
-        android:textSize="20sp"
+        android:textSize="20dp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:text="평균 일일 활동 시간" />
+        android:layout_marginTop="15dp"
+        android:drawableLeft="@drawable/circle_check"
+        android:text=" 평균 일일 활동 시간 :"
+        android:textSize="18dp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tv_activeTme"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text="시간 표시" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:gravity="right"
-            android:text="분" />
     </LinearLayout>
 
     <ProgressBar
@@ -51,56 +38,63 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:progressTint="#37C13D"/>
+        android:progressTint="#37C13D" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="right"
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/tv_activeTme"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:layout_weight="1"
             android:gravity="right"
-            android:text="60" />
+            android:text="시간 표시"
+            android:textSize="13dp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:gravity="right"
+            android:text="   / "
+            android:textSize="13dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="right"
+            android:text="60"
+            android:textSize="13dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:gravity="right"
-            android:text="분" />
+            android:text="  분"
+            android:textSize="13dp" />
     </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:text="평균 일일 걸음" />
+        android:layout_marginTop="15dp"
+        android:drawableLeft="@drawable/circle_check"
+        android:text=" 평균 일일 걸음 :"
+        android:textSize="18dp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tv_walk"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text="걸음수 표시" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:gravity="right"
-            android:text="걸음" />
     </LinearLayout>
 
     <ProgressBar
@@ -109,58 +103,47 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:max="10000"
-        android:progress="5000"/>
+        android:progress="5000" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="right"
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/tv_walk"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:layout_weight="1"
             android:gravity="right"
-            android:text="10000" />
+            android:text="걸음수 표시"
+            android:textSize="13dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:gravity="right"
-            android:text="걸음" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            android:text="   / "
+            android:textSize="13dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="지난주보다 평균 " />
+            android:layout_gravity="right"
+            android:gravity="right"
+            android:text="10000"
+            android:textSize="13dp" />
 
         <TextView
-            android:id="@+id/calculateActiveTime"
-            android:layout_weight="0.5"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="시간표시" />
-
-        <TextView
-            android:id="@+id/activeTimeComment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
-            android:layout_weight="0.5"
-            android:layout_gravity="right"
             android:gravity="right"
-            android:text="분 많이 활동했습니다! " />
+            android:text="  걸음"
+            android:textSize="13dp" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -169,8 +152,35 @@
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/circle_check"
+            android:text=" 평균 활동 시간 :"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/circle_check"
+            android:text=" 평균 칼로리 소모량 :"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="horizontal">
@@ -179,20 +189,19 @@
                 android:id="@+id/imageView"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginLeft="20dp"
                 app:srcCompat="@drawable/jogging_icon" />
 
             <TextView
                 android:id="@+id/activeTimeInfo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:gravity="center"
-                android:text="시간 표시" />
+                android:text="시간 표시"
+                android:textSize="16dp" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="horizontal">
@@ -208,30 +217,41 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="칼로리 소모 표시" />
+                android:text="칼로리 소모 표시"
+                android:textSize="16dp" />
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/round_rect"
+        android:backgroundTint="#C2F388"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textView8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginLeft="20dp"
-            android:text="평균 활동 시간" />
+            android:text="지난주보다 평균 "
+            android:textSize="16dp" />
 
         <TextView
-            android:id="@+id/textView9"
+            android:id="@+id/calculateActiveTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="평균 칼로리 소모량" />
+            android:text="시간표시"
+            android:textColor="#D67B7B"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/activeTimeComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 분 많이 활동했습니다! "
+            android:textSize="16dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -243,75 +263,91 @@
             android:id="@+id/textView10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:text="총평"
-            android:textSize="20sp"
+            android:layout_marginTop="30dp"
+            android:text="■ 총평"
+            android:textSize="20dp"
             android:textStyle="bold" />
 
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_comment"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/protein_comment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:paddingTop="5dp"
-                android:text="단백질 부족"
-                android:textAlignment="center" />
-
-            <TextView
-                android:id="@+id/fat_comment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="지방 과잉"
-                android:textAlignment="center" />
-
-            <TextView
-                android:id="@+id/exercise_comment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="운동 부족"
-                android:textAlignment="center" />
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="120dp"
+            android:layout_height="200dp"
+            app:srcCompat="@drawable/heart_cut_icon" />
 
         <ImageView
             android:id="@+id/imageView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/comment_tail" />
+            android:background="@drawable/comment_tail"
+            android:backgroundTint="#D8ECC0" />
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            app:srcCompat="@drawable/character" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_comment"
+            android:backgroundTint="#D8ECC0"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <TextView
+                android:id="@+id/protein_comment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/cook_icon"
+                android:gravity="center"
+                android:paddingTop="5dp"
+                android:text="단백질 부족"
+                android:textAlignment="center"
+                android:textColor="#334E13"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/fat_comment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/eat_icon"
+                android:gravity="center"
+                android:text="지방 과잉"
+                android:textAlignment="center"
+                android:textColor="#334E13"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/exercise_comment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/ic_ball_icon"
+                android:gravity="center"
+                android:text="운동 부족"
+                android:textAlignment="center"
+                android:textColor="#334E13"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 

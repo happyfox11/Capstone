@@ -123,6 +123,8 @@
                                 android:layout_marginLeft="15dp"
                                 android:text="볶음밥"
                                 android:textSize="18dp"
+                                android:ellipsize="marquee"
+                                android:maxLines="1"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -181,6 +183,8 @@
                                 android:layout_marginLeft="15dp"
                                 android:text="고기"
                                 android:textSize="18dp"
+                                android:ellipsize="marquee"
+                                android:maxLines="1"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -239,6 +243,8 @@
                                 android:layout_marginLeft="15dp"
                                 android:text="밀푀유나베"
                                 android:textSize="18dp"
+                                android:ellipsize="marquee"
+                                android:maxLines="1"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -248,6 +254,8 @@
                             android:layout_height="wrap_content"
                             android:drawableStart="@drawable/recipe_icon"
                             android:text="레시피 확인하러 가기"
+                            android:ellipsize="marquee"
+                            android:maxLines="1"
                             android:textColor="#213EDF" />
 
                         <Button
