@@ -73,22 +73,24 @@ public class BackService extends Service implements SensorEventListener {
 
         super.onCreate();
 
+        //23:59:59에 초기화
         Calendar resetCal = Calendar.getInstance();
         resetCal.setTimeInMillis(System.currentTimeMillis());
-        resetCal.set(Calendar.HOUR_OF_DAY,0);
-        resetCal.set(Calendar.MINUTE,0);
-        resetCal.set(Calendar.SECOND,0);
+        resetCal.set(Calendar.HOUR_OF_DAY,23);
+        resetCal.set(Calendar.MINUTE,59);
+        resetCal.set(Calendar.SECOND,59);
         Timer time = new Timer();
         TimerTask timerTask = new TimerTask(){
             @Override
             public void run() {
                 Date now = new Date();
                 currentSteps=0;
-                Log.d("reset성공"+now.toString(),Integer.toString(currentSteps));
+                Log.d("reset 성공" + now.toString(),Integer.toString(currentSteps));
             }
         };
 
-        time.schedule(timerTask, new Date(resetCal.getTimeInMillis()+1000*60*60*24),1000*60*60*24);
+        time.schedule(timerTask, new Date(resetCal.getTimeInMillis()),1000*60*60*24);
+        //1000*60*60*24
     }
 
 
@@ -113,14 +115,14 @@ public class BackService extends Service implements SensorEventListener {
             );
 
             NotificationManager NoManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            NotificationChannel channel = new NotificationChannel("test1", "Service", NotificationManager.IMPORTANCE_LOW);// 알림음 발생 --> 알림음 발생하지 않도록 변경
+            NotificationChannel channel = new NotificationChannel("walk", "Service", NotificationManager.IMPORTANCE_LOW);// 알림음 발생 --> 알림음 발생하지 않도록 변경
             channel.enableLights(true);     //채널에 게시 된 알림에 알림 표시 등을 표시
             channel.setLightColor(Color.RED);
 
             NoManager.createNotificationChannel(channel);
-            NCBuilder = new NotificationCompat.Builder(this, "test1");
-            NCBuilder.setSmallIcon(android.R.drawable.ic_menu_search);
-            NCBuilder.setContentTitle("서비스 가동");
+            NCBuilder = new NotificationCompat.Builder(this, "walk");
+            NCBuilder.setSmallIcon(R.drawable.burning_icon);
+            NCBuilder.setContentTitle("걸음수 측정");
             NCBuilder.setContentText("현재 걸음수 : " + currentSteps);
             NCBuilder.setOngoing(true);
             NCBuilder.setContentIntent(mPendingIntent);
@@ -211,7 +213,7 @@ public class BackService extends Service implements SensorEventListener {
 
                 /* ~ 시간에 DB 저장? */
                 // 이 코드는  onSensorChanged 함수내부에 짜여진 코드이기 때문에 sensor 변화가 있을때만 해당 코드가 작동한다.
-                //TODO 원하는 시간에 DB에 저장할 수 있게 해야 하는데.. 어디에 위치해야 할까?! 또한, 자정에 currentSteps값 초기화 해야함
+                //TODO 원하는 시간에 DB에 저장할 수 있게 해야 하는데.
                 //지금 currentSteps가 하나씩 증가할때마다 db에 저장되고 있음..ㅎㅎ
 
                 Date now = new Date(); //Date타입으로 변수 선언

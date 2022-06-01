@@ -119,7 +119,7 @@ public class FoodAnalysisActivity extends AppCompatActivity {
         addListener();
         //setFoodList();
         _FoodAnalysis_Activity = FoodAnalysisActivity.this;
-        tv_meal_position.setText("식단 "+pos);
+        tv_meal_position.setText("식사 "+(pos+1));
 
         //https://andro-jinu.tistory.com/entry/androidstudio2
         ProgressDialog dialog = new ProgressDialog(this);//loading
