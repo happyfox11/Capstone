@@ -60,11 +60,15 @@ public class FoodInfoAdapter extends RecyclerView.Adapter<FoodInfoAdapter.Custom
     @Override //어떤 객체를 바인딩할지 설정
     public void onBindViewHolder(@NonNull FoodInfoAdapter.CustomViewHolder holder, int position) {
 
+        String intake=String.valueOf(items.get(position).getCl_intake());
+        String calories=String.valueOf((int) items.get(position).getFood().getCalorie());
+        int caloriesResult=(int)(Integer.parseInt(calories) * Double.parseDouble(intake));
+
         /* setting */
         holder.cl_foodInfo.setImageBitmap(items.get(position).getCl_img());
         holder.cl_foodName.setText(items.get(position).getFood().getName());
-        holder.cl_caloriesInfo.setText(String.valueOf((int) items.get(position).getFood().getCalorie()));
-        holder.cl_intake.setText(String.valueOf(items.get(position).getCl_intake()));
+        holder.cl_caloriesInfo.setText(String.valueOf(caloriesResult));
+        holder.cl_intake.setText(intake);
         holder.food_list_name.setText(items.get(position).getFood().getName());
 
         //화살표 버튼 클릭 시 상세정보 액티비티로 이동
@@ -107,6 +111,7 @@ public class FoodInfoAdapter extends RecyclerView.Adapter<FoodInfoAdapter.Custom
             }
         });
 
+        /* intake값 변화 */
         holder.iv_scrollUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,7 +121,7 @@ public class FoodInfoAdapter extends RecyclerView.Adapter<FoodInfoAdapter.Custom
                 items.set(position,new FoodInfo(items.get(position).getFood(),items.get(position).getCl_img(),intake));
                 notifyDataSetChanged();
                 if (itemClickListener != null) {
-                    itemClickListener.onIntakeChangeClicked(intake,position);
+                    itemClickListener.onIntakeChangeClicked(intake, position);
                 }
             }
         });
