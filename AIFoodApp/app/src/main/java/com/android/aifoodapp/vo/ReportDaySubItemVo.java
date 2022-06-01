@@ -5,11 +5,13 @@ public class ReportDaySubItemVo {
     private String subItemImage;
     private String subItemTitle;
     private String subItemDesc;
+    private Double subItemIntake;
 
-    public ReportDaySubItemVo(String subItemTitle, String subItemDesc, String subItemImage) {
+    public ReportDaySubItemVo(String subItemTitle, String subItemDesc, String subItemImage, Double subItemIntake) {
         this.subItemTitle = subItemTitle;
         this.subItemDesc = subItemDesc;
         this.subItemImage = subItemImage;
+        this.subItemIntake = subItemIntake;
     }
 
     public String getSubItemImage() {
@@ -34,5 +36,13 @@ public class ReportDaySubItemVo {
 
     public void setSubItemDesc(String subItemDesc) {
         this.subItemDesc = subItemDesc;
+    }
+
+    public Double getSubItemIntake(){
+        return subItemIntake;
+    }
+
+    public void setSubItemIntake(Double subItemIntake){
+        this.subItemIntake=subItemIntake;
     }
 }

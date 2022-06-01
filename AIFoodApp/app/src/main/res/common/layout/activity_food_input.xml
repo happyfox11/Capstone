@@ -29,13 +29,6 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/iv_user_setting_update"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/menu_icon" />
-
         </LinearLayout>
     </LinearLayout>
 

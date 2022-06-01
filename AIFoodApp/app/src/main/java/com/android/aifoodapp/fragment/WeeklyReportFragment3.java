@@ -101,7 +101,7 @@ public class WeeklyReportFragment3 extends Fragment {
     //하위 아이템
     private List<ReportDaySubItemVo> buildSubItemList(String day)  {
 
-        //동기적 처리 부분 음식 가져오는부분 juhee
+        //AsyncTask 처리 부분 음식 가져오는부분 juhee
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create()).build();
@@ -127,7 +127,7 @@ public class WeeklyReportFragment3 extends Fragment {
     }
 
     private class FoodNetworkCall extends AsyncTask<Call, Void, List<ReportDaySubItemVo> > {
-        //동기적 처리
+        //AsyncTask 처리
         @Override
         protected List<ReportDaySubItemVo> doInBackground(Call[] params) {
             List<ReportDaySubItemVo> subItemList = new ArrayList<>();
@@ -144,7 +144,8 @@ public class WeeklyReportFragment3 extends Fragment {
                     String subItemTitle = repo.getMealname();
                     String subItemDesc = Integer.toString(repo.getCalorie()); //칼로리만 출력 (추가 가능)
                     String subItemImage = repo.getMealphoto();
-                    subItemList.add(new ReportDaySubItemVo(subItemTitle, subItemDesc, subItemImage));
+                    Double subItemIntake = repo.getIntake();
+                    subItemList.add(new ReportDaySubItemVo(subItemTitle, subItemDesc, subItemImage, subItemIntake));
                     Log.e("mealname",repo.getMealname());
                 }
 
