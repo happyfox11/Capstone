@@ -7,8 +7,8 @@ AI기반 음식 분석 애플리케이션, 플랜밀
 
 </p>
 
-## Our Team
-어니스트(Honest)
+## 🌞 Our Team
+🌱 어니스트(Honest)
 
 * 팀장 박주희([@juhee77](https://github.com/juhee77 "github link"))
 
@@ -80,7 +80,7 @@ AI기반 음식 분석 애플리케이션, 플랜밀
 
 
 
-## 주요 기능 설명
+## 🍴 주요 기능 설명
 <br>
 <br>
 <p align="center">
