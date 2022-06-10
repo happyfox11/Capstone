@@ -125,3 +125,6 @@ AI기반 음식 분석 애플리케이션, 플랜밀
 
 <br>
 
+|                로그인                |             기본정보입력             |             개인정보수정            |
+|:-------------------------------------:|:-------------------------------------------------:|:-----------------------------------------------:|
+|![login](https://user-images.githubusercontent.com/56522878/173003261-bedb9b73-e897-4a18-93d0-202fdc90a5f6.png)|![init](https://user-images.githubusercontent.com/56522878/173002744-dada2409-242d-4a94-b260-519e21304e0a.png)|![modify](https://user-images.githubusercontent.com/56522878/173002766-e196cb91-e583-49af-acbb-4ffbe94cf961.png)|
