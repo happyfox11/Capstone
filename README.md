@@ -74,8 +74,10 @@ AI기반 음식 분석 애플리케이션, 플랜밀
 
 - AI
 
-    - Python : 
-    - 
+    - Python : 3.10
+    - IDE : Pycharm 2021.3.2
+    - Flask : 2.1.2
+    
   <br><br>
 
 
