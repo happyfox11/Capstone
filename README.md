@@ -1,6 +1,7 @@
 
 # 📋 Intro
 AI기반 음식 분석 애플리케이션, 플랜밀
+(시연영상 : https://www.youtube.com/watch?v=GAX8TYVCVOc&list=PLJ8elSeS2xGzF_XREuwtVei7JwcD2SSUv&index=20)
 
 <p align="center">
   <img src = "https://user-images.githubusercontent.com/56522878/170629000-4a237356-9c32-414a-bf45-af9f039a36d7.jpg" width="700px">
