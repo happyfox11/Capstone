@@ -6,12 +6,12 @@ AI기반 음식 분석 애플리케이션, 플랜밀
   <img src = "https://user-images.githubusercontent.com/56522878/170629000-4a237356-9c32-414a-bf45-af9f039a36d7.jpg" width="700px">
 </p>
 
-## 시연영상
+## 🎥 시연영상
 + [플랜밀 시연영상](https://www.youtube.com/watch?v=GAX8TYVCVOc&list=PLJ8elSeS2xGzF_XREuwtVei7JwcD2SSUv&index=20)
 
 <br>
 
-## Prize
+## 🏆 Prize
 + 2022 경기대 AI컴공 캡스톤 금상
 + 2022년 한국정보기술학회 대학생논문경진대회 동상
 <br>
@@ -29,7 +29,7 @@ AI기반 음식 분석 애플리케이션, 플랜밀
 
 * 팀원 박소영([@kdmsws](https://github.com/kdmsws "github link")) <br><br>
 
-## 개발기간
+## 📅 개발기간
 2022.03.11 ~ 2022.06.09 <br><br>
 
 ## 🗂 Content
