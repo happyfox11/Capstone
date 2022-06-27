@@ -12,7 +12,7 @@ AI기반 음식 분석 애플리케이션, 플랜밀
 <br>
 
 ## 🏆 Prize
-+ 2022 경기대 AI컴공 캡스톤 금상
++ 2022년 경기대 AI컴공 캡스톤 금상
 + 2022년 한국정보기술학회 대학생논문경진대회 동상
 <br>
 
@@ -38,7 +38,7 @@ AI기반 음식 분석 애플리케이션, 플랜밀
    <br>
    - [📑 개요 및 목표]
    - [📑 개발 환경]
-   - [📑 주요 기능 ]
+   - [📑 주요 기능]
    <br><br>
 2. [🔈 구현 결과]
    <br><br>
@@ -69,8 +69,9 @@ AI기반 음식 분석 애플리케이션, 플랜밀
 
   - Ubuntu Server 18.04 (64-bit)
 
-- Backend
+- Backend 
 
+  - [github](https://github.com/juhee77/honest-backend)
   - Java : Java 1.11.0
   - Framework : SpringBoot 2.6.4
   - ORM : JPA(Hibernate)
